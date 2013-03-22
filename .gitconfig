@@ -1,0 +1,22 @@
+[alias]
+	co = checkout
+	ci = commit
+	aa = add --all
+    st = status
+	ffs = flow feature start
+	fff = flow feature finish
+	frs = flow release start
+	frf = flow release finish
+	dc = diff --color
+[user]
+	name = Aurélien Noce
+	email = aurelien.noce@imagine-app.fr
+[core]
+	editor = /usr/bin/env vim
+	excludesfile = /Users/ushu/.gitignore_global
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
