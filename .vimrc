@@ -18,6 +18,7 @@ NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'matchit.zip' 
 NeoBundle 'molokai' 
 NeoBundle 'jelera/vim-javascript-syntax'
+NeoBundle 'othree/html5.vim' 
 "
 NeoBundleCheck
 
@@ -168,7 +169,6 @@ map <Down> <Nop>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
 map <leader>e :edit %%
-map <leader>v :view %%
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " RENAME CURRENT FILE
@@ -185,22 +185,8 @@ endfunction
 map <leader>n :call RenameFile()<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" PROMOTE VARIABLE TO RSPEC LET
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! PromoteToLet()
-  :normal! dd
-  " :exec '?^\s*it\>'
-  :normal! P
-  :.s/\(\w\+\) = \(.*\)$/let(:\1) { \2 }/
-  :normal ==
-endfunction
-:command! PromoteToLet :call PromoteToLet()
-:map <leader>p :PromoteToLet<cr>
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MAPS TO JUMP TO SPECIFIC COMMAND-T TARGETS AND FILES
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map <leader>gr :topleft :split config/routes.rb<cr>
 function! ShowRoutes()
   " Requires 'scratch' plugin
   :topleft 100 :split __Routes__
@@ -217,11 +203,10 @@ function! ShowRoutes()
   " Delete empty trailing line
   :normal dd
 endfunction
-map <leader>gR :call ShowRoutes()<cr>
-map <leader>ga :CtrlPClearCache<cr>\|:CtrlP app<cr>
-map <leader>gl :CtrlPClearCache<cr>\|:CtrlP lib<cr>
-map <leader>gp :CtrlPClearCache<cr>\|:CtrlP public<cr>
+map <leader>r :call ShowRoutes()<cr>
+"map <leader>ga :CtrlPClearCache<cr>\|:CtrlP app<cr>
 map <leader>gg :topleft 100 :split Gemfile<cr>
+map <leader>gr :topleft :split config/routes.rb<cr>
 map <leader>e :e %%<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -260,8 +245,6 @@ nnoremap <leader>. :call OpenTestAlternate()<cr>
 map <leader>t :call RunTestFile()<cr>
 map <leader>T :call RunNearestTest()<cr>
 map <leader>a :call RunTests('')<cr>
-map <leader>c :w\|:!script/features<cr>
-map <leader>w :w\|:!script/features --profile wip<cr>
 
 function! RunTestFile(...)
     if a:0

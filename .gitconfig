@@ -8,9 +8,19 @@
 	frs = flow release start
 	frf = flow release finish
 	dc = diff --color
+	ffc = flow feature checkout
+	lo = log --oneline
+	gr = log --graph --oneline
+	gra = log --graph --oneline --all
+	today = log --oneline --since='yesterday'
+    rstat = "!f() { git lo origin/"$1".."$1"; }; f"
+    grstat = "!f() { git gra origin/"$1".."$1"; }; f"
+    rbn = "!f() { git rebase -i HEAD~"$1"; }; f"
+    rbt = "!f() { git rbn `git today | wc -l | xargs echo`; }; f"
+    rbr = "!f() { git rbn `git rstat "$1" | wc -l | xargs echo`; }; f"
 [user]
 	name = Aurélien Noce
-	email = aurelien.noce@imagine-app.fr
+	email = aurnoce@gmail.com
 [core]
 	editor = /usr/bin/env vim
 	excludesfile = /Users/ushu/.gitignore_global
@@ -20,3 +30,5 @@
 [mergetool "sourcetree"]
 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
+[color]
+	ui = auto
