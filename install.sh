@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 MISSING_PACKAGES=()
+DOTFILES="$HOME/.dotfiles"
 
 is_debian () {
   [ `uname -a | grep -ci "debian\|ubuntu"` -ne 0 ] && return 0
@@ -85,6 +86,14 @@ main () {
       npm install -g $c
     fi
   done
+
+  if check_command git; then
+    git clone https://github.com/ushu/dotfiles $DOTFILES
+
+    ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
+    ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
+  fi
+  
   
 }
 
