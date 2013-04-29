@@ -89,7 +89,7 @@ main () {
 
   if check_command git; then
     if [ -d "$DOTFILES" ]; then
-      cd "$DOTFILES" && git update origin master
+      cd "$DOTFILES" && git pull origin master
     else
       git clone https://github.com/ushu/dotfiles $DOTFILES
     fi
