@@ -88,10 +88,15 @@ main () {
   done
 
   if check_command git; then
-    git clone https://github.com/ushu/dotfiles $DOTFILES
+    if [ -f "$DOTFILES" ]; then
+      cd "$DOTFILES" && git update origin master
+    else
+      git clone https://github.com/ushu/dotfiles $DOTFILES
+    fi
 
-    ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
-    ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
+    [ -f "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
+    [ -f "$HOME/,vim" ] || ln -s "$DOTFILES/.vim" "$HOME/.vim"
+    [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
   fi
   
   
