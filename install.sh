@@ -95,7 +95,7 @@ main () {
     fi
 
     [ -f "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
-    [ -f "$HOME/,vim" ] || ln -s "$DOTFILES/.vim" "$HOME/.vim"
+    [ -f "$HOME/.vim" ] || ln -s "$DOTFILES/.vim" "$HOME/.vim"
     [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
   fi
   
