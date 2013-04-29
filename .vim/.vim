@@ -1,0 +1,1 @@
+/home/ushu/.dotfiles/.vim
