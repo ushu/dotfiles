@@ -17,9 +17,13 @@ command_available () {
   declare -f $1 > /dev/null
 }
 
+register_package_to_install () {
+  MISSING_PACKAGES=( ${MISSING_PACKAGES[@]} $1 )
+}
+
 check_command() {
   if ! command_available $1; then
-    MISSING_PACKAGES=( ${MISSING_PACKAGES[@]} $2 )
+    register_package_to_install $2
   fi
 }
 
@@ -49,18 +53,36 @@ check_command_and_dependencies () {
   fi
 }
 
+check_brew_dependencies () {
+  for c in $@; do
+    if ! check_brew_dependency $c; then
+      MISSING_PACKAGES=( ${MISSING_PACKAGES[@]} $c )
+    fi
+  done
+}
+
+check_brew_dependency () {
+  brew list | grep -q $1 && return 0
+}
+
 main () {
   # linux ??
   if is_debian; then
-    check_commands curl git zsh 
+    check_commands curl git bash zsh 
     check_command vim vim-nox
+  elif is_osx; then
+    # common dependencies
+    check_commands curl git zsh vim
+    # for ruby/rails
+    check_commands autoconf automake libtool apple-gcc42
+    check_brew_dependencies libyaml libxml2 libxslt libksba sqlite
   fi
   
   if [ ${#MISSING_PACKAGES[@]} -ne 0 ]; then
     if is_debian; then
       sudo apt-get install ${MISSING_PACKAGES[@]}
     elif is_osx; then
-      sudo brew install ${MISSING_PACKAGES[@]}
+      brew install ${MISSING_PACKAGES[@]}
     fi
   fi
 
@@ -99,7 +121,16 @@ main () {
     [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
   fi
   
+  if check_command_and_dependencies rvm curl bash git; then
+    curl -L https://get.rvm.io | bash -s stable --rails --autolibs=enabled
+    source "$HOME/.nvm/nvm.sh"
+  elif check_commands rvm; then
+    rvm get stable
+  fi
   
+  
+
+
 }
 
 main
