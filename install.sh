@@ -140,7 +140,20 @@ main () {
   elif check_commands rvm; then
     rvm get stable
   fi
+
   
+  if ! rvm list | grep -q 1.9.3; then
+    # grab the last available binary version
+    RUBY19=$(rvm list --remote | grep 1.9.3 | tail -n 1 | cut -d\  -f3)
+    if [ -z $RUBY19 ]; then
+      rvm install $RUBY19 --binary
+    else
+      rvm install 1.9.3
+    fi
+  fi
+  if ! rvm list | grep -q 2.0; then
+    rvm install 2.0
+  fi
   
 
 
