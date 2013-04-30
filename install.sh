@@ -126,7 +126,7 @@ main () {
     if [ -d "$DOTFILES" ]; then
       cd "$DOTFILES" && git pull origin master
     else
-      git clone https://github.com/ushu/dotfiles --recursive $DOTFILES
+      git clone git@github.com:ushu/dotfiles.git --recursive $DOTFILES
     fi
 
     [ -f "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
