@@ -43,6 +43,7 @@ set hlsearch
 set ignorecase smartcase
 " highlight current line
 set cursorline
+set cursorcolumn
 set cmdheight=2
 set switchbuf=useopen
 set numberwidth=5
@@ -117,8 +118,6 @@ augroup END
 " COLOR
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 colorscheme molokai
-set cursorline
-set cursorcolumn
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " STATUS LINE
