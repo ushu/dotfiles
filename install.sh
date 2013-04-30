@@ -126,7 +126,7 @@ main () {
     if [ -d "$DOTFILES" ]; then
       cd "$DOTFILES" && git pull origin master
     else
-      git clone https://github.com/Shougo/neobundle.vim.git --recursive $DOTFILES
+      git clone git@github.com:ushu/dotfiles.git --recursive $DOTFILES
 
       [ -f "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
       [ -d "$HOME/.vim" ] || ln -s "$DOTFILES/.vim" "$HOME/.vim"
