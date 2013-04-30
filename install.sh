@@ -126,12 +126,13 @@ main () {
     if [ -d "$DOTFILES" ]; then
       cd "$DOTFILES" && git pull origin master
     else
-      git clone git@github.com:ushu/dotfiles.git --recursive $DOTFILES
+      git clone https://github.com/Shougo/neobundle.vim.git --recursive $DOTFILES
+
+      [ -f "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
+      [ -d "$HOME/.vim" ] || ln -s "$DOTFILES/.vim" "$HOME/.vim"
+      [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
     fi
 
-    [ -f "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
-    [ -d "$HOME/.vim" ] || ln -s "$DOTFILES/.vim" "$HOME/.vim"
-    [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
   fi
   
   if check_command_and_dependencies rvm curl bash git; then
