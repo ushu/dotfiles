@@ -1,5 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =3
-let g:netrw_dirhist_1='/Users/ushu/Downloads/backbone-on-rails-code-after/app/views'
-let g:netrw_dirhist_2='/Users/ushu/Downloads/backbone-on-rails-code-after/app/views/layouts'
-let g:netrw_dirhist_3='/Users/ushu'
