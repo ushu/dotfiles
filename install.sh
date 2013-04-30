@@ -53,6 +53,18 @@ check_command_and_dependencies () {
   fi
 }
 
+check_apt_dependencies () {
+  for c in $@; do
+    if ! check_apt_dependency $c; then
+      MISSING_PACKAGES=( ${MISSING_PACKAGES[@]} $c )
+    fi
+  done
+}
+
+check_apt_dependency () {
+  apt-cache pkgnames | grep -q $1 && return 0
+}
+
 check_brew_dependencies () {
   for c in $@; do
     if ! check_brew_dependency $c; then
@@ -68,8 +80,9 @@ check_brew_dependency () {
 main () {
   # linux ??
   if is_debian; then
-    check_commands curl git bash zsh 
+    check_commands curl git bash zsh autoconf libtool bison pkg-config
     check_command vim vim-nox
+    check_apt_dependencies libreadline6-dev zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libgdbm-dev libncurses5-dev libffi-dev
   elif is_osx; then
     # common dependencies
     check_commands curl git zsh vim
