@@ -8,9 +8,9 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " upadate
 if has('vim_starting')
-  set runtimepath+=/Users/ushu/.vim/bundle/neobundle.vim/
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
-call neobundle#rc(expand('/Users/ushu/.vim/bundle/'))
+call neobundle#rc(expand('~/.vim/bundle/'))
  
 NeoBundleFetch 'Shougo/neobundle.vim'
 "

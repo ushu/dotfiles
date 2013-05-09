@@ -79,6 +79,18 @@ check_brew_dependency () {
 
 main () {
   # linux ??
+  if is_osx; then
+      if !command_available brew; then
+          ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
+      fi
+      echo "Preparing brew for multi-user"
+      # sudo chgrp -R admin /usr/local
+      # sudo chmod -R g+w /usr/local
+      # sudo chgrp -R admin /Library/Caches/Homebrew
+      # sudo chmod -R g+w /Library/Caches/Homebrew
+      # sudo chmod g+x /Library/Caches/Homebrew
+  fi
+
   if is_debian; then
     check_commands curl git bash zsh autoconf libtool bison pkg-config
     check_command vim vim-nox

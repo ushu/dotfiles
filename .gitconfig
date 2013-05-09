@@ -19,11 +19,11 @@
     rbt = "!f() { git rbn `git today | wc -l | xargs echo`; }; f"
     rbr = "!f() { git rbn `git rstat "$1" | wc -l | xargs echo`; }; f"
 [user]
-	name = Aurélien Noce
-	email = aurnoce@gmail.com
+	name = Aurélien Noce
+	email = aurelien.noce@imagine-app.fr
 [core]
 	editor = /usr/bin/env vim
-	excludesfile = /Users/ushu/.gitignore_global
+	excludesfile = $HOME/.gitignore_global
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
