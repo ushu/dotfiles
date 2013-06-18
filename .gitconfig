@@ -17,12 +17,13 @@
     gt = "!f() { echo "Commits made today"; git gr -`git today | wc -l | xargs echo`; }; f"
     br = branch
     cb = "!f() { git branch --list | grep \"^*\" | cut -b3-; }; f"
-    lgo = "!f() { current=`git cb`; distant="$1"; if [ -z "$distant" ]; then distant=`git branch | grep develop && head -n1 || echo master`; fi; echo "Diffing current branch \\($current\\) with origin/$distant"; git lg origin/"$distant".."$current"; }; f"
-    gro = "!f() { current=`git cb`; distant="$1"; if [ -z "$distant" ]; then distant=`git branch | grep develop && head -n1 || echo master`; fi; echo "Graphing from current branch \\($current\\) to origin/$distant"; git gr origin/"$distant".."$current"; }; f"
+    lgo = "!f() { current=`git cb`; distant="$1"; if [ -z "$distant" ];then distant=`git branch | grep develop | xargs echo`;fi; if [ -z "$distant" ];then distant="master";fi; echo "Diffing current branch \\($current\\) with origin/$distant"; git lg origin/"$distant".."$current"; }; f"
+    gro = "!f() { current=`git cb`; distant="$1"; if [ -z "$distant" ];then distant=`git branch | grep develop | xargs echo`;fi; if [ -z "$distant" ];then distant="master";fi; echo "Grpahing differences between current branch \\($current\\) and origin/$distant"; git gr origin/"$distant".."$current"; }; f"
     ri = "!f() { git rebase -i HEAD~"$1"; }; f"
     rt = "!f() { git ri `git today | wc -l | xargs echo`; }; f"
+    abort = rebase --abort
 [user]
-	name = Aurélien Noce
+	name = Aurélien Noce
 	email = aurelien.noce@imagine-app.fr
 [core]
 	editor = /usr/bin/env vim
