@@ -8,9 +8,9 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " upadate
 if has('vim_starting')
-  set runtimepath+=/Users/ushu/.vim/bundle/neobundle.vim/
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
-call neobundle#rc(expand('/Users/ushu/.vim/bundle/'))
+call neobundle#rc(expand('~/.vim/bundle/'))
  
 NeoBundleFetch 'Shougo/neobundle.vim'
 "
@@ -43,6 +43,7 @@ set hlsearch
 set ignorecase smartcase
 " highlight current line
 set cursorline
+set cursorcolumn
 set cmdheight=2
 set switchbuf=useopen
 set numberwidth=5

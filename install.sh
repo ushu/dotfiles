@@ -79,6 +79,18 @@ check_brew_dependency () {
 
 main () {
   # linux ??
+  if is_osx; then
+      if !command_available brew; then
+          ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
+      fi
+      echo "Preparing brew for multi-user"
+      # sudo chgrp -R admin /usr/local
+      # sudo chmod -R g+w /usr/local
+      # sudo chgrp -R admin /Library/Caches/Homebrew
+      # sudo chmod -R g+w /Library/Caches/Homebrew
+      # sudo chmod g+x /Library/Caches/Homebrew
+  fi
+
   if is_debian; then
     check_commands curl git bash zsh autoconf libtool bison pkg-config
     check_command vim vim-nox
@@ -126,12 +138,13 @@ main () {
     if [ -d "$DOTFILES" ]; then
       cd "$DOTFILES" && git pull origin master
     else
-      git clone https://github.com/ushu/dotfiles $DOTFILES
+      git clone --recursive http://github.com/ushu/dotfiles.git $DOTFILES
+
+      [ -f "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
+      [ -d "$HOME/.vim" ] || ln -s "$DOTFILES/.vim" "$HOME/.vim"
+      [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
     fi
 
-    [ -f "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
-    [ -d "$HOME/.vim" ] || ln -s "$DOTFILES/.vim" "$HOME/.vim"
-    [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
   fi
   
   if check_command_and_dependencies rvm curl bash git; then

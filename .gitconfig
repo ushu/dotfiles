@@ -22,7 +22,7 @@
     ri = "!f() { git rebase -i HEAD~"$1"; }; f"
     rt = "!f() { git ri `git today | wc -l | xargs echo`; }; f"
 [user]
-	name = Aurélien Noce
+	name = Aurélien Noce
 	email = aurelien.noce@imagine-app.fr
 [core]
 	editor = /usr/bin/env vim

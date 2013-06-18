@@ -218,9 +218,8 @@ neobundle-options-stay_same	neobundle.txt	/*neobundle-options-stay_same*
 neobundle-options-tail_path	neobundle.txt	/*neobundle-options-tail_path*
 neobundle-options-terminal	neobundle.txt	/*neobundle-options-terminal*
 neobundle-options-type	neobundle.txt	/*neobundle-options-type*
+neobundle-options-type__filename	neobundle.txt	/*neobundle-options-type__filename*
 neobundle-options-type__protocol	neobundle.txt	/*neobundle-options-type__protocol*
-neobundle-options-type__shallow	neobundle.txt	/*neobundle-options-type__shallow*
-neobundle-options-type__update_style	neobundle.txt	/*neobundle-options-type__update_style*
 neobundle-recipe	neobundle.txt	/*neobundle-recipe*
 neobundle-unite-source-neobundle	neobundle.txt	/*neobundle-unite-source-neobundle*
 neobundle-unite-source-neobundle-install	neobundle.txt	/*neobundle-unite-source-neobundle-install*
