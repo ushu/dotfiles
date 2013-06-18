@@ -1,29 +1,32 @@
 [alias]
 	co = checkout
 	ci = commit
+	cm = commit -m 
 	aa = add --all
     st = status
 	ffs = flow feature start
 	fff = flow feature finish
+	ffc = flow feature checkout
 	frs = flow release start
 	frf = flow release finish
 	dc = diff --color
-	ffc = flow feature checkout
-	lo = log --oneline
-	gr = log --graph --oneline
-	gra = log --graph --oneline --all
+    lg = log --oneline --all --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+    gr = log --graph --oneline --all --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
 	today = log --oneline --since='yesterday'
-    rstat = "!f() { git lo origin/"$1".."$1"; }; f"
-    grstat = "!f() { git gra origin/"$1".."$1"; }; f"
-    rbn = "!f() { git rebase -i HEAD~"$1"; }; f"
-    rbt = "!f() { git rbn `git today | wc -l | xargs echo`; }; f"
-    rbr = "!f() { git rbn `git rstat "$1" | wc -l | xargs echo`; }; f"
+    br = branch
+    cb = "!f() { git branch --list | grep \"^*\" | cut -b3-; }; f"
+    lgo = "!f() { distant="${1-develop}"; git lg origin/"$distant"..`git cb`; }; f"
+    gro = "!f() { distant="${1-develop}"; git gr origin/"$distant"..`git cb`; }; f"
+    ri = "!f() { git rebase -i HEAD~"$1"; }; f"
+    rt = "!f() { git ri `git today | wc -l | xargs echo`; }; f"
+    rg = "!f() { git ri `git rstat "$1" | wc -l | xargs echo`; }; f"
 [user]
 	name = Aurélien Noce
-	email = aurnoce@gmail.com
+	email = aurelien.noce@imagine-app.fr
 [core]
 	editor = /usr/bin/env vim
-	excludesfile = /Users/ushu/.gitignore_global
+	excludesfile = $HOME/.gitignore_global
+	filemode = false
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
