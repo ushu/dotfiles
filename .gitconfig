@@ -3,25 +3,25 @@
 	ci = commit
 	cm = commit -m 
 	aa = add --all
-    st = status
+  st = status
 	ffs = flow feature start
 	fff = flow feature finish
 	ffc = flow feature checkout
 	frs = flow release start
 	frf = flow release finish
 	dc = diff --color
-    lg = log --oneline --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
-    lt = "!f() { echo "Commits made today"; git lg -`git today | wc -l | xargs echo`; }; f"
-    gr = log --graph --oneline --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
-	today = log --oneline --since='yesterday'
-    gt = "!f() { echo "Commits made today"; git gr -`git today | wc -l | xargs echo`; }; f"
-    br = branch
-    cb = "!f() { git branch --list | grep \"^*\" | cut -b3-; }; f"
-    lgo = "!f() { current=`git cb`; distant="$1"; if [ -z "$distant" ];then distant=`git branch | grep develop | xargs echo`;fi; if [ -z "$distant" ];then distant="master";fi; echo "Diffing current branch \\($current\\) with origin/$distant"; git lg origin/"$distant".."$current"; }; f"
-    gro = "!f() { current=`git cb`; distant="$1"; if [ -z "$distant" ];then distant=`git branch | grep develop | xargs echo`;fi; if [ -z "$distant" ];then distant="master";fi; echo "Grpahing differences between current branch \\($current\\) and origin/$distant"; git gr origin/"$distant".."$current"; }; f"
-    ri = "!f() { git rebase -i HEAD~"$1"; }; f"
-    rt = "!f() { git ri `git today | wc -l | xargs echo`; }; f"
-    abort = rebase --abort
+  lg = log --oneline --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+  td = "!f() { echo "Commits made today"; git today; }; f"
+  gr = log --graph --oneline --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+  today = "!f() { git lg --since='yesterday'; }; f"
+  gt = "!f() { echo "Commits made today"; git gr -`git today | wc -l | xargs echo`; }; f"
+  br = branch
+  cb = "!f() { git branch --list | grep \"^*\" | cut -b3-; }; f"
+  lo = "!f() { current=`git cb`; distant="$1"; if [ -z "$distant" ];then distant=`git branch | grep develop | sed -e \"s/\\*\\ //\"`;fi; if [ -z "$distant" ];then distant="master";fi; echo "Diffing current branch \\($current\\) with origin/$distant"; git lg origin/"$distant".."$current"; }; f"
+  go = "!f() { current=`git cb`; distant="$1"; if [ -z "$distant" ];then distant=`git branch | grep develop | sed -e \"s/\\*\\ //\"`;fi; if [ -z "$distant" ];then distant="master";fi; echo "Graphing differences between current branch \\($current\\) and origin/$distant"; git gr origin/"$distant".."$current"; }; f"
+  ri = "!f() { git rebase -i HEAD~"$1"; }; f"
+  rt = "!f() { git ri `git today | wc -l | xargs echo`; }; f"
+  abort = rebase --abort
 [user]
 	name = Aurélien Noce
 	email = aurelien.noce@imagine-app.fr
