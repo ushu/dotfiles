@@ -78,7 +78,7 @@ check_brew_dependency () {
 }
 
 install_homebrew () {
-  if !command_available brew; then
+  if ! command_available brew; then
     ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
 
     echo "Preparing brew for multi-user"
