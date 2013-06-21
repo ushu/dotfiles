@@ -14,11 +14,12 @@ call neobundle#rc(expand('~/.vim/bundle/'))
  
 NeoBundleFetch 'Shougo/neobundle.vim'
 "
-NeoBundle 'kien/ctrlp.vim' 
 NeoBundle 'matchit.zip' 
 NeoBundle 'molokai' 
 NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'othree/html5.vim' 
+NeoBundle 'lunaru/vim-less' 
+NeoBundle 'tpope/vim-cucumber' 
 "
 NeoBundleCheck
 
@@ -31,9 +32,9 @@ set hidden
 " remember more commands and search history
 set history=10000
 set expandtab
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
 set autoindent
 set laststatus=2
 set showmatch
@@ -169,45 +170,6 @@ map <Down> <Nop>
 " OPEN FILES IN DIRECTORY OF CURRENT FILE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
-map <leader>e :edit %%
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" RENAME CURRENT FILE
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! RenameFile()
-    let old_name = expand('%')
-    let new_name = input('New file name: ', expand('%'), 'file')
-    if new_name != '' && new_name != old_name
-        exec ':saveas ' . new_name
-        exec ':silent !rm ' . old_name
-        redraw!
-    endif
-endfunction
-map <leader>n :call RenameFile()<cr>
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" MAPS TO JUMP TO SPECIFIC COMMAND-T TARGETS AND FILES
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! ShowRoutes()
-  " Requires 'scratch' plugin
-  :topleft 100 :split __Routes__
-  " Make sure Vim doesn't write __Routes__ as a file
-  :set buftype=nofile
-  " Delete everything
-  :normal 1GdG
- " Put routes output in buffer
-  :0r! bundle exec rake -s routes
-  " Size window to number of lines (1 plus rake output length)
-  :exec ":normal " . line("$") . "_ "
-  " Move cursor to bottom
-  :normal 1GG
-  " Delete empty trailing line
-  :normal dd
-endfunction
-map <leader>r :call ShowRoutes()<cr>
-"map <leader>ga :CtrlPClearCache<cr>\|:CtrlP app<cr>
-map <leader>gg :topleft 100 :split Gemfile<cr>
-map <leader>gr :topleft :split config/routes.rb<cr>
 map <leader>e :e %%<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
