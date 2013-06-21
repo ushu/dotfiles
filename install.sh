@@ -77,18 +77,24 @@ check_brew_dependency () {
   brew list | grep -q $1 && return 0
 }
 
+install_homebrew () {
+  if !command_available brew; then
+    ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
+
+    echo "Preparing brew for multi-user"
+    sudo chgrp -R admin /usr/local
+    sudo chmod -R g+w /usr/local
+    sudo chgrp -R admin /Library/Caches/Homebrew
+    sudo chmod -R g+w /Library/Caches/Homebrew
+    sudo chmod g+x /Library/Caches/Homebrew
+  fi
+}
+
+
 main () {
   # linux ??
   if is_osx; then
-      if !command_available brew; then
-          ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
-      fi
-      echo "Preparing brew for multi-user"
-      # sudo chgrp -R admin /usr/local
-      # sudo chmod -R g+w /usr/local
-      # sudo chgrp -R admin /Library/Caches/Homebrew
-      # sudo chmod -R g+w /Library/Caches/Homebrew
-      # sudo chmod g+x /Library/Caches/Homebrew
+    install_homebrew
   fi
 
   if is_debian; then
