@@ -20,6 +20,7 @@ NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'othree/html5.vim' 
 NeoBundle 'lunaru/vim-less' 
 NeoBundle 'tpope/vim-cucumber' 
+NeoBundle 'tristen/vim-sparkup'
 "
 NeoBundleCheck
 
