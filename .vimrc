@@ -1,10 +1,7 @@
-" My little .vimrc, mostly copied from Gary Bernhardt's .vimrc file
-" since his setup is just awesome, I mostly remote stuff instead of
-" adding (or for some functions I keep them to lean vimscript...)
 " vim:set ts=2 sts=2 sw=2 expandtab:
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Using NeoBundle package Manager
+" PACKAGES
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " upadate
 if has('vim_starting')
@@ -13,36 +10,46 @@ endif
 call neobundle#rc(expand('~/.vim/bundle/'))
  
 NeoBundleFetch 'Shougo/neobundle.vim'
-"
+" syntaxes
 NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'othree/html5.vim' 
 NeoBundle 'lunaru/vim-less' 
 NeoBundle 'tpope/vim-cucumber' 
-"
+NeoBundle 'cakebaker/scss-syntax.vim'
+" plugins
+"" add C-p to loop through previous yanks
+NeoBundle 'YankRing.vim'
+"" fast search through files
+NeoBundle 'kien/ctrlp.vim'
+"" (we change the mapping to `` to avoid collision with the yankring)
+:noremap `` :CtrlP<cr>
+:noremap <leader>` :CtrlPClearCache<cr> :CtrlP<cr>
+"" ignore
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules$',
+  \ 'file': '\v\.(exe|so|dll)$'
+  \ }
+"" smart syntax checker
+NeoBundle 'scrooloose/syntastic'
+let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
 NeoBundleCheck
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" BASIC EDITING CONFIGURATION
+" TONS OF OPTIONS
+" (these are mostly copied from Gary Bernhart's .vimrc)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set nocompatible
-" allow unsaved background buffers and remember marks/undo for them
+" allow unsaved buffers
 set hidden
 " remember more commands and search history
 set history=10000
-set expandtab
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
-set autoindent
 set laststatus=2
+" show mathing paren
 set showmatch
+" search options
 set incsearch
 set hlsearch
 " make searches case-sensitive only if they contain upper-case characters
-set ignorecase smartcase
-" highlight current line
-"set cursorline
-"set cursorcolumn
 set cmdheight=2
 set switchbuf=useopen
 set numberwidth=5
@@ -56,9 +63,8 @@ set t_ti= t_te=
 " keep more context when scrolling off the end of a buffer
 set scrolloff=3
 " Store temporary files in a central spot
-set backup
-set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
-set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set nobackup
+set noswapfile
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 " display incomplete commands
@@ -74,51 +80,9 @@ filetype plugin indent on
 set wildmode=longest,list
 " make tab completion for files/buffers act like bash
 set wildmenu
-let mapleader=","
 " Fix slow O inserts
 :set timeout timeoutlen=1000 ttimeoutlen=100
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" CUSTOM AUTOCMDS
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-augroup vimrcEx
-  " Clear all autocmds in the group
-  autocmd!
-  autocmd FileType text setlocal textwidth=78
-  " Jump to last cursor position unless it's invalid or in an event handler
-  autocmd BufReadPost *
-    \ if line("'\"") > 0 && line("'\"") <= line("$") |
-    \   exe "normal g`\"" |
-    \ endif
-
-  "for ruby, autoindent with two spaces, always expand tabs
-  autocmd FileType ruby,haml,eruby,yaml,html,javascript,sass,cucumber set ai sw=2 sts=2 et
-  autocmd FileType javascript set cindent sw=2 sts=2 et
-  autocmd FileType python set sw=4 sts=4 et
-
-  autocmd! BufRead,BufNewFile *.sass setfiletype sass 
-  autocmd! BufRead,BufNewFile *.json setfiletype javascript
-  autocmd! BufRead,BufNewFile Gemfile setfiletype ruby
-
-  autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:&gt;
-  autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:&gt;
-
-  " Indent p tags
-  autocmd FileType html,eruby if g:html_indent_tags !~ '\\|p\>' | let g:html_indent_tags .= '\|p\|li\|dt\|dd' | endif
-
-  " Don't syntax highlight markdown because it's often wrong
-  autocmd! FileType mkd setlocal syn=off
-
-  " Leave the return key alone when in command line windows, since it's used
-  " to run commands there.
-  autocmd! CmdwinEnter * :unmap <cr>
-  autocmd! CmdwinLeave * :call MapCR()
-augroup END
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" COLOR
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" color
 colorscheme koehler
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -127,16 +91,54 @@ colorscheme koehler
 :set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" MISC KEY MAPS
+" EDIT OPTIONS 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map <leader>y "*y
+set expandtab
+set ignorecase smartcase
+
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set autoindent
+
+augroup vimrcEx
+  " Clear all autocmds in the group
+  autocmd!
+  " Jump to last cursor position unless it's invalid or in an event handler
+  autocmd BufReadPost *
+    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal g`\"" |
+    \ endif
+
+  autocmd! BufRead,BufNewFile *.sass setfiletype sass 
+  autocmd! BufRead,BufNewFile *.json setfiletype javascript
+  autocmd! BufRead,BufNewFile Gemfile setfiletype ruby
+  autocmd! BufRead,BufNewFile Procfile setfiletype ruby
+
+  " Indent p tags
+  autocmd FileType html,eruby if g:html_indent_tags !~ '\\|p\>' | let g:html_indent_tags .= '\|p\|li\|dt\|dd' | endif
+augroup END
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" CUSTOM KEY MAPS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let mapleader=","
+
+map <Left> <Nop>
+map <Right> <Nop>
+map <Up> <Nop>
+map <Down> <Nop>
 " Move around splits with <c-hjkl>
 nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
-" Insert a hash rocket with <c-l>
-imap <c-l> <space>=><space>
+" more split joy
+nnoremap <leader>j <c-w>s <c-w>j
+nnoremap <leader>k <c-w>s
+nnoremap <leader>h <c-w>v
+nnoremap <leader>l <c-w>v <c-w>l
+nnoremap <leader>d <c-w>c
 " Can't be bothered to understand ESC vs <c-c> in insert mode
 imap <c-c> <esc>
 " Clear the search buffer when hitting return
@@ -145,8 +147,12 @@ function! MapCR()
 endfunction
 call MapCR()
 nnoremap <leader><leader> <c-^>
+" %% = current file
+cnoremap %% <C-R>=expand('%:h').'/'<cr>
+map <leader>e :e %%<cr>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " MULTIPURPOSE TAB KEY
-" Indent if we're at the beginning of a line. Else, do completion.
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! InsertTabWrapper()
     let col = col('.') - 1
@@ -158,18 +164,4 @@ function! InsertTabWrapper()
 endfunction
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>
 inoremap <s-tab> <c-n>
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" ARROW KEYS ARE UNACCEPTABLE
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map <Left> <Nop>
-map <Right> <Nop>
-map <Up> <Nop>
-map <Down> <Nop>
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" OPEN FILES IN DIRECTORY OF CURRENT FILE
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-cnoremap %% <C-R>=expand('%:h').'/'<cr>
-map <leader>e :e %%<cr>
 
