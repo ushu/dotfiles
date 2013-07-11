@@ -4,6 +4,7 @@
 	cm = commit -m 
 	aa = add --all
   st = status
+  mm = merge --no-ff
 	ffs = flow feature start
 	fff = flow feature finish
 	ffc = flow feature checkout
