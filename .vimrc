@@ -8,13 +8,13 @@ if has('vim_starting')
   set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
 call neobundle#rc(expand('~/.vim/bundle/'))
- 
+
 NeoBundleFetch 'Shougo/neobundle.vim'
 " syntaxes
 NeoBundle 'jelera/vim-javascript-syntax'
-NeoBundle 'othree/html5.vim' 
-NeoBundle 'lunaru/vim-less' 
-NeoBundle 'tpope/vim-cucumber' 
+NeoBundle 'othree/html5.vim'
+NeoBundle 'lunaru/vim-less'
+NeoBundle 'tpope/vim-cucumber'
 NeoBundle 'cakebaker/scss-syntax.vim'
 " plugins
 "" add C-p to loop through previous yanks
@@ -91,7 +91,7 @@ colorscheme koehler
 :set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" EDIT OPTIONS 
+" EDIT OPTIONS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set expandtab
 set ignorecase smartcase
@@ -110,13 +110,14 @@ augroup vimrcEx
     \   exe "normal g`\"" |
     \ endif
 
-  autocmd! BufRead,BufNewFile *.sass setfiletype sass 
+  autocmd! BufRead,BufNewFile *.sass setfiletype sass
   autocmd! BufRead,BufNewFile *.json setfiletype javascript
   autocmd! BufRead,BufNewFile Gemfile setfiletype ruby
   autocmd! BufRead,BufNewFile Procfile setfiletype ruby
 
-  " Indent p tags
-  autocmd FileType html,eruby if g:html_indent_tags !~ '\\|p\>' | let g:html_indent_tags .= '\|p\|li\|dt\|dd' | endif
+  " auto removing of ending spaces
+  autocmd FileType ruby,python,javascript,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
+
 augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -164,4 +165,11 @@ function! InsertTabWrapper()
 endfunction
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>
 inoremap <s-tab> <c-n>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" HANDLING THE EMPTY LINES END OEL SPACES
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" color in rend EOL spaces and empty lines
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$\| \+\ze\t/
 
