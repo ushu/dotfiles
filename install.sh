@@ -43,7 +43,7 @@ check_command_and_dependencies () {
       if ! command_available $c; then
         missing=( ${missing[@]} $c )
       fi
-    done 
+    done
     if [ ${#missing[@]} -ne 0 ]; then
       echo "cannot install" $1 "because of missing dependencies" ${missing[@]}
       return 1
@@ -108,13 +108,15 @@ main () {
     check_commands autoconf automake libtool apple-gcc42
     check_brew_dependencies libyaml libxml2 libxslt libksba sqlite
   fi
-  
+
   if [ ${#MISSING_PACKAGES[@]} -ne 0 ]; then
     if is_debian; then
       sudo apt-get install ${MISSING_PACKAGES[@]}
     elif is_osx; then
       brew install ${MISSING_PACKAGES[@]}
     fi
+    # add gjslint
+    easy_install http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz
   fi
 
   if check_command_and_dependencies nvm curl git; then
@@ -152,7 +154,7 @@ main () {
     fi
 
   fi
-  
+
   if check_command_and_dependencies rvm curl bash git; then
     curl -L https://get.rvm.io | bash -s stable --rails --autolibs=enabled
     source "$HOME/.nvm/nvm.sh"
@@ -160,7 +162,7 @@ main () {
     rvm get stable
   fi
 
-  
+
   if ! rvm list | grep -q 1.9.3; then
     # grab the last available binary version
     RUBY19=$(rvm list --remote | grep 1.9.3 | tail -n 1 | cut -d\  -f3)
@@ -173,8 +175,6 @@ main () {
   if ! rvm list | grep -q 2.0; then
     rvm install 2.0
   fi
-  
-
 
 }
 
