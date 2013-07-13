@@ -20,15 +20,12 @@ NeoBundle 'cakebaker/scss-syntax.vim'
 """""""" plugins
 " better ststus line
 NeoBundle "Lokaltog/vim-powerline"
-" add C-p to loop through previous yanks
-"NeoBundle 'YankRing.vim'
 " fast search through files
 NeoBundle 'kien/ctrlp.vim'
 " smart syntax checker
 NeoBundle 'scrooloose/syntastic'
 " Smart Tab completion
 NeoBundle "Shougo/neocomplcache.vim"
-NeoBundle "Shougo/neosnippet.vim"
 " git integration
 NeoBundle "tpope/vim-fugitive"
 NeoBundleCheck
@@ -39,7 +36,6 @@ filetype plugin indent on
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPTIONS FOR PLUGINS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 """""""" Ctrlp
 " ignore node_modules, etc
 let g:ctrlp_custom_ignore = {
@@ -55,23 +51,6 @@ let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
 let g:neocomplcache_enable_at_startup = 1
 " Supertab-like behavious (found in the docs :))
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-      \ "\<Plug>(neosnippet_expand_or_jump)"
-      \: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-      \ "\<Plug>(neosnippet_expand_or_jump)"
-      \: "\<TAB>"
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" OMNI COMPLETION
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
@@ -147,6 +126,14 @@ augroup vimrcEx
 
   " auto removing of ending spaces
   autocmd FileType ruby,python,javascript,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
+
+  " Enable omni completion.
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+  autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 augroup END
 
