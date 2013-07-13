@@ -1,38 +1,77 @@
 " vim:set ts=2 sts=2 sw=2 expandtab:
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" PACKAGES
+" LOAD PLUGINS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" upadate
+" Load package manager
 if has('vim_starting')
   set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
 call neobundle#rc(expand('~/.vim/bundle/'))
 
+"""""""" keep package manager up-to-date
 NeoBundleFetch 'Shougo/neobundle.vim'
-" syntaxes
+"""""""" syntaxes
 NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'othree/html5.vim'
 NeoBundle 'lunaru/vim-less'
 NeoBundle 'tpope/vim-cucumber'
 NeoBundle 'cakebaker/scss-syntax.vim'
-" plugins
-"" add C-p to loop through previous yanks
-NeoBundle 'YankRing.vim'
-"" fast search through files
+"""""""" plugins
+" better ststus line
+NeoBundle "Lokaltog/vim-powerline"
+" add C-p to loop through previous yanks
+"NeoBundle 'YankRing.vim'
+" fast search through files
 NeoBundle 'kien/ctrlp.vim'
-"" (we change the mapping to `` to avoid collision with the yankring)
-:noremap `` :CtrlP<cr>
-:noremap <leader>` :CtrlPClearCache<cr> :CtrlP<cr>
-"" ignore
+" smart syntax checker
+NeoBundle 'scrooloose/syntastic'
+" Smart Tab completion
+NeoBundle "Shougo/neocomplcache.vim"
+NeoBundle "Shougo/neosnippet.vim"
+" git integration
+NeoBundle "tpope/vim-fugitive"
+NeoBundleCheck
+
+" enable everything
+filetype plugin indent on
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" OPTIONS FOR PLUGINS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"""""""" Ctrlp
+" ignore node_modules, etc
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules$',
   \ 'file': '\v\.(exe|so|dll)$'
   \ }
-"" smart syntax checker
-NeoBundle 'scrooloose/syntastic'
+""" disable "root" detection (find .git => start at CWD)
+let g:ctrlp_working_path_mode = ''
+"""""""" Syntastic
+" use google's gslint
 let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
-NeoBundleCheck
+"""""""" NeoCompleteCache
+let g:neocomplcache_enable_at_startup = 1
+" Supertab-like behavious (found in the docs :))
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+      \ "\<Plug>(neosnippet_expand_or_jump)"
+      \: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+      \ "\<Plug>(neosnippet_expand_or_jump)"
+      \: "\<TAB>"
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" OMNI COMPLETION
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
@@ -71,11 +110,6 @@ set backspace=indent,eol,start
 set showcmd
 " Enable highlighting for syntax
 syntax on
-" Enable file type detection.
-" Use the default filetype settings, so that mail gets 'tw' set to 72,
-" 'cindent' is on in C files, etc.
-" Also load indent files, to automatically do language-dependent indenting.
-filetype plugin indent on
 " use emacs-style tab completion when selecting files, etc
 set wildmode=longest,list
 " make tab completion for files/buffers act like bash
@@ -85,10 +119,6 @@ set wildmenu
 " color
 colorscheme koehler
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" STATUS LINE
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-:set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " EDIT OPTIONS
@@ -151,20 +181,6 @@ nnoremap <leader><leader> <c-^>
 " %% = current file
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
 map <leader>e :e %%<cr>
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" MULTIPURPOSE TAB KEY
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! InsertTabWrapper()
-    let col = col('.') - 1
-    if !col || getline('.')[col - 1] !~ '\k'
-        return "\<tab>"
-    else
-        return "\<c-p>"
-    endif
-endfunction
-inoremap <tab> <c-r>=InsertTabWrapper()<cr>
-inoremap <s-tab> <c-n>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " HANDLING THE EMPTY LINES END OEL SPACES
