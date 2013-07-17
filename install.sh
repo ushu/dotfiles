@@ -87,14 +87,26 @@ install_homebrew () {
     sudo chgrp -R admin /Library/Caches/Homebrew
     sudo chmod -R g+w /Library/Caches/Homebrew
     sudo chmod g+x /Library/Caches/Homebrew
+
+    # add repo for gcc
+    echo "add additional sources"
+    brew tap homebrew/dupes
+
+    # patch /etc/paths to help homebrew
+    echo "patch /etc/paths (old version in $DOTFILES/.paths.backup)"
+    cp /etc/paths .paths.backup
+    sed '/[/]usr[/]local[/]bin/d' /etc/paths | sed '1 i\
+/usr/local/bin
+' > "$DOTFILES/paths"
+    sudo mv "$DOTFILES/paths" /etc/paths
   fi
 }
-
 
 main () {
   # linux ??
   if is_osx; then
     install_homebrew
+
   fi
 
   if is_debian; then
@@ -105,8 +117,8 @@ main () {
     # common dependencies
     check_commands curl git zsh vim
     # for ruby/rails
-    check_commands autoconf automake libtool apple-gcc42
-    check_brew_dependencies libyaml libxml2 libxslt libksba sqlite
+    check_commands autoconf automake libtool
+    check_brew_dependencies libyaml libxml2 libxslt libksba sqlite apple-gcc42 gcc49
   fi
 
   if [ ${#MISSING_PACKAGES[@]} -ne 0 ]; then
@@ -136,7 +148,6 @@ main () {
 
   # node-based tools
   for c in grunt "less"; do
-    #echo "installing" $c
     if check_command_and_dependencies $c npm; then
       npm install -g $c
     fi
@@ -146,13 +157,21 @@ main () {
     if [ -d "$DOTFILES" ]; then
       cd "$DOTFILES" && git pull origin master
     else
-      git clone --recursive http://github.com/ushu/dotfiles.git $DOTFILES
+      # clone and init all submodules
+      git clone http://github.com/ushu/dotfiles.git $DOTFILES
+      cd $DOTFILES
+      git submudule init
+      cd ..
 
+      # vim config
       [ -f "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
       [ -d "$HOME/.vim" ] || ln -s "$DOTFILES/.vim" "$HOME/.vim"
+      # git config
       [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
+      # zsh config
+      [ -d "$HOME/.oh-my-zsh" ] || git clone git://github.com/robbyrussell/oh-my-zsh.git "$HOME/.oh-my-zsh"
+      [ -f "$HOME/.zshrc" ] || ln -s "$DOTFILES/.zshrc" "$HOME/.zshrc" && chsh -s /bin/zsh
     fi
-
   fi
 
   if check_command_and_dependencies rvm curl bash git; then
