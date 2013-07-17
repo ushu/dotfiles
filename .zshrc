@@ -5,7 +5,7 @@
 ZSH=$HOME/.oh-my-zsh
 
 # theme
-ZSH_THEME="miloshadzic"
+ZSH_THEME="wedisagree"
 # plugins
 plugins=(git rails ruby)
 
