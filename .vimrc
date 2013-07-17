@@ -12,7 +12,7 @@ call neobundle#rc(expand('~/.vim/bundle/'))
 """""""" keep package manager up-to-date
 NeoBundleFetch 'Shougo/neobundle.vim'
 """""""" syntaxes
-NeoBundle 'jelera/vim-javascript-syntax'
+NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'othree/html5.vim'
 NeoBundle 'lunaru/vim-less'
 NeoBundle 'tpope/vim-cucumber'
@@ -29,6 +29,9 @@ NeoBundle 'scrooloose/syntastic'
 NeoBundle "Shougo/neocomplcache.vim"
 " git integration
 NeoBundle "tpope/vim-fugitive"
+"""""""" color
+NeoBundle 'vylight'
+
 NeoBundleCheck
 
 " enable everything
@@ -40,7 +43,7 @@ filetype plugin indent on
 """""""" Ctrlp
 " ignore node_modules, etc
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules$',
+  \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules$|vendor',
   \ 'file': '\v\.(exe|so|dll)$'
   \ }
 """ disable "root" detection (find .git => start at CWD)
@@ -97,7 +100,7 @@ set wildmenu
 " Fix slow O inserts
 :set timeout timeoutlen=1000 ttimeoutlen=100
 " color
-colorscheme koehler
+colorscheme vylight
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -177,3 +180,17 @@ map <leader>e :e %%<cr>
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$\| \+\ze\t/
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ACCESS EXTRENAL PROGRAMS WITHOUT THE !
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+noreabbrev git !git
+noreabbrev rails !rails
+noreabbrev rake !rake
+noreabbrev npm !npm
+noreabbrev nvm !nvm
+noreabbrev rvm !rvm
+noreabbrev guard !guard
+
+" a few extra-short abbrvs
+noreabbrev g !git
+noreabbrev r !rails
