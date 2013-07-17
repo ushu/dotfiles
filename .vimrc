@@ -41,12 +41,12 @@ NeoBundleCheck
 filetype plugin indent on
 
 " light theme
-"set background=light
-"colorscheme vylight
+set background=light
+colorscheme vylight
 " dark theme
-let g:solarized_termcolors=256
-colorscheme solarized
-set background=dark
+"let g:solarized_termcolors=256
+"colorscheme solarized
+"set background=dark
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -87,7 +87,6 @@ set hlsearch
 set cmdheight=2
 set switchbuf=useopen
 set numberwidth=5
-set showtabline=2
 set winwidth=79
 " This makes RVM work inside Vim. I have no idea why.
 set shell=bash
