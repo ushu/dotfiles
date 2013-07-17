@@ -22,6 +22,7 @@ NeoBundle 'kchmck/vim-coffee-script'
 " better ststus line
 NeoBundle "Lokaltog/vim-powerline"
 " fast search through files
+let g:ctrlp_map="<Space>"
 NeoBundle 'kien/ctrlp.vim'
 " smart syntax checker
 NeoBundle 'scrooloose/syntastic'
@@ -29,13 +30,24 @@ NeoBundle 'scrooloose/syntastic'
 NeoBundle "Shougo/neocomplcache.vim"
 " git integration
 NeoBundle "tpope/vim-fugitive"
+NeoBundle "YankRing.vim"
 """""""" color
 NeoBundle 'vylight'
+NeoBundle 'altercation/vim-colors-solarized'
 
 NeoBundleCheck
 
 " enable everything
 filetype plugin indent on
+
+" light theme
+"set background=light
+"colorscheme vylight
+" dark theme
+let g:solarized_termcolors=256
+colorscheme solarized
+set background=dark
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPTIONS FOR PLUGINS
@@ -99,9 +111,6 @@ set wildmode=longest,list
 set wildmenu
 " Fix slow O inserts
 :set timeout timeoutlen=1000 ttimeoutlen=100
-" color
-colorscheme vylight
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " EDIT OPTIONS
@@ -183,14 +192,10 @@ match ExtraWhitespace /\s\+$\| \+\ze\t/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ACCESS EXTRENAL PROGRAMS WITHOUT THE !
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-noreabbrev git !git
-noreabbrev rails !rails
-noreabbrev rake !rake
-noreabbrev npm !npm
-noreabbrev nvm !nvm
-noreabbrev rvm !rvm
-noreabbrev guard !guard
-
-" a few extra-short abbrvs
-noreabbrev g !git
-noreabbrev r !rails
+cnoreabbrev git !git
+cnoreabbrev rails !rails
+cnoreabbrev rake !rake
+cnoreabbrev npm !npm
+cnoreabbrev nvm !nvm
+cnoreabbrev rvm !rvm
+cnoreabbrev guard !guard
