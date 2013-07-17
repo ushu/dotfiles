@@ -147,7 +147,7 @@ main () {
   nvm use 0.10
 
   # node-based tools
-  for c in grunt "less"; do
+  for c in grunt-cli "less" bower yo generator-webapp; do
     if check_command_and_dependencies $c npm; then
       npm install -g $c
     fi
