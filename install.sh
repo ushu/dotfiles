@@ -176,11 +176,12 @@ main () {
 
   if check_command_and_dependencies rvm curl bash git; then
     curl -L https://get.rvm.io | bash -s stable --rails --autolibs=enabled
-    source "$HOME/.nvm/nvm.sh"
+    # load RVM into current shell sessions
+    export PATH="$PATH:$HOME/.rvm/bin"
+    source "$HOME/.rvm/scripts/rvm"
   elif check_commands rvm; then
     rvm get stable
   fi
-
 
   if ! rvm list | grep -q 1.9.3; then
     # grab the last available binary version
