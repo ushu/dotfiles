@@ -17,6 +17,7 @@ NeoBundle 'othree/html5.vim'
 NeoBundle 'lunaru/vim-less'
 NeoBundle 'tpope/vim-cucumber'
 NeoBundle 'cakebaker/scss-syntax.vim'
+NeoBundle 'kchmck/vim-coffee-script'
 """""""" plugins
 " better ststus line
 NeoBundle "Lokaltog/vim-powerline"
@@ -119,10 +120,10 @@ augroup vimrcEx
     \   exe "normal g`\"" |
     \ endif
 
-  autocmd! BufRead,BufNewFile *.sass setfiletype sass
-  autocmd! BufRead,BufNewFile *.json setfiletype javascript
-  autocmd! BufRead,BufNewFile Gemfile setfiletype ruby
-  autocmd! BufRead,BufNewFile Procfile setfiletype ruby
+  autocmd! BufRead,BufNewFile *.sass setlocal filetype=sass
+  autocmd! BufRead,BufNewFile *.json setlocal filetype=javascript
+  autocmd! BufRead,BufNewFile Gemfile setlocal filetype=ruby
+  autocmd! BufRead,BufNewFile Procfile setlocal filetype=ruby
 
   " auto removing of ending spaces
   autocmd FileType ruby,python,javascript,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
