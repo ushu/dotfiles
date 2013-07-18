@@ -20,9 +20,8 @@ NeoBundle 'cakebaker/scss-syntax.vim'
 NeoBundle 'kchmck/vim-coffee-script'
 """""""" plugins
 " better ststus line
-NeoBundle "Lokaltog/vim-powerline"
+NeoBundle "bling/vim-airline"
 " fast search through files
-let g:ctrlp_map="<Space>"
 NeoBundle 'kien/ctrlp.vim'
 " smart syntax checker
 NeoBundle 'scrooloose/syntastic'
@@ -30,7 +29,8 @@ NeoBundle 'scrooloose/syntastic'
 NeoBundle "Shougo/neocomplcache.vim"
 " git integration
 NeoBundle "tpope/vim-fugitive"
-NeoBundle "YankRing.vim"
+" ag integration
+NeoBundle "rking/ag.vim"
 """""""" color
 NeoBundle 'vylight'
 NeoBundle 'altercation/vim-colors-solarized'
@@ -171,11 +171,6 @@ nnoremap <leader>l <c-w>v <c-w>l
 nnoremap <leader>d <c-w>c
 " Can't be bothered to understand ESC vs <c-c> in insert mode
 imap <c-c> <esc>
-" Clear the search buffer when hitting return
-function! MapCR()
-  nnoremap <cr> :nohlsearch<cr>
-endfunction
-call MapCR()
 nnoremap <leader><leader> <c-^>
 " %% = current file
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
@@ -189,12 +184,8 @@ highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$\| \+\ze\t/
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" ACCESS EXTRENAL PROGRAMS WITHOUT THE !
+" TRYING TO LEARN fugitive ?
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-cnoreabbrev git !git
-cnoreabbrev rails !rails
-cnoreabbrev rake !rake
-cnoreabbrev npm !npm
-cnoreabbrev nvm !nvm
-cnoreabbrev rvm !rvm
-cnoreabbrev guard !guard
+nnoremap <leader>gd :Gdiff<cr>
+nnoremap <leader>gs :Gstatus<cr>
+
