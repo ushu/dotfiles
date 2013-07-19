@@ -10,7 +10,10 @@ ZSH_THEME="wedisagree"
 plugins=(git rails ruby)
 
 source $ZSH/oh-my-zsh.sh
+# disable autocorrect
+unsetopt correct_all
 
+export PATH="$PATH:./node_modules/.bin"
 
 ################################################################################
 # Options

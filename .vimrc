@@ -33,7 +33,7 @@ NeoBundle "tpope/vim-fugitive"
 NeoBundle "rking/ag.vim"
 """""""" color
 NeoBundle 'vylight'
-NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'Lokaltog/vim-distinguished'
 
 NeoBundleCheck
 
@@ -41,12 +41,11 @@ NeoBundleCheck
 filetype plugin indent on
 
 " light theme
-set background=light
-colorscheme vylight
+"set background=light
+"colorscheme vylight
 " dark theme
-"let g:solarized_termcolors=256
-"colorscheme solarized
-"set background=dark
+colorscheme distinguished
+set background=dark
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
