@@ -1,5 +1,7 @@
 " vim:set ts=2 sts=2 sw=2 expandtab:
 
+let mapleader=","
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " LOAD PLUGINS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -20,6 +22,10 @@ NeoBundle 'cakebaker/scss-syntax.vim'
 NeoBundle 'kchmck/vim-coffee-script'
 """""""" plugins
 " better ststus line
+"NeoBundle 'Lokaltog/vim-powerline'
+" default separators look ugly on Terminal.app with default font
+let g:airline_left_sep  = ''
+let g:airline_right_sep = ''
 NeoBundle "bling/vim-airline"
 " fast search through files
 NeoBundle 'kien/ctrlp.vim'
@@ -31,6 +37,13 @@ NeoBundle "Shougo/neocomplcache.vim"
 NeoBundle "tpope/vim-fugitive"
 " ag integration
 NeoBundle "rking/ag.vim"
+" zen codign for vim
+let g:user_zen_expandabbr_key='<C-e>'
+let g:user_zen_next_key='<C-d>'
+NeoBundle 'mattn/zencoding-vim'
+" file tree
+nnoremap <leader>. :NERDTreeToggle<CR>
+NeoBundle 'scrooloose/nerdtree'
 """""""" color
 NeoBundle 'vylight'
 NeoBundle 'Lokaltog/vim-distinguished'
@@ -65,7 +78,7 @@ let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
 """""""" NeoCompleteCache
 let g:neocomplcache_enable_at_startup = 1
 " Supertab-like behavious (found in the docs :))
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
@@ -151,7 +164,6 @@ augroup END
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " CUSTOM KEY MAPS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let mapleader=","
 
 map <Left> <Nop>
 map <Right> <Nop>
