@@ -12,7 +12,7 @@ call neobundle#rc(expand('~/.vim/bundle/'))
 """""""" keep package manager up-to-date
 NeoBundleFetch 'Shougo/neobundle.vim'
 """""""" syntaxes
-NeoBundle 'pangloss/vim-javascript'
+"NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'othree/html5.vim'
 NeoBundle 'lunaru/vim-less'
 NeoBundle 'tpope/vim-cucumber'
@@ -26,24 +26,18 @@ NeoBundle 'kien/ctrlp.vim'
 " smart syntax checker
 NeoBundle 'scrooloose/syntastic'
 " Smart Tab completion
-NeoBundle "Shougo/neocomplcache.vim"
+"NeoBundle "Shougo/neocomplcache.vim"
 " git integration
 NeoBundle "tpope/vim-fugitive"
-" ag integration
-NeoBundle "rking/ag.vim"
 """""""" color
-NeoBundle 'vylight'
 NeoBundle 'Lokaltog/vim-distinguished'
 
 NeoBundleCheck
 
 " enable everything
 filetype plugin indent on
+syntax on
 
-" light theme
-"set background=light
-"colorscheme vylight
-" dark theme
 colorscheme distinguished
 set background=dark
 
@@ -62,17 +56,15 @@ let g:ctrlp_working_path_mode = ''
 """""""" Syntastic
 " use google's gslint
 let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
-"""""""" NeoCompleteCache
-let g:neocomplcache_enable_at_startup = 1
-" Supertab-like behavious (found in the docs :))
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
 " (these are mostly copied from Gary Bernhart's .vimrc)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" cowboy mode on
 set nocompatible
-" allow unsaved buffers
+set nobackup
+set noswapfile
 set hidden
 " remember more commands and search history
 set history=10000
@@ -87,22 +79,15 @@ set cmdheight=2
 set switchbuf=useopen
 set numberwidth=5
 set winwidth=79
-" This makes RVM work inside Vim. I have no idea why.
-set shell=bash
 " Prevent Vim from clobbering the scrollback buffer. See
 " http://www.shallowsky.com/linux/noaltscreen.html
 set t_ti= t_te=
 " keep more context when scrolling off the end of a buffer
 set scrolloff=3
-" Store temporary files in a central spot
-set nobackup
-set noswapfile
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 " display incomplete commands
 set showcmd
-" Enable highlighting for syntax
-syntax on
 " use emacs-style tab completion when selecting files, etc
 set wildmode=longest,list
 " make tab completion for files/buffers act like bash
@@ -122,9 +107,10 @@ set softtabstop=2
 set autoindent
 
 augroup vimrcEx
-  " Clear all autocmds in the group
+
   autocmd!
   " Jump to last cursor position unless it's invalid or in an event handler
+  " (in vim doc...)
   autocmd BufReadPost *
     \ if line("'\"") > 0 && line("'\"") <= line("$") |
     \   exe "normal g`\"" |
@@ -137,14 +123,6 @@ augroup vimrcEx
 
   " auto removing of ending spaces
   autocmd FileType ruby,python,javascript,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
-
-  " Enable omni completion.
-  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-  autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 augroup END
 
@@ -163,10 +141,8 @@ nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
 " more split joy
-nnoremap <leader>j <c-w>s <c-w>j
-nnoremap <leader>k <c-w>s
-nnoremap <leader>h <c-w>v
-nnoremap <leader>l <c-w>v <c-w>l
+nnoremap <leader>s <c-w>s
+nnoremap <leader>v <c-w>v
 nnoremap <leader>d <c-w>c
 " Can't be bothered to understand ESC vs <c-c> in insert mode
 imap <c-c> <esc>
@@ -188,3 +164,16 @@ match ExtraWhitespace /\s\+$\| \+\ze\t/
 nnoremap <leader>gd :Gdiff<cr>
 nnoremap <leader>gs :Gstatus<cr>
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" VERY fast Tab completion from Gary Bernhart's vimrc
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! InsertTabWrapper()
+  let col = col('.') - 1
+  if !col || getline('.')[col - 1] !~ '\k'
+    return "\<tab>"
+  else
+    return "\<c-n>"
+  endif
+endfunction
+inoremap <tab> <c-r>=InsertTabWrapper()<cr>
+inoremap <s-tab> <c-n>
