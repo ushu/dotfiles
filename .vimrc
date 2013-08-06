@@ -57,14 +57,6 @@ NeoBundle 'chip/vim-fat-finger'
 " add "av" scope for variables in Ruby/PHP/Javascript
 NeoBundle 'robmiller/vim-movar'
 " neocomplete for completion
-NeoBundle 'Shougo/vimproc', {
-      \ 'build' : {
-      \     'windows' : 'make -f make_mingw32.mak',
-      \     'cygwin' : 'make -f make_cygwin.mak',
-      \     'mac' : 'make -f make_mac.mak',
-      \     'unix' : 'make -f make_unix.mak',
-      \    },
-      \ }
 NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'Shougo/neocomplcache-rsense.vim'
 
