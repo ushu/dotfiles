@@ -39,8 +39,7 @@ NeoBundle 'Shougo/vimproc', { 'build': {
 " unite + plugins
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/unite-outline'
-NeoBundle 'Shougo/unite-help'
-NeoBundle 'Shougo/unite-session'
+NeoBundle 'tsukkee/unite-tag'
 NeoBundle 'thinca/vim-unite-history'
 " color parenthesis
 NeoBundle 'amdt/vim-niji'
@@ -57,18 +56,28 @@ NeoBundle 'marijnh/tern_for_vim', { 'build': {
 NeoBundle 'chip/vim-fat-finger'
 " add "av" scope for variables in Ruby/PHP/Javascript
 NeoBundle 'robmiller/vim-movar'
+" neocomplete for completion
+NeoBundle 'Shougo/vimproc', {
+      \ 'build' : {
+      \     'windows' : 'make -f make_mingw32.mak',
+      \     'cygwin' : 'make -f make_cygwin.mak',
+      \     'mac' : 'make -f make_mac.mak',
+      \     'unix' : 'make -f make_unix.mak',
+      \    },
+      \ }
+NeoBundle 'Shougo/neocomplete.vim'
+NeoBundle 'Shougo/neocomplcache-rsense.vim'
 
-if has("gui_running") 
+if has("gui_running")
   " Smart completion
   " does not seem to work in console for mysterious reasons
   NeoBundle 'Valloric/YouCompleteMe', { 'build': {
         \   'mac': './install.sh',
         \   'unix': './install.sh',
         \ } }
-  colorscheme toychest
   set guifont=Monaco:h15
+  colorscheme toychest
 else
-  " Guess colors from curent term settings
   colorscheme default
 endif
 
@@ -77,6 +86,7 @@ NeoBundleCheck
 " enable everything
 filetype plugin indent on
 syntax on
+let mapleader=","
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -103,6 +113,13 @@ let g:startify_custom_header = [
             \ '',
             \ '',
             \ ]
+" neocomplete
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
+" Git Gutter (disable by default)
+let g:gitgutter_enabled = 0
+nnoremap <leader>gg :GitGutterToggle<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
@@ -182,7 +199,6 @@ augroup END
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " CUSTOM KEY MAPS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let mapleader=","
 
 map <Left> <Nop>
 map <Right> <Nop>
@@ -210,7 +226,8 @@ nnoremap <C-p> :Unite -start-insert -auto-preview file_rec/async<cr>
 nnoremap <leader>/ :Unite grep:.<cr>
 let g:unite_source_history_yank_enable = 1
 nnoremap <leader>. :Unite history/yank<cr>
-nnoremap <leader>b :Unite -quick-match buffer<cr>
+nnoremap <leader>b :Unite buffer<cr>
+nnoremap <leader>m :Unite outline<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " HANDLING THE EMPTY LINES END OEL SPACES
@@ -233,7 +250,7 @@ function! InsertTabWrapper()
   if !col || getline('.')[col - 1] !~ '\k'
     return "\<tab>"
   else
-    return "\<c-n>"
+     return pumvisible() ? "\<C-n>" : "\<TAB>"
   endif
 endfunction
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>
