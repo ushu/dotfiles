@@ -19,27 +19,64 @@ NeoBundle 'tpope/vim-cucumber'
 NeoBundle 'cakebaker/scss-syntax.vim'
 NeoBundle 'kchmck/vim-coffee-script'
 """""""" plugins
-" better ststus line
-NeoBundle "bling/vim-airline"
-" fast search through files
-NeoBundle 'kien/ctrlp.vim'
+" better status line
+NeoBundle 'maciakl/vim-neatstatus'
 " smart syntax checker
 NeoBundle 'scrooloose/syntastic'
-" Smart Tab completion
-"NeoBundle "Shougo/neocomplcache.vim"
 " git integration
-NeoBundle "tpope/vim-fugitive"
-"""""""" color
-NeoBundle 'Lokaltog/vim-distinguished'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'airblade/vim-gitgutter'
+" connect to Gist
+NeoBundle 'mattn/webapi-vim'
+NeoBundle 'mattn/gist-vim'
+" Unite for search/completion
+NeoBundle 'Shougo/vimproc', { 'build': {
+      \   'windows': 'make -f make_mingw32.mak',
+      \   'cygwin': 'make -f make_cygwin.mak',
+      \   'mac': 'make -f make_mac.mak',
+      \   'unix': 'make -f make_unix.mak',
+      \ } }
+" unite + plugins
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/unite-outline'
+NeoBundle 'Shougo/unite-help'
+NeoBundle 'Shougo/unite-session'
+NeoBundle 'thinca/vim-unite-history'
+" color parenthesis
+NeoBundle 'amdt/vim-niji'
+" better start page
+NeoBundle 'mhinz/vim-startify'
+" expand region
+NeoBundle 'terryma/vim-expand-region'
+" intergrate Tern completion for JS
+NeoBundle 'marijnh/tern_for_vim', { 'build': {
+     \ 'mac': 'npm install',
+     \ 'unix': 'npm install'
+     \ } }
+" a lot of iabbrev for common errors
+NeoBundle 'chip/vim-fat-finger'
+" add "av" scope for variables in Ruby/PHP/Javascript
+NeoBundle 'robmiller/vim-movar'
+
+if has("gui_running") 
+  " Smart completion
+  " does not seem to work in console for mysterious reasons
+  NeoBundle 'Valloric/YouCompleteMe', { 'build': {
+        \   'mac': './install.sh',
+        \   'unix': './install.sh',
+        \ } }
+  colorscheme toychest
+  set guifont=Monaco:h15
+else
+  " Guess colors from curent term settings
+  colorscheme default
+endif
 
 NeoBundleCheck
 
 " enable everything
 filetype plugin indent on
 syntax on
-
-colorscheme distinguished
-set background=dark
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -52,10 +89,20 @@ let g:ctrlp_custom_ignore = {
   \ 'file': '\v\.(exe|so|dll)$'
   \ }
 """ disable "root" detection (find .git => start at CWD)
-let g:ctrlp_working_path_mode = ''
+let g:ctrlp_working_path_mode = 0
 """""""" Syntastic
 " use google's gslint
 let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
+" custom start header
+let g:startify_custom_header = [
+            \ '            __  _______ __  ____  __',
+            \ '           / / / / ___// / / / / / /',
+            \ '          / / / /\__ \/ /_/ / / / /',
+            \ '         / /_/ /___/ / __  / /_/ /',
+            \ '         \____//____/_/ /_/\____/',
+            \ '',
+            \ '',
+            \ ]
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
@@ -123,6 +170,12 @@ augroup vimrcEx
 
   " auto removing of ending spaces
   autocmd FileType ruby,python,javascript,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
+  autocmd FileType javascript autocmd set nocindent smartindend
+
+  " omni complete for ruby
+  autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
+  autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
+  autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
 
 augroup END
 
@@ -150,6 +203,14 @@ nnoremap <leader><leader> <c-^>
 " %% = current file
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
 map <leader>e :e %%<cr>
+" keys for Gist
+nnoremap <leader>l :Gist -l<cr>
+" Unite
+nnoremap <C-p> :Unite -start-insert -auto-preview file_rec/async<cr>
+nnoremap <leader>/ :Unite grep:.<cr>
+let g:unite_source_history_yank_enable = 1
+nnoremap <leader>. :Unite history/yank<cr>
+nnoremap <leader>b :Unite -quick-match buffer<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " HANDLING THE EMPTY LINES END OEL SPACES
@@ -177,3 +238,4 @@ function! InsertTabWrapper()
 endfunction
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>
 inoremap <s-tab> <c-n>
+

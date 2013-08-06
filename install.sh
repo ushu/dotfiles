@@ -145,6 +145,7 @@ main () {
   fi
 
   nvm use 0.10
+  nvm alias default 0.10
 
   # node-based tools
   for c in grunt-cli "less" bower yo generator-webapp; do
@@ -196,6 +197,14 @@ main () {
     rvm install 2.0
   fi
 
+  # setup Ruby 2 with usefull gems !
+  rvm --default use 2.0
+  gem install rak sass compass rails nokogiri capistrano sinatra chef
+
+  if is_osx; then
+    # register custom theme
+    open "$DOTFILES/Flat-bigFont.terminal"
+  fi
 }
 
 main
