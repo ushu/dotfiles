@@ -204,6 +204,12 @@ main () {
   if is_osx; then
     # register custom theme
     open "$DOTFILES/Flat-bigFont.terminal"
+
+    if check_commands brew; then
+      # install vim/macvim with lua/python/ruby enabled
+      brew install vim --with-cscope --with-lua --HEAD --with-python --with-ruby
+      brew install macvim --with-cscope --with-lua --HEAD --with-python --with-ruby
+    fi
   fi
 }
 
