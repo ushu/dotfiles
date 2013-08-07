@@ -12,7 +12,7 @@ call neobundle#rc(expand('~/.vim/bundle/'))
 """""""" keep package manager up-to-date
 NeoBundleFetch 'Shougo/neobundle.vim'
 """""""" syntaxes
-"NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'othree/html5.vim'
 NeoBundle 'lunaru/vim-less'
 NeoBundle 'tpope/vim-cucumber'
@@ -25,7 +25,6 @@ NeoBundle 'maciakl/vim-neatstatus'
 NeoBundle 'scrooloose/syntastic'
 " git integration
 NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'airblade/vim-gitgutter'
 " connect to Gist
 NeoBundle 'mattn/webapi-vim'
 NeoBundle 'mattn/gist-vim'
@@ -45,20 +44,10 @@ NeoBundle 'thinca/vim-unite-history'
 NeoBundle 'amdt/vim-niji'
 " better start page
 NeoBundle 'mhinz/vim-startify'
-" expand region
-NeoBundle 'terryma/vim-expand-region'
-" intergrate Tern completion for JS
-NeoBundle 'marijnh/tern_for_vim', { 'build': {
-     \ 'mac': 'npm install',
-     \ 'unix': 'npm install'
-     \ } }
 " a lot of iabbrev for common errors
 NeoBundle 'chip/vim-fat-finger'
-" add "av" scope for variables in Ruby/PHP/Javascript
-NeoBundle 'robmiller/vim-movar'
-" neocomplete for completion
-NeoBundle 'Shougo/neocomplete.vim'
-NeoBundle 'Shougo/neocomplcache-rsense.vim'
+" emmet
+NeoBundle 'mattn/emmet-vim'
 
 if has("gui_running")
   " Smart completion
@@ -68,10 +57,9 @@ if has("gui_running")
         \   'unix': './install.sh',
         \ } }
   set guifont=Monaco:h15
-  colorscheme toychest
-else
-  colorscheme default
 endif
+
+colorscheme toychest
 
 NeoBundleCheck
 
@@ -79,7 +67,6 @@ NeoBundleCheck
 filetype plugin indent on
 syntax on
 let mapleader=","
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPTIONS FOR PLUGINS
@@ -112,6 +99,8 @@ let g:neocomplete#enable_smart_case = 1
 " Git Gutter (disable by default)
 let g:gitgutter_enabled = 0
 nnoremap <leader>gg :GitGutterToggle<cr>
+" Unite
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
@@ -161,6 +150,7 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set autoindent
+set nocindent
 
 augroup vimrcEx
 
@@ -179,13 +169,6 @@ augroup vimrcEx
 
   " auto removing of ending spaces
   autocmd FileType ruby,python,javascript,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
-  autocmd FileType javascript autocmd set nocindent smartindend
-
-  " omni complete for ruby
-  autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
-  autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
-  autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
-
 augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -220,6 +203,19 @@ let g:unite_source_history_yank_enable = 1
 nnoremap <leader>. :Unite history/yank<cr>
 nnoremap <leader>b :Unite buffer<cr>
 nnoremap <leader>m :Unite outline<cr>
+" keys for Gist
+nnoremap <leader>l :Gist -l<cr>
+" Unite
+nnoremap <C-p> :Unite -start-insert -auto-preview file_rec/async<cr>
+nnoremap <C-p> :Unite -start-insert file_rec/async<cr>
+nnoremap <leader>/ :Unite grep:.<cr>
+let g:unite_source_history_yank_enable = 1
+nnoremap <leader>. :Unite history/yank<cr>
+nnoremap <leader>b :Unite buffer<cr>
+nnoremap <leader>m :Unite -start-insert outline<cr>
+" emmet
+let g:user_emmet_leader_key = ','
+let g:user_emmet_expandabbr_key = '<C-v>'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " HANDLING THE EMPTY LINES END OEL SPACES
@@ -242,7 +238,7 @@ function! InsertTabWrapper()
   if !col || getline('.')[col - 1] !~ '\k'
     return "\<tab>"
   else
-     return pumvisible() ? "\<C-n>" : "\<TAB>"
+     return "\<C-n>"
   endif
 endfunction
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>
