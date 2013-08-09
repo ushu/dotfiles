@@ -20,7 +20,7 @@ NeoBundle 'cakebaker/scss-syntax.vim'
 NeoBundle 'kchmck/vim-coffee-script'
 """""""" plugins
 " better status line
-NeoBundle 'maciakl/vim-neatstatus'
+NeoBundle 'bling/vim-airline'
 " smart syntax checker
 NeoBundle 'scrooloose/syntastic'
 " git integration
@@ -59,7 +59,13 @@ if has("gui_running")
   set guifont=Monaco:h15
 endif
 
-colorscheme toychest
+NeoBundle 'Shougo/neocomplcache.vim'
+NeoBundle 'Shougo/neocomplcache-rsense.vim'
+call neobundle#config('neocomplcache-rsense', {
+      \ 'depends' : 'Shougo/neocomplcache.vim',
+      \ 'autoload' : { 'filetypes' : 'ruby' }
+      \ })
+let g:neocomplcache#sources#rsense#home_directory = '/usr/local/bin'
 
 NeoBundleCheck
 
@@ -67,6 +73,8 @@ NeoBundleCheck
 filetype plugin indent on
 syntax on
 let mapleader=","
+
+colorscheme toychest
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPTIONS FOR PLUGINS
@@ -92,15 +100,14 @@ let g:startify_custom_header = [
             \ '',
             \ '',
             \ ]
-" neocomplete
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
-" Git Gutter (disable by default)
-let g:gitgutter_enabled = 0
-nnoremap <leader>gg :GitGutterToggle<cr>
 " Unite
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
+" Neocomplete
+let g:neocomplcache#enable_at_startup = 1
+let g:neocomplcache#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplcache_min_syntax_length = 2
+let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
@@ -166,9 +173,19 @@ augroup vimrcEx
   autocmd! BufRead,BufNewFile *.json setlocal filetype=javascript
   autocmd! BufRead,BufNewFile Gemfile setlocal filetype=ruby
   autocmd! BufRead,BufNewFile Procfile setlocal filetype=ruby
+  autocmd! BufRead,BufNewFile Podfile setlocal filetype=ruby
 
   " auto removing of ending spaces
   autocmd FileType ruby,python,javascript,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
+
+  " Enable omni completion.
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+  autocmd FileType python setlocal omnifunc=rubycomplete#Complete
+  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
 augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -191,22 +208,12 @@ nnoremap <leader>d <c-w>c
 " Can't be bothered to understand ESC vs <c-c> in insert mode
 imap <c-c> <esc>
 nnoremap <leader><leader> <c-^>
-" %% = current file
+" %% = current directory
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
 map <leader>e :e %%<cr>
 " keys for Gist
 nnoremap <leader>l :Gist -l<cr>
 " Unite
-nnoremap <C-p> :Unite -start-insert -auto-preview file_rec/async<cr>
-nnoremap <leader>/ :Unite grep:.<cr>
-let g:unite_source_history_yank_enable = 1
-nnoremap <leader>. :Unite history/yank<cr>
-nnoremap <leader>b :Unite buffer<cr>
-nnoremap <leader>m :Unite outline<cr>
-" keys for Gist
-nnoremap <leader>l :Gist -l<cr>
-" Unite
-nnoremap <C-p> :Unite -start-insert -auto-preview file_rec/async<cr>
 nnoremap <C-p> :Unite -start-insert file_rec/async<cr>
 nnoremap <leader>/ :Unite grep:.<cr>
 let g:unite_source_history_yank_enable = 1
@@ -215,7 +222,7 @@ nnoremap <leader>b :Unite buffer<cr>
 nnoremap <leader>m :Unite -start-insert outline<cr>
 " emmet
 let g:user_emmet_leader_key = ','
-let g:user_emmet_expandabbr_key = '<C-v>'
+let g:user_emmet_expandabbr_key = '<C-@>'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " HANDLING THE EMPTY LINES END OEL SPACES
@@ -238,9 +245,8 @@ function! InsertTabWrapper()
   if !col || getline('.')[col - 1] !~ '\k'
     return "\<tab>"
   else
-     return "\<C-n>"
+     return pumvisible() ? "\<C-n>" : "\<C-p>"
   endif
 endfunction
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>
 inoremap <s-tab> <c-n>
-
