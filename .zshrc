@@ -13,6 +13,7 @@ source $ZSH/oh-my-zsh.sh
 # disable autocorrect
 unsetopt correct_all
 
+export PATH="$PATH:$HOME/.rvm/bin"
 export PATH="$PATH:./node_modules/.bin"
 
 ################################################################################

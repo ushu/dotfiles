@@ -164,6 +164,7 @@ main () {
       git submudule init
       cd ..
 
+      # Linking files in HOME
       # vim config
       [ -f "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
       [ -d "$HOME/.vim" ] || ln -s "$DOTFILES/.vim" "$HOME/.vim"
@@ -172,6 +173,8 @@ main () {
       # zsh config
       [ -d "$HOME/.oh-my-zsh" ] || git clone git://github.com/robbyrussell/oh-my-zsh.git "$HOME/.oh-my-zsh"
       [ -f "$HOME/.zshrc" ] || ln -s "$DOTFILES/.zshrc" "$HOME/.zshrc" && chsh -s /bin/zsh
+      # default options for rails new ...
+      [ -f "$HOME/.railsrc" ] || ln -s "$DOTFILES/.railsrc" "$HOME/.railsrc"
     fi
   fi
 

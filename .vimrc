@@ -1,4 +1,7 @@
 " vim:set ts=2 sts=2 sw=2 expandtab:
+" My .vimrc, with a lot coming from Gary Bernhart's vimrc
+
+set encoding=utf-8
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " LOAD PLUGINS
@@ -42,30 +45,12 @@ NeoBundle 'tsukkee/unite-tag'
 NeoBundle 'thinca/vim-unite-history'
 " color parenthesis
 NeoBundle 'amdt/vim-niji'
-" better start page
-NeoBundle 'mhinz/vim-startify'
 " a lot of iabbrev for common errors
 NeoBundle 'chip/vim-fat-finger'
 " emmet
 NeoBundle 'mattn/emmet-vim'
-
-if has("gui_running")
-  " Smart completion
-  " does not seem to work in console for mysterious reasons
-  NeoBundle 'Valloric/YouCompleteMe', { 'build': {
-        \   'mac': './install.sh',
-        \   'unix': './install.sh',
-        \ } }
-  set guifont=Monaco:h15
-endif
-
-NeoBundle 'Shougo/neocomplcache.vim'
-NeoBundle 'Shougo/neocomplcache-rsense.vim'
-call neobundle#config('neocomplcache-rsense', {
-      \ 'depends' : 'Shougo/neocomplcache.vim',
-      \ 'autoload' : { 'filetypes' : 'ruby' }
-      \ })
-let g:neocomplcache#sources#rsense#home_directory = '/usr/local/bin'
+" solarized color scheme
+NeoBundle 'altercation/vim-colors-solarized'
 
 NeoBundleCheck
 
@@ -74,7 +59,24 @@ filetype plugin indent on
 syntax on
 let mapleader=","
 
-colorscheme toychest
+colorscheme solarized
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" MAKE TERMINAL.APP HAPPY
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" solarized with fix for Terminal.app https://github.com/altercation/solarized/issues/146
+if has('gui_macvim')
+  set transparency=0
+endif
+if !has('gui_running') && $TERM_PROGRAM == 'Apple_Terminal'
+  let g:solarized_termcolors = &t_Co
+  let g:solarized_termtrans = 1
+  colorscheme solarized
+endif
+
+" fix ugly airline in Terminal.app
+let g:airline_left_sep=''
+let g:airline_right_sep=''
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPTIONS FOR PLUGINS
@@ -146,6 +148,8 @@ set wildmode=longest,list
 set wildmenu
 " Fix slow O inserts
 :set timeout timeoutlen=1000 ttimeoutlen=100
+" make shell work with Rails
+set shell=bash
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " EDIT OPTIONS
@@ -177,14 +181,6 @@ augroup vimrcEx
 
   " auto removing of ending spaces
   autocmd FileType ruby,python,javascript,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
-
-  " Enable omni completion.
-  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-  autocmd FileType python setlocal omnifunc=rubycomplete#Complete
-  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
 augroup END
 
@@ -220,7 +216,7 @@ let g:unite_source_history_yank_enable = 1
 nnoremap <leader>. :Unite history/yank<cr>
 nnoremap <leader>b :Unite buffer<cr>
 nnoremap <leader>m :Unite -start-insert outline<cr>
-" emmet
+" emmet starts with Ctrl-Space on the Mac
 let g:user_emmet_leader_key = ','
 let g:user_emmet_expandabbr_key = '<C-@>'
 
@@ -245,7 +241,7 @@ function! InsertTabWrapper()
   if !col || getline('.')[col - 1] !~ '\k'
     return "\<tab>"
   else
-     return pumvisible() ? "\<C-n>" : "\<C-p>"
+     return "\<C-p>"
   endif
 endfunction
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>
