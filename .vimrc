@@ -81,14 +81,6 @@ let g:airline_right_sep=''
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPTIONS FOR PLUGINS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"""""""" Ctrlp
-" ignore node_modules, etc
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules$|vendor',
-  \ 'file': '\v\.(exe|so|dll)$'
-  \ }
-""" disable "root" detection (find .git => start at CWD)
-let g:ctrlp_working_path_mode = 0
 """""""" Syntastic
 " use google's gslint
 let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
@@ -104,12 +96,6 @@ let g:startify_custom_header = [
             \ ]
 " Unite
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
-" Neocomplete
-let g:neocomplcache#enable_at_startup = 1
-let g:neocomplcache#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplcache_min_syntax_length = 2
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
