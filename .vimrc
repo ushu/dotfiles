@@ -26,8 +26,6 @@ NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'bling/vim-airline'
 " smart syntax checker
 NeoBundle 'scrooloose/syntastic'
-" git integration
-NeoBundle 'tpope/vim-fugitive'
 " connect to Gist
 NeoBundle 'mattn/webapi-vim'
 NeoBundle 'mattn/gist-vim'
@@ -212,12 +210,6 @@ let g:user_emmet_expandabbr_key = '<C-@>'
 " color in rend EOL spaces and empty lines
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$\| \+\ze\t/
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TRYING TO LEARN fugitive ?
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <leader>gd :Gdiff<cr>
-nnoremap <leader>gs :Gstatus<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VERY fast Tab completion from Gary Bernhart's vimrc
