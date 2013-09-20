@@ -145,6 +145,7 @@ main () {
   fi
 
   nvm use 0.10
+  nvm alias default 0.10
 
   # node-based tools
   for c in grunt-cli "less" bower yo generator-webapp; do
@@ -163,6 +164,7 @@ main () {
       git submudule init
       cd ..
 
+      # Linking files in HOME
       # vim config
       [ -f "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
       [ -d "$HOME/.vim" ] || ln -s "$DOTFILES/.vim" "$HOME/.vim"
@@ -171,6 +173,8 @@ main () {
       # zsh config
       [ -d "$HOME/.oh-my-zsh" ] || git clone git://github.com/robbyrussell/oh-my-zsh.git "$HOME/.oh-my-zsh"
       [ -f "$HOME/.zshrc" ] || ln -s "$DOTFILES/.zshrc" "$HOME/.zshrc" && chsh -s /bin/zsh
+      # default options for rails new ...
+      [ -f "$HOME/.railsrc" ] || ln -s "$DOTFILES/.railsrc" "$HOME/.railsrc"
     fi
   fi
 
@@ -196,6 +200,20 @@ main () {
     rvm install 2.0
   fi
 
+  # setup Ruby 2 with usefull gems !
+  rvm --default use 2.0
+  gem install rak sass compass rails nokogiri capistrano sinatra chef
+
+  if is_osx; then
+    # register custom theme
+    open "$DOTFILES/Flat-bigFont.terminal"
+
+    if check_commands brew; then
+      # install vim/macvim with lua/python/ruby enabled
+      brew install vim --with-cscope --with-lua --HEAD --with-python --with-ruby
+      brew install macvim --with-cscope --with-lua --HEAD --with-python --with-ruby
+    fi
+  fi
 }
 
 main

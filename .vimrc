@@ -1,4 +1,7 @@
 " vim:set ts=2 sts=2 sw=2 expandtab:
+" My .vimrc, with a lot coming from Gary Bernhart's vimrc
+
+set encoding=utf-8
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " LOAD PLUGINS
@@ -12,50 +15,85 @@ call neobundle#rc(expand('~/.vim/bundle/'))
 """""""" keep package manager up-to-date
 NeoBundleFetch 'Shougo/neobundle.vim'
 """""""" syntaxes
-"NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'othree/html5.vim'
 NeoBundle 'lunaru/vim-less'
 NeoBundle 'tpope/vim-cucumber'
 NeoBundle 'cakebaker/scss-syntax.vim'
 NeoBundle 'kchmck/vim-coffee-script'
 """""""" plugins
-" better ststus line
-NeoBundle "bling/vim-airline"
-" fast search through files
-NeoBundle 'kien/ctrlp.vim'
+" better status line
+NeoBundle 'bling/vim-airline'
 " smart syntax checker
 NeoBundle 'scrooloose/syntastic'
-" Smart Tab completion
-"NeoBundle "Shougo/neocomplcache.vim"
-" git integration
-NeoBundle "tpope/vim-fugitive"
-"""""""" color
-NeoBundle 'Lokaltog/vim-distinguished'
+" connect to Gist
+NeoBundle 'mattn/webapi-vim'
+NeoBundle 'mattn/gist-vim'
+" Unite for search/completion
+NeoBundle 'Shougo/vimproc', { 'build': {
+      \   'windows': 'make -f make_mingw32.mak',
+      \   'cygwin': 'make -f make_cygwin.mak',
+      \   'mac': 'make -f make_mac.mak',
+      \   'unix': 'make -f make_unix.mak',
+      \ } }
+" unite + plugins
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/unite-outline'
+NeoBundle 'tsukkee/unite-tag'
+NeoBundle 'thinca/vim-unite-history'
+" color parenthesis
+NeoBundle 'amdt/vim-niji'
+" a lot of iabbrev for common errors
+NeoBundle 'chip/vim-fat-finger'
+" emmet
+NeoBundle 'mattn/emmet-vim'
+" solarized color scheme
+NeoBundle 'altercation/vim-colors-solarized'
 
 NeoBundleCheck
 
 " enable everything
 filetype plugin indent on
 syntax on
+let mapleader=","
 
-colorscheme distinguished
-set background=dark
+colorscheme solarized
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" MAKE TERMINAL.APP HAPPY
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" solarized with fix for Terminal.app https://github.com/altercation/solarized/issues/146
+if has('gui_macvim')
+  set transparency=0
+endif
+if !has('gui_running') && $TERM_PROGRAM == 'Apple_Terminal'
+  let g:solarized_termcolors = &t_Co
+  let g:solarized_termtrans = 1
+  colorscheme solarized
+endif
+
+" fix ugly airline in Terminal.app
+let g:airline_left_sep=''
+let g:airline_right_sep=''
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPTIONS FOR PLUGINS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"""""""" Ctrlp
-" ignore node_modules, etc
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules$|vendor',
-  \ 'file': '\v\.(exe|so|dll)$'
-  \ }
-""" disable "root" detection (find .git => start at CWD)
-let g:ctrlp_working_path_mode = ''
 """""""" Syntastic
 " use google's gslint
 let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
+" custom start header
+let g:startify_custom_header = [
+            \ '            __  _______ __  ____  __',
+            \ '           / / / / ___// / / / / / /',
+            \ '          / / / /\__ \/ /_/ / / / /',
+            \ '         / /_/ /___/ / __  / /_/ /',
+            \ '         \____//____/_/ /_/\____/',
+            \ '',
+            \ '',
+            \ ]
+" Unite
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
@@ -94,6 +132,8 @@ set wildmode=longest,list
 set wildmenu
 " Fix slow O inserts
 :set timeout timeoutlen=1000 ttimeoutlen=100
+" make shell work with Rails
+set shell=bash
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " EDIT OPTIONS
@@ -105,6 +145,7 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set autoindent
+set nocindent
 
 augroup vimrcEx
 
@@ -120,6 +161,7 @@ augroup vimrcEx
   autocmd! BufRead,BufNewFile *.json setlocal filetype=javascript
   autocmd! BufRead,BufNewFile Gemfile setlocal filetype=ruby
   autocmd! BufRead,BufNewFile Procfile setlocal filetype=ruby
+  autocmd! BufRead,BufNewFile Podfile setlocal filetype=ruby
 
   " auto removing of ending spaces
   autocmd FileType ruby,python,javascript,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
@@ -129,7 +171,6 @@ augroup END
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " CUSTOM KEY MAPS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let mapleader=","
 
 map <Left> <Nop>
 map <Right> <Nop>
@@ -147,9 +188,21 @@ nnoremap <leader>d <c-w>c
 " Can't be bothered to understand ESC vs <c-c> in insert mode
 imap <c-c> <esc>
 nnoremap <leader><leader> <c-^>
-" %% = current file
+" %% = current directory
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
 map <leader>e :e %%<cr>
+" keys for Gist
+nnoremap <leader>l :Gist -l<cr>
+" Unite
+nnoremap <C-p> :Unite -start-insert file_rec/async<cr>
+nnoremap <leader>/ :Unite grep:.<cr>
+let g:unite_source_history_yank_enable = 1
+nnoremap <leader>. :Unite history/yank<cr>
+nnoremap <leader>b :Unite buffer<cr>
+nnoremap <leader>m :Unite -start-insert outline<cr>
+" emmet starts with Ctrl-Space on the Mac
+let g:user_emmet_leader_key = ','
+let g:user_emmet_expandabbr_key = '<C-@>'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " HANDLING THE EMPTY LINES END OEL SPACES
@@ -159,12 +212,6 @@ highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$\| \+\ze\t/
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TRYING TO LEARN fugitive ?
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <leader>gd :Gdiff<cr>
-nnoremap <leader>gs :Gstatus<cr>
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " VERY fast Tab completion from Gary Bernhart's vimrc
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! InsertTabWrapper()
@@ -172,7 +219,7 @@ function! InsertTabWrapper()
   if !col || getline('.')[col - 1] !~ '\k'
     return "\<tab>"
   else
-    return "\<c-n>"
+     return "\<C-p>"
   endif
 endfunction
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>

@@ -40,3 +40,5 @@
 	ui = auto
 [github]
 	user = ushu
+[push]
+	default = matching
