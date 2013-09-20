@@ -38,3 +38,5 @@
 	trustExitCode = true
 [color]
 	ui = auto
+[github]
+	user = ushu
