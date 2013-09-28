@@ -49,6 +49,8 @@ NeoBundle 'chip/vim-fat-finger'
 NeoBundle 'mattn/emmet-vim'
 " solarized color scheme
 NeoBundle 'altercation/vim-colors-solarized'
+" Git fugitive
+NeoBundle 'tpope/vim-fugitive'
 
 NeoBundleCheck
 
@@ -83,7 +85,7 @@ let g:airline_right_sep=''
 " use google's gslint
 let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
 " Unite
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
+call unite#filters#matcher_default#use(['matcher_fuzzy', 'sorter_rank'])
 call unite#filters#sorter_default#use(['sorter_rank'])
 let g:unite_source_file_rec_max_cache_files = 1000000
 let g:unite_source_history_yank_enable = 1
@@ -196,10 +198,22 @@ nnoremap <leader>l :Gist -l<cr>
 nnoremap <C-p> <C-l>:Unite -no-split -start-insert -immediately buffer file_rec/async bookmark file_mru<cr>
 nnoremap <leader>/ :Unite grep:.<cr>
 nnoremap <leader>. :Unite history/yank<cr>
-nnoremap <leader>m :Unite -start-insert outline tag/file<cr>
+nnoremap <leader>m :Unite -start-insert outline tag<cr>
 " emmet starts with Ctrl-Space on the Mac
 let g:user_emmet_leader_key = ','
 let g:user_emmet_expandabbr_key = '<C-@>'
+" retrying fugitive :)
+" added a bunch of gX commands, overriding existing shortcuts..
+" ( but I don't want to depend on <leader> !)
+nnoremap g<Space> :Git<Space>
+nnoremap gs :Gstatus<CR>
+nnoremap gr :Gread<CR>
+nnoremap ga :Gwrite<CR>
+nnoremap gr :Gremove<CR>
+nnoremap gm :Gmove<Space>
+nnoremap gc :Gcommit<CR>
+nnoremap gb :Gblame<CR>
+nnoremap gd :Gdiff<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " HANDLING THE EMPTY LINES END OEL SPACES

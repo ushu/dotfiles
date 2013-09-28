@@ -22,3 +22,11 @@ export PATH="$PATH:./node_modules/.bin"
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 source ~/.nvm/nvm.sh
+
+################################################################################
+# Options
+################################################################################
+
+rn () {
+  rails new $1 -m "$HOME/.dotfiles/rails_templates.rb" -B -T
+}
