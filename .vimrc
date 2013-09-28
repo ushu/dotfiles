@@ -208,6 +208,7 @@ let g:user_emmet_expandabbr_key = '<C-@>'
 nnoremap g<Space> :Git<Space>
 nnoremap gs :Gstatus<CR>
 nnoremap gr :Gread<CR>
+nnoremap gw :Gwrite<CR>
 nnoremap ga :Gwrite<CR>
 nnoremap gr :Gremove<CR>
 nnoremap gm :Gmove<Space>
