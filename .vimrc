@@ -82,18 +82,16 @@ let g:airline_right_sep=''
 """""""" Syntastic
 " use google's gslint
 let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
-" custom start header
-let g:startify_custom_header = [
-            \ '            __  _______ __  ____  __',
-            \ '           / / / / ___// / / / / / /',
-            \ '          / / / /\__ \/ /_/ / / / /',
-            \ '         / /_/ /___/ / __  / /_/ /',
-            \ '         \____//____/_/ /_/\____/',
-            \ '',
-            \ '',
-            \ ]
 " Unite
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
+call unite#filters#sorter_default#use(['sorter_rank'])
+let g:unite_source_file_rec_max_cache_files = 1000000
+let g:unite_source_history_yank_enable = 1
+if executable('ag')
+  let g:unite_source_grep_command = 'ag'
+  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
+  let g:unite_source_grep_recursive_opt = ''
+endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
@@ -194,12 +192,11 @@ map <leader>e :e %%<cr>
 " keys for Gist
 nnoremap <leader>l :Gist -l<cr>
 " Unite
-nnoremap <C-p> :Unite -start-insert file_rec/async<cr>
+"nnoremap <C-p> :Unite -start-insert -immediately buffer file_rec bookmark file_mru <cr>
+nnoremap <C-p> <C-l>:Unite -no-split -start-insert -immediately buffer file_rec/async bookmark file_mru<cr>
 nnoremap <leader>/ :Unite grep:.<cr>
-let g:unite_source_history_yank_enable = 1
 nnoremap <leader>. :Unite history/yank<cr>
-nnoremap <leader>b :Unite buffer<cr>
-nnoremap <leader>m :Unite -start-insert outline<cr>
+nnoremap <leader>m :Unite -start-insert outline tag/file<cr>
 " emmet starts with Ctrl-Space on the Mac
 let g:user_emmet_leader_key = ','
 let g:user_emmet_expandabbr_key = '<C-@>'
