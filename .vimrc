@@ -196,7 +196,7 @@ map <leader>e :e %%<cr>
 nnoremap <leader>l :Gist -l<cr>
 " Unite
 nnoremap <C-p> <C-l>:Unite -no-split -start-insert -immediately buffer file_rec/async bookmark file_mru<cr>
-nnoremap <C-i> <C-l>:Unite -no-split -start-insert -immediately directory<cr>
+"nnoremap <C-i> <C-l>:Unite -no-split -start-insert -immediately directory<cr>
 nnoremap <leader>/ :Unite grep:.<cr>
 nnoremap <leader>. :Unite history/yank<cr>
 nnoremap <leader>m :Unite -start-insert outline<cr>
@@ -235,6 +235,18 @@ endfunction
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>
 inoremap <s-tab> <c-n>
 
+" and change the mapping to hit emmet in HTML/CSS files
+function! CallEmmet()
+  let col = col('.') - 1
+  if !col || getline('.')[col - 1] !~ '\k'
+    return "\<tab>"
+  else
+     return "\<c-g>u\<esc>:call emmet#expandAbbr(0,\"\")\<cr>a"
+  endif
+endfunction
+autocmd FileType html,css inoremap <buffer> <tab> <c-r>=CallEmmet()<cr>
+autocmd FileType html,css map <buffer> <c-n> <leader>n
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Clear the search buffer when hitting return
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -248,8 +260,6 @@ endfunction
 map <leader>t :silent call RunTestFile()<cr>
 map <leader>T :silent call RunNearestTest()<cr>
 map <leader>a :silent call RunTests('')<cr>
-map <leader>c :w\|:silent !script/features<cr>
-map <leader>w :w\|:silent !script/features --profile wip<cr>
 
 function! RunTestFile(...)
     if a:0
@@ -284,11 +294,13 @@ function! RunTests(filename)
       :w
     end
     if match(a:filename, '\.feature$') != -1
-        exec ":!script/features " . a:filename
+        if filereadable("Gemfile")
+            exec ":!bundle exec cucumber " . a:filename
+        else
+            exec ":!cucumber " . a:filename
+        end
     else
-        if filereadable("script/test")
-            exec ":!script/test " . a:filename
-        elseif filereadable("Gemfile")
+        if filereadable("Gemfile")
             exec ":!bundle exec rspec --color " . a:filename
         else
             exec ":!rspec --color " . a:filename

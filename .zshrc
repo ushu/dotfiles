@@ -13,20 +13,25 @@ source $ZSH/oh-my-zsh.sh
 # disable autocorrect
 unsetopt correct_all
 
-export PATH="$PATH:$HOME/.rvm/bin"
 export PATH="$PATH:./node_modules/.bin"
 
 ################################################################################
 # Options
 ################################################################################
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 source ~/.nvm/nvm.sh
 
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
 ################################################################################
-# Options
+# Custom commands
 ################################################################################
 
-rn () {
-  rails new $1 -m "$HOME/.dotfiles/rails_templates.rb" -B -T
+rn() {
+  rails new $1 -m "$HOME/.dotfiles/rails_template.rb" -T -B
 }
+alias d="git dc"
+alias s="git st"
+alias l="git lg"
+alias ac="git aa && git ci"
+alias ci="git ci"
