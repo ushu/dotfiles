@@ -14,6 +14,7 @@ source $ZSH/oh-my-zsh.sh
 unsetopt correct_all
 
 export PATH="$PATH:./node_modules/.bin"
+export PATH="$PATH:$HOME/.dotfiles/bin"
 
 ################################################################################
 # Options
