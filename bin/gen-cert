@@ -1,33 +1,23 @@
-#/usr/bin/env sh
+cat > openssl.cnf <<-END
+[req]
+distinguished_name = req_distinguished_name
+x509_extensions = v3_req
+prompt = no
 
-echo "--------------------------------------------------------------------------------"
-echo " Generate a private key in $1.key: choose a passphrase"
-echo "--------------------------------------------------------------------------------"
-openssl genrsa -des3 -out $1.key 2048
+[req_distinguished_name]
+C = FR
+ST = Paris
+L = Paris
+O = imagine-app
+CN = $1
 
-echo "--------------------------------------------------------------------------------"
-echo " Generate a key phrase WITHOUT the passphrase" 
-echo " (this has to be done in 2 steps...)" 
-echo "--------------------------------------------------------------------------------"
-mv $1.key $1-passphrase.key
-openssl rsa -in $1-passphrase.key -out $1.key
+[v3_req]
+basicConstraints = critical,CA:FALSE
+keyUsage = digitalSignature, keyEncipherment, dataEncipherment
+extendedKeyUsage = serverAuth
+nsCertType = server
+subjectAltName = DNS:$1
+END
 
-echo "--------------------------------------------------------------------------------"
-echo " Generate a Certificate Signing Request in $1.crt using $1.key"
-echo "--------------------------------------------------------------------------------"
-openssl req -new -key $1.key -out $1.csr
-
-
-echo "--------------------------------------------------------------------------------"
-echo " Generate a Self-Signed Certificate"
-echo " THE HOSTNAME FOISE INTO the \"Common Name\" section"
-echo "--------------------------------------------------------------------------------"
-openssl x509 -req -days 3650 -in $1.csr -signkey $1.key -out $1.crt
-
-echo "--------------------------------------------------------------------------------"
-echo " Generate a DER version of the Certificate"
-echo "--------------------------------------------------------------------------------"
-openssl x509 -inform PEM -in $1.crt -outform DER -out $1.der
-
-
-
+openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout server.key -out server.crt -config openssl.cnf
+openssl x509 -in server.crt -out server.der -outform der
