@@ -31,6 +31,7 @@ PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 rn() {
   rails new $1 -m "$HOME/.dotfiles/rails_template.rb" -T -B
 }
+
 alias d="git dc"
 alias s="git st"
 alias l="git lg"
