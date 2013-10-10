@@ -1,7 +1,7 @@
 cat > openssl.cnf <<-END
-[req]
+[ req ]
+default_md = sha1
 distinguished_name = req_distinguished_name
-x509_extensions = v3_req
 prompt = no
 
 [req_distinguished_name]
@@ -11,13 +11,46 @@ L = Paris
 O = imagine-app
 CN = $1
 
-[v3_req]
-basicConstraints = critical,CA:FALSE
+[ certauth ]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:alwaysssuer:always
+basicConstraints = CA:true
+crlDistributionPoints = @crl
+
+[ server ]
+basicConstraints = CA:FALSE
 keyUsage = digitalSignature, keyEncipherment, dataEncipherment
 extendedKeyUsage = serverAuth
 nsCertType = server
 subjectAltName = DNS:$1
+crlDistributionPoints = @crl
+
+[ client ]
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature, keyEncipherment, dataEncipherment
+extendedKeyUsage = clientAuth
+nsCertType = client
+crlDistributionPoints = @crl
+
+[ crl ]
+URI=http://testca.local/ca.crl
 END
 
-openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout server.key -out server.crt -config openssl.cnf
+echo "Generating self-signate certificate CA"
+openssl req -config ./openssl.cnf -newkey rsa:2048 -nodes -keyform PEM -keyout ca.key -x509 -days 3650 -extensions certauth -outform PEM -out ca.cer
+
+echo "generating a new private key"
+openssl genrsa -out server.key 2048
+
+echo "generating a certificate signing request"
+openssl req -config ./openssl.cnf -new -key server.key -out server.req
+
+echo "Signing the request with the generated ca"
+openssl x509 -req -in server.req -CA ca.cer -CAkey ca.key -set_serial 100 -extfile openssl.cnf -extensions server -days 365 -outform PEM -out server.crt
+
+echo "generating DER version of the server key"
 openssl x509 -in server.crt -out server.der -outform der
+
+#echo "Generating server self-signed certificate"
+#openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout server.key -out server.crt -config openssl.cnf
+#openssl x509 -in server.crt -out server.der -outform der

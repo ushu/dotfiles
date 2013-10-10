@@ -21,6 +21,8 @@ NeoBundle 'lunaru/vim-less'
 NeoBundle 'tpope/vim-cucumber'
 NeoBundle 'cakebaker/scss-syntax.vim'
 NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'jtratner/vim-flavored-markdown'
+NeoBundle 'rodjek/vim-puppet'
 """""""" plugins
 " better status line
 NeoBundle 'bling/vim-airline'
@@ -159,10 +161,10 @@ augroup vimrcEx
 
   autocmd! BufRead,BufNewFile *.sass setlocal filetype=sass
   autocmd! BufRead,BufNewFile *.json setlocal filetype=javascript
-  autocmd! BufRead,BufNewFile Gemfile setlocal filetype=ruby
-  autocmd! BufRead,BufNewFile Procfile setlocal filetype=ruby
-  autocmd! BufRead,BufNewFile Podfile setlocal filetype=ruby
+  autocmd! BufRead,BufNewFile Gemfile,Procfile,Podfile,VagrantFile setlocal filetype=ruby
   autocmd! BufRead,BufNewFile .pryrc setlocal filetype=ruby
+  " replace markdown by github markdown everywhere
+  autocmd! BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
 
   " auto removing of ending spaces
   autocmd FileType ruby,python,javascript,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
