@@ -118,7 +118,7 @@ main () {
     check_commands curl git zsh vim
     # for ruby/rails
     check_commands autoconf automake libtool
-    check_brew_dependencies libyaml libxml2 libxslt libksba sqlite apple-gcc42 gcc49 the_silver_searcher
+    check_brew_dependencies libyaml libxml2 libxslt libksba sqlite apple-gcc42 gcc49 the_silver_searcher qt
   fi
 
   if [ ${#MISSING_PACKAGES[@]} -ne 0 ]; then
