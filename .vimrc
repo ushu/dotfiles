@@ -87,10 +87,11 @@ let g:airline_right_sep=''
 " use google's gslint
 let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
 " Unite
-let g:unite_source_file_ignore_pattern = '\.(png|jpg)'
-let g:unite_source_file_rec_ignore_pattern = '\.(png|jpg)'
-call unite#custom#source('file_rec/async', 'ignore_pattern', '\.(o|png|jpg)')
-
+" https://github.com/ujihisa/config/blob/master/_vimrc
+let s:file_rec_ignore_pattern=
+ \'\%(^\|/\)\.$\|\~$\|\.\%(o\|exe\|dll\|ba\?k\|sw[po]\|tmp\|png\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|node_modules\|vendor/bundle'
+call unite#custom#source('file_rec', 'ignore_pattern', s:file_rec_ignore_pattern)
+call unite#custom#source('grep', 'ignore_pattern', s:file_rec_ignore_pattern)
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_rank', 'sorter_length'])
 let g:unite_source_file_rec_max_cache_files = 1000000
@@ -201,8 +202,8 @@ map <leader>e :e %%<cr>
 " keys for Gist
 nnoremap <leader>l :Gist -l<cr>
 " Unite
-"nnoremap <C-p> <C-l>:Unite -no-split -start-insert -immediately buffer file_rec/async bookmark file_mru<cr>
-nnoremap <C-p> <C-l>:Unite -no-split -start-insert -immediately file_rec/async<cr>
+nnoremap <C-p> <C-l>:Unite -start-insert -immediately file_rec/async buffer file_mru<cr>
+nnoremap <C-i> <C-l>:Unite -start-insert -resume file_rec/async buffer file_mru<cr>
 nnoremap <leader>/ :Unite grep:.<cr>
 nnoremap <leader>. :Unite history/yank<cr>
 nnoremap <leader>m :Unite -start-insert outline<cr>
