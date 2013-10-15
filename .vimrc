@@ -87,8 +87,12 @@ let g:airline_right_sep=''
 " use google's gslint
 let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
 " Unite
+let g:unite_source_file_ignore_pattern = '\.(png|jpg)'
+let g:unite_source_file_rec_ignore_pattern = '\.(png|jpg)'
+call unite#custom#source('file_rec/async', 'ignore_pattern', '\.(o|png|jpg)')
+
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#filters#sorter_default#use(['sorter_rank'])
+call unite#filters#sorter_default#use(['sorter_rank', 'sorter_length'])
 let g:unite_source_file_rec_max_cache_files = 1000000
 let g:unite_source_history_yank_enable = 1
 if executable('ag')
@@ -197,8 +201,8 @@ map <leader>e :e %%<cr>
 " keys for Gist
 nnoremap <leader>l :Gist -l<cr>
 " Unite
-nnoremap <C-p> <C-l>:Unite -no-split -start-insert -immediately buffer file_rec/async bookmark file_mru<cr>
-"nnoremap <C-i> <C-l>:Unite -no-split -start-insert -immediately directory<cr>
+"nnoremap <C-p> <C-l>:Unite -no-split -start-insert -immediately buffer file_rec/async bookmark file_mru<cr>
+nnoremap <C-p> <C-l>:Unite -no-split -start-insert -immediately file_rec/async<cr>
 nnoremap <leader>/ :Unite grep:.<cr>
 nnoremap <leader>. :Unite history/yank<cr>
 nnoremap <leader>m :Unite -start-insert outline<cr>
