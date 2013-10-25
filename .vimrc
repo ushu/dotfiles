@@ -187,13 +187,11 @@ call neobundle#config('neosnippet', {
 let g:neocomplete#sources#rsense#home_directory= '/user/local/bin'
 " https://github.com/jakzal/dotfiles/blob/master/.vimrc.local
 " Enable heavy omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 if !exists('g:neocomplete#omni_patterns')
   let g:neocomplete#omni_patterns = {}
 endif
-let g:neocomplete#omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-let g:neocomplete#omni_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-let g:neocomplete#omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-let g:neocomplete#omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 let g:neocomplete#omni_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -263,13 +261,6 @@ augroup vimrcEx
   autocmd! BufRead,BufNewFile .pryrc setlocal filetype=ruby
   " replace markdown by github markdown everywhere
   autocmd! BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
-
-  " Enable omni completion.
-  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
   " auto removing of ending spaces
   autocmd FileType ruby,python,javascript,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
