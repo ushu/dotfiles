@@ -188,11 +188,12 @@ let g:neocomplete#sources#rsense#home_directory= '/user/local/bin'
 " https://github.com/jakzal/dotfiles/blob/master/.vimrc.local
 " Enable heavy omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType html,markdown,eruby setlocal omnifunc=htmlcomplete#CompleteTags
 if !exists('g:neocomplete#omni_patterns')
   let g:neocomplete#omni_patterns = {}
 endif
 let g:neocomplete#omni_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
+let g:neocomplete#sources#syntax#min_keyword_length = 2
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
