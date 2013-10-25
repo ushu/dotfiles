@@ -85,7 +85,7 @@ NeoBundle 'Shougo/neocomplete', {
          \ 'depends' : 'Shougo/context_filetype.vim',
          \ 'disabled' : !has('lua'),
          \ }
-NeoBundleLazy 'supermomonga/neocomplete-rsense.vim'
+"NeoBundleLazy 'supermomonga/neocomplete-rsense.vim'
 NeoBundle 'Shougo/neosnippet'
 " color parenthesis
 NeoBundle 'amdt/vim-niji'
@@ -172,11 +172,11 @@ call neobundle#config('neocomplete.vim', {
       \   'insert' : 1,
       \   'commands' : 'NeoCompleteBufferMakeCache',
       \ } })
-call neobundle#config('supermomonga/neocomplete-rsense.vim', {
-      \ 'lazy' : 1,
-      \ 'depends' : 'Shougo/neocomplete',
-      \ 'autoload' : { 'filetypes' : 'ruby' }
-      \ })
+"call neobundle#config('supermomonga/neocomplete-rsense.vim', {
+"      \ 'lazy' : 1,
+"      \ 'depends' : 'Shougo/neocomplete',
+"      \ 'autoload' : { 'filetypes' : 'ruby' }
+"      \ })
 call neobundle#config('neosnippet', {
       \ 'lazy' : 1,
       \ 'autoload' : {
@@ -185,6 +185,16 @@ call neobundle#config('neosnippet', {
       \   'unite_sources' : ['snippet', 'neosnippet/user', 'neosnippet/runtime'],
       \ } })
 let g:neocomplete#sources#rsense#home_directory= '/user/local/bin'
+" https://github.com/jakzal/dotfiles/blob/master/.vimrc.local
+" Enable heavy omni completion.
+if !exists('g:neocomplete#omni_patterns')
+  let g:neocomplete#omni_patterns = {}
+endif
+let g:neocomplete#omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplete#omni_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+let g:neocomplete#omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+let g:neocomplete#omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+let g:neocomplete#omni_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
