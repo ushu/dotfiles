@@ -162,7 +162,6 @@ set showmatch
 set incsearch
 set hlsearch
 " make searches case-sensitive only if they contain upper-case characters
-set cmdheight=2
 set switchbuf=useopen
 set numberwidth=5
 set winwidth=79
