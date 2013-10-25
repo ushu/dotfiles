@@ -24,6 +24,9 @@ NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'jtratner/vim-flavored-markdown'
 NeoBundle 'rodjek/vim-puppet'
 """""""" plugins
+" latest versions of default plugins
+NeoBundle 'matchit.zip'
+NeoBundle 'netrw.vim'
 " better status line
 NeoBundle 'bling/vim-airline'
 " smart syntax checker
@@ -39,7 +42,20 @@ NeoBundle 'Shougo/vimproc', { 'build': {
       \   'unix': 'make -f make_unix.mak',
       \ } }
 " unite + plugins
-NeoBundle 'Shougo/unite.vim'
+NeoBundleLazy 'Shougo/unite.vim', {
+      \   'autoload' : {
+      \       'commands' : [ "Unite", "UniteWithCursorWord" ]
+      \   }
+      \}
+" Vim shell
+NeoBundleLazy 'Shougo/vimshell', {
+      \ 'depends' : 'Shougo/vimproc',
+      \ 'autoload' : {
+      \   'commands' : [{ 'name' : 'VimShell',
+      \                   'complete' : 'customlist,vimshell#complete'},
+      \                 'VimShellExecute', 'VimShellInteractive',
+      \                 'VimShellTerminal', 'VimShellPop']
+      \ }}
 NeoBundle 'Shougo/unite-outline'
 NeoBundle 'tsukkee/unite-tag'
 NeoBundle 'thinca/vim-unite-history'
@@ -89,12 +105,13 @@ let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
 " Unite
 " https://github.com/ujihisa/config/blob/master/_vimrc
 let s:file_rec_ignore_pattern=
- \'\%(^\|/\)\.$\|\~$\|\.\%(o\|exe\|dll\|ba\?k\|sw[po]\|tmp\|png\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|node_modules\|vendor/bundle'
+ \'\%(^\|/\)\.$\|\~$\|\.\%(o\|exe\|dll\|ba\?k\|sw[po]\|tmp\|png\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|node_modules\|vendor/bundle\|public/assets\|app/assets/images'
 call unite#custom#source('file_rec', 'ignore_pattern', s:file_rec_ignore_pattern)
 call unite#custom#source('grep', 'ignore_pattern', s:file_rec_ignore_pattern)
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#filters#sorter_default#use(['sorter_rank', 'sorter_length'])
-let g:unite_source_file_rec_max_cache_files = 1000000
+call unite#filters#sorter_default#use(['sorter_length', 'sorter_rank'])
+call unite#filters#converter_default#use(['converter_smart_path'])
+let g:unite_source_file_rec_max_cache_files = 1000
 let g:unite_source_history_yank_enable = 1
 if executable('ag')
   let g:unite_source_grep_command = 'ag'
@@ -202,11 +219,11 @@ map <leader>e :e %%<cr>
 " keys for Gist
 nnoremap <leader>l :Gist -l<cr>
 " Unite
-nnoremap <C-p> <C-l>:Unite -start-insert -immediately file_rec/async buffer file_mru<cr>
-nnoremap <C-i> <C-l>:Unite -start-insert -resume file_rec/async buffer file_mru<cr>
+nnoremap <C-p> <C-l>:Unite -start-insert -immediately file_rec/async buffer<cr>
+nnoremap <C-i> <C-l>:Unite -resume file_rec/async buffer<cr>
 nnoremap <leader>/ :Unite grep:.<cr>
 nnoremap <leader>. :Unite history/yank<cr>
-nnoremap <leader>m :Unite -start-insert outline<cr>
+nnoremap <leader>m :Unite outline<cr>
 nnoremap <leader>] :UniteWithCursorWord tag<cr>
 " emmet starts with Ctrl-Space on the Mac
 let g:user_emmet_leader_key = ','
@@ -220,6 +237,8 @@ nnoremap ga :Gwrite<CR>
 nnoremap gc :Gcommit<CR>
 nnoremap gb :Gblame<CR>
 nnoremap gd :Gdiff<CR>
+" pop shell
+:nmap <leader><space> :VimShellPop<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " HANDLING THE EMPTY LINES END OEL SPACES
@@ -251,8 +270,8 @@ function! CallEmmet()
      return "\<c-g>u\<esc>:call emmet#expandAbbr(0,\"\")\<cr>a"
   endif
 endfunction
-autocmd FileType html,css inoremap <buffer> <tab> <c-r>=CallEmmet()<cr>
-autocmd FileType html,css map <buffer> <c-n> <leader>n
+autocmd FileType html,eruby,css,scss inoremap <buffer> <tab> <c-r>=CallEmmet()<cr>
+autocmd FileType html,eruby,css,scss map <buffer> <c-n> <leader>n
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Clear the search buffer when hitting return
@@ -262,11 +281,36 @@ function! MapCR()
 endfunction
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" FARY BENRHART's test macros
+" GARY BENRHART's macros
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-map <leader>t :silent call RunTestFile()<cr>
-map <leader>T :silent call RunNearestTest()<cr>
-map <leader>a :silent call RunTests('')<cr>
+
+" rename file
+function! RenameFile()
+    let old_name = expand('%')
+    let new_name = input('New file name: ', expand('%'), 'file')
+    if new_name != '' && new_name != old_name
+        exec ':saveas ' . new_name
+        exec ':silent !rm ' . old_name
+        redraw!
+    endif
+endfunction
+map <leader>n :call RenameFile()<cr>
+
+" promote to let
+function! PromoteToLet()
+  :normal! dd
+" :exec '?^\s*it\>'
+  :normal! P
+  :.s/\(\w\+\) = \(.*\)$/let(:\1) { \2 }/
+  :normal ==
+endfunction
+:command! PromoteToLet :call PromoteToLet()
+:map <leader>p :PromoteToLet<cr>
+
+" test files
+map <leader>t :call RunTestFile()<cr>
+map <leader>T :call RunNearestTest()<cr>
+map <leader>a :call RunTests('')<cr>
 
 function! RunTestFile(...)
     if a:0
@@ -301,17 +345,24 @@ function! RunTests(filename)
       :w
     end
     if match(a:filename, '\.feature$') != -1
+      if !empty(glob('.zeus.sock')) && !empty(a:filename)
+        exec ":!zeus cucumber " . a:filename
+      else
         if filereadable("Gemfile")
             exec ":!bundle exec cucumber " . a:filename
         else
             exec ":!cucumber " . a:filename
         end
+      end
     else
+      if !empty(glob('.zeus.sock')) && !empty(a:filename)
+        exec ":!zeus rspec " . a:filename
+      else
         if filereadable("Gemfile")
-            exec ":!bundle exec rspec --color " . a:filename
+            exec ":!bundle exec rspec -fd --color " . a:filename
         else
-            exec ":!rspec --color " . a:filename
+            exec ":!rspec -fd --color " . a:filename
         end
+      end
     end
 endfunction
-
