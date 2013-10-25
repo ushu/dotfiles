@@ -69,10 +69,10 @@ NeoBundle 'tsukkee/unite-tag', { 'autoload' : {
       \ }}
 "NeoBundle 'thinca/vim-unite-history'
 " file explorer
-NeoBundleLazy 'Shougo/vimfiler', {
+"NeoBundleLazy 'Shougo/vimfiler', {
       \ 'depends' : 'Shougo/vimproc',
       \ 'autoload' : {
-      \   'commands' : [ 'VimFiler' ]
+      \   'commands' : [ 'VimFiler', 'VimFilerExplorer' ]
       \ }}
 " color parenthesis
 NeoBundle 'amdt/vim-niji'
@@ -143,6 +143,8 @@ if executable('ag')
   let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
   let g:unite_source_grep_recursive_opt = ''
 endif
+" vim-filer
+"let g:vimfiler_as_default_explorer = 1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
@@ -240,6 +242,7 @@ nnoremap <leader><leader> <c-^>
 " %% = current directory
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
 map <leader>e :e %%<cr>
+map <leader><s-e> :VimFilerExplorer %%<cr>
 " keys for Gist
 nnoremap <leader>l :Gist -l<cr>
 " Unite
