@@ -37,7 +37,7 @@ URI=http://testca.local/ca.crl
 END
 
 echo "Generating self-signate certificate CA"
-openssl req -config ./openssl.cnf -newkey rsa:2048 -nodes -keyform PEM -keyout ca.key -x509 -days 3650 -extensions certauth -outform PEM -out ca.cer
+openssl req -config ./openssl.cnf -newkey rsa:2048 -nodes -keyform PEM -keyout ca.key -x509 -days 3650 -extensions certauth -outform PEM -out ca.crt
 
 echo "generating a new private key"
 openssl genrsa -out server.key 2048
@@ -46,10 +46,14 @@ echo "generating a certificate signing request"
 openssl req -config ./openssl.cnf -new -key server.key -out server.req
 
 echo "Signing the request with the generated ca"
-openssl x509 -req -in server.req -CA ca.cer -CAkey ca.key -set_serial 100 -extfile openssl.cnf -extensions server -days 365 -outform PEM -out server.crt
+openssl x509 -req -in server.req -CA ca.crt -CAkey ca.key -set_serial 100 -extfile openssl.cnf -extensions server -days 365 -outform PEM -out server.crt
 
 echo "generating DER version of the server key"
 openssl x509 -in server.crt -out server.der -outform der
+
+echo "bundling the server certificate with the CA certificate"
+cp server.crt server-with-ca.crt
+cat ca.crt >> server-with-ca.crt
 
 #echo "Generating server self-signed certificate"
 #openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout server.key -out server.crt -config openssl.cnf

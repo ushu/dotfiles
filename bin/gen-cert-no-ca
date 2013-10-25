@@ -1,0 +1,23 @@
+cat > openssl.cnf <<-END
+[req]
+distinguished_name = req_distinguished_name
+x509_extensions = v3_req
+prompt = no
+
+[req_distinguished_name]
+C = FR
+ST = Paris
+L = Paris
+O = imagine-app
+CN = $1
+
+[v3_req]
+basicConstraints = critical,CA:FALSE
+keyUsage = digitalSignature, keyEncipherment, dataEncipherment
+extendedKeyUsage = serverAuth
+nsCertType = server
+subjectAltName = DNS:$1
+END
+
+openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout server.key -out server.crt -config openssl.cnf
+openssl x509 -in server.crt -out server.der -outform der
