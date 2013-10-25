@@ -2,6 +2,7 @@
 " My .vimrc, with a lot coming from Gary Bernhart's vimrc
 
 set encoding=utf-8
+let mapleader=","
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " LOAD PLUGINS
@@ -32,8 +33,12 @@ NeoBundle 'bling/vim-airline'
 " smart syntax checker
 NeoBundle 'scrooloose/syntastic'
 " connect to Gist
-NeoBundle 'mattn/webapi-vim'
-NeoBundle 'mattn/gist-vim'
+NeoBundleLazy 'mattn/webapi-vim'
+NeoBundleLazy 'mattn/gist-vim', {
+      \   'depends': 'mattn/webapi-vim',
+      \   'autoload': {
+      \     'commands': [ 'Gist' ]
+      \ } }
 " Unite for search/completion
 NeoBundle 'Shougo/vimproc', { 'build': {
       \   'windows': 'make -f make_mingw32.mak',
@@ -43,11 +48,11 @@ NeoBundle 'Shougo/vimproc', { 'build': {
       \ } }
 " unite + plugins
 NeoBundleLazy 'Shougo/unite.vim', {
+      \ 'depends' : 'Shougo/vimproc',
       \   'autoload' : {
       \       'commands' : [ "Unite", "UniteWithCursorWord" ]
       \   }
       \}
-" Vim shell
 NeoBundleLazy 'Shougo/vimshell', {
       \ 'depends' : 'Shougo/vimproc',
       \ 'autoload' : {
@@ -56,13 +61,25 @@ NeoBundleLazy 'Shougo/vimshell', {
       \                 'VimShellExecute', 'VimShellInteractive',
       \                 'VimShellTerminal', 'VimShellPop']
       \ }}
-NeoBundle 'Shougo/unite-outline'
-NeoBundle 'tsukkee/unite-tag'
-NeoBundle 'thinca/vim-unite-history'
+NeoBundleLazy 'Shougo/unite-outline', { 'autoload' : {
+      \ 'unite_sources' : 'outline',
+      \ }}
+NeoBundle 'tsukkee/unite-tag', { 'autoload' : {
+      \ 'unite_sources' : 'tag',
+      \ }}
+"NeoBundle 'thinca/vim-unite-history'
+" file explorer
+NeoBundleLazy 'Shougo/vimfiler', {
+      \ 'depends' : 'Shougo/vimproc',
+      \ 'autoload' : {
+      \   'commands' : [ 'VimFiler' ]
+      \ }}
 " color parenthesis
 NeoBundle 'amdt/vim-niji'
 " a lot of iabbrev for common errors
 NeoBundle 'chip/vim-fat-finger'
+" smart parenthesis
+NeoBundle 'kana/vim-smartinput'
 " emmet
 NeoBundle 'mattn/emmet-vim'
 " solarized color scheme
@@ -75,7 +92,6 @@ NeoBundleCheck
 " enable everything
 filetype plugin indent on
 syntax on
-let mapleader=","
 
 colorscheme solarized
 
@@ -108,11 +124,20 @@ let s:file_rec_ignore_pattern=
  \'\%(^\|/\)\.$\|\~$\|\.\%(o\|exe\|dll\|ba\?k\|sw[po]\|tmp\|png\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|node_modules\|vendor/bundle\|public/assets\|app/assets/images'
 call unite#custom#source('file_rec', 'ignore_pattern', s:file_rec_ignore_pattern)
 call unite#custom#source('grep', 'ignore_pattern', s:file_rec_ignore_pattern)
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#filters#sorter_default#use(['sorter_length', 'sorter_rank'])
-call unite#filters#converter_default#use(['converter_smart_path'])
+" https://raw.github.com/Shougo/shougo-s-github/master/vim/.vimrc
+call unite#custom#source('file_rec', 'sorters', 'sorter_reverse')
+call unite#custom#source(
+      \ 'buffer,file_rec,file_rec/async,file_mru', 'matchers',
+      \ ['converter_tail', 'matcher_fuzzy'])
+call unite#custom#source(
+      \ 'file', 'matchers',
+      \ ['matcher_fuzzy', 'matcher_hide_hidden_files'])
+call unite#custom#source(
+      \ 'file_rec/async,file_mru', 'converters',
+      \ ['converter_file_directory'])
+call unite#filters#sorter_default#use(['sorter_rank'])
 let g:unite_source_file_rec_max_cache_files = 1000
-let g:unite_source_history_yank_enable = 1
+"let g:unite_source_history_yank_enable = 1
 if executable('ag')
   let g:unite_source_grep_command = 'ag'
   let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
