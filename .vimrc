@@ -294,8 +294,8 @@ map <leader>e :e %%<cr>
 map <leader>q :VimFilerExplorer .<cr>
 map <leader><s-q> :VimFilerExplorer %%<cr>
 " remove the man shortcut arrrrrg
-map <s-K> :VimFilerBufferDir<cr>
-map <c-s-K> :VimFilerCurrentDir<cr>
+map <s-k> :VimFilerBufferDir<cr>
+map <leader>k :VimFilerCurrentDir<cr>
 " keys for Gist
 nnoremap <leader>l :Gist -l<cr>
 " Unite
