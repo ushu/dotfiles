@@ -145,16 +145,17 @@ let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
 " https://github.com/ujihisa/config/blob/master/_vimrc
 let s:file_rec_ignore_pattern=
  \'\%(^\|/\)\.$\|\~$\|\.\%(o\|exe\|dll\|ba\?k\|sw[po]\|tmp\|png\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|node_modules\|vendor/bundle\|public/assets\|app/assets/images\|tmp/\|public/upload'
-call unite#custom#source('file_rec', 'ignore_pattern', s:file_rec_ignore_pattern)
+call unite#custom#source('file_rec/async', 'ignore_pattern', s:file_rec_ignore_pattern)
 call unite#custom#source('grep', 'ignore_pattern', s:file_rec_ignore_pattern)
 " https://raw.github.com/Shougo/shougo-s-github/master/vim/.vimrc
 call unite#custom#source(
-      \ 'buffer,file_rec,file_rec/async,file_mru',
-      \ 'matchers', ['matcher_fuzzy'])
+      \ 'file_rec/async',
+      \ 'matchers', ['converter_tail', 'matcher_fuzzy'])
 call unite#custom#source(
-      \ 'buffer,file_rec,file_rec/async,file_mru',
-      \ 'sorters', ['sorter_length', 'sorter_rank'])
-let g:unite_source_file_rec_max_cache_files = 200
+      \ 'file_rec/async', 'converters',
+      \ ['converter_file_directory'])
+call unite#filters#sorter_default#use(['sorter_rank'])
+let g:unite_source_file_rec_max_cache_files = 1000
 if executable('ag')
   let g:unite_source_grep_command = 'ag'
   let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
@@ -283,7 +284,7 @@ map <leader>k :VimFilerCurrentDir<cr>
 " keys for Gist
 nnoremap <leader>l :Gist -l<cr>
 " Unite
-nnoremap <C-p> <C-l>:Unite -start-insert -immediately file_rec/async buffer<cr>
+nnoremap <C-p> <C-l>:Unite -start-insert -immediately -winheight=10 file_rec/async buffer<cr>
 nnoremap <C-i> <C-l>:Unite -resume file_rec/async buffer<cr>
 nnoremap <leader>/ :Unite grep:.<cr>
 nnoremap <leader>. :Unite history/yank<cr>
