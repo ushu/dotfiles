@@ -1,5 +1,4 @@
 " vim:set ts=2 sts=2 sw=2 expandtab:
-" My .vimrc, with a lot coming from Gary Bernhart's vimrc
 
 set encoding=utf-8
 let mapleader=","
@@ -16,18 +15,30 @@ call neobundle#rc(expand('~/.vim/bundle/'))
 """""""" keep package manager up-to-date
 NeoBundleFetch 'Shougo/neobundle.vim'
 """""""" syntaxes
-NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'othree/html5.vim'
-NeoBundle 'lunaru/vim-less'
-NeoBundle 'tpope/vim-cucumber'
-NeoBundle 'cakebaker/scss-syntax.vim'
-NeoBundle 'kchmck/vim-coffee-script'
+NeoBundleLazy 'pangloss/vim-javascript', {
+      \   'autoload': {
+      \     'filetypes': 'javascript'
+      \ } }
+NeoBundleLazy 'othree/html5.vim', {
+      \   'autoload': {
+      \     'filetypes': 'html'
+      \ } }
+NeoBundleLazy 'lunaru/vim-less', {
+      \   'autoload': {
+      \     'filetypes': 'less'
+      \ } }
+NeoBundleLazy 'tpope/vim-cucumber'
+NeoBundleLazy 'cakebaker/scss-syntax.vim', {
+      \   'autoload': {
+      \     'filetypes': 'scss'
+      \ } }
+NeoBundleLazy 'kchmck/vim-coffee-script', {
+      \   'autoload': {
+      \     'filetypes': 'coffee'
+      \ } }
 NeoBundle 'jtratner/vim-flavored-markdown'
 NeoBundle 'rodjek/vim-puppet'
 """""""" plugins
-" latest versions of default plugins
-NeoBundle 'matchit.zip'
-NeoBundle 'netrw.vim'
 " better status line
 NeoBundle 'bling/vim-airline'
 " smart syntax checker
@@ -40,7 +51,7 @@ NeoBundleLazy 'mattn/gist-vim', {
       \     'commands': [ 'Gist' ]
       \ } }
 " Unite for search/completion
-NeoBundle 'Shougo/vimproc', { 'build': {
+NeoBundleLazy 'Shougo/vimproc', { 'build': {
       \   'windows': 'make -f make_mingw32.mak',
       \   'cygwin': 'make -f make_cygwin.mak',
       \   'mac': 'make -f make_mac.mak',
@@ -64,12 +75,6 @@ NeoBundleLazy 'Shougo/vimshell', {
 NeoBundleLazy 'Shougo/unite-outline', { 'autoload' : {
       \ 'unite_sources' : 'outline',
       \ }}
-NeoBundle 'tsukkee/unite-tag', { 'autoload' : {
-      \ 'unite_sources' : 'tag',
-      \ }}
-NeoBundle 'supermomonga/unite-kawaii-calc', { 'autoload' : {
-      \ 'unite_sources' : 'kawaii-calc',
-      \ }}
 "NeoBundle 'thinca/vim-unite-history'
 " file explorer
 NeoBundleLazy 'Shougo/vimfiler', {
@@ -81,24 +86,25 @@ NeoBundleLazy 'Shougo/vimfiler', {
       \ } }
 " neocomplete
 NeoBundleLazy 'Shougo/context_filetype.vim'
-NeoBundle 'Shougo/neocomplete', {
+NeoBundleLazy 'Shougo/neocomplete', {
          \ 'depends' : 'Shougo/context_filetype.vim',
          \ 'disabled' : !has('lua'),
-         \ }
-NeoBundle 'supermomonga/neocomplete-rsense.vim'
-NeoBundle 'Shougo/neosnippet'
-" clang_complete
-NeoBundle 'Rip-Rip/clang_complete', { 'build': {
-         \   'unix': 'make install',
+         \ 'autoload' : {
+         \   'insert' : 1,
+         \   'commands' : 'NeoCompleteBufferMakeCache',
          \ } }
-" color parenthesis
-NeoBundle 'amdt/vim-niji'
-" a lot of iabbrev for common errors
-NeoBundle 'chip/vim-fat-finger'
-" smart parenthesis
-NeoBundle 'kana/vim-smartinput'
+NeoBundleLazy 'Shougo/neosnippet', {
+      \ 'autoload' : {
+      \   'insert' : 1,
+      \   'filetypes' : 'snippet',
+      \   'unite_sources' : ['snippet', 'neosnippet/user', 'neosnippet/runtime'],
+      \ } }
 " emmet
-NeoBundle 'mattn/emmet-vim'
+NeoBundleLazy 'mattn/emmet-vim', {
+      \ 'autoload' : {
+      \   'insert' : 1,
+      \   'filetypes' : [ 'html', 'css', 'sass', 'eruby'],
+      \ } }
 " solarized color scheme
 NeoBundle 'altercation/vim-colors-solarized'
 " Git fugitive
@@ -138,23 +144,17 @@ let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
 " Unite
 " https://github.com/ujihisa/config/blob/master/_vimrc
 let s:file_rec_ignore_pattern=
- \'\%(^\|/\)\.$\|\~$\|\.\%(o\|exe\|dll\|ba\?k\|sw[po]\|tmp\|png\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|node_modules\|vendor/bundle\|public/assets\|app/assets/images'
+ \'\%(^\|/\)\.$\|\~$\|\.\%(o\|exe\|dll\|ba\?k\|sw[po]\|tmp\|png\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|node_modules\|vendor/bundle\|public/assets\|app/assets/images\|tmp/\|public/upload'
 call unite#custom#source('file_rec', 'ignore_pattern', s:file_rec_ignore_pattern)
 call unite#custom#source('grep', 'ignore_pattern', s:file_rec_ignore_pattern)
 " https://raw.github.com/Shougo/shougo-s-github/master/vim/.vimrc
-call unite#custom#source('file_rec', 'sorters', 'sorter_reverse')
 call unite#custom#source(
-      \ 'buffer,file_rec,file_rec/async,file_mru', 'matchers',
-      \ ['converter_tail', 'matcher_fuzzy'])
+      \ 'buffer,file_rec,file_rec/async,file_mru',
+      \ 'matchers', ['matcher_fuzzy'])
 call unite#custom#source(
-      \ 'file', 'matchers',
-      \ ['matcher_fuzzy', 'matcher_hide_hidden_files'])
-call unite#custom#source(
-      \ 'file_rec/async,file_mru', 'converters',
-      \ ['converter_file_directory'])
-call unite#filters#sorter_default#use(['sorter_rank'])
-let g:unite_source_file_rec_max_cache_files = 1000
-"let g:unite_source_history_yank_enable = 1
+      \ 'buffer,file_rec,file_rec/async,file_mru',
+      \ 'sorters', ['sorter_length', 'sorter_rank'])
+let g:unite_source_file_rec_max_cache_files = 200
 if executable('ag')
   let g:unite_source_grep_command = 'ag'
   let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
@@ -163,64 +163,15 @@ endif
 " vim-filer
 let g:vimfiler_as_default_explorer = 0
 let g:vimfiler_safe_mode_by_default = 0
-let g:vimfiler_tree_leaf_icon = ' '
-let g:vimfiler_tree_opened_icon = '▾'
-let g:vimfiler_tree_closed_icon = '▸'
-let g:vimfiler_file_icon = '-'
-let g:vimfiler_marked_file_icon = '*'
 " neocomplete
 inoremap <expr><c-@> neocomplete#start_manual_complete()
 snoremap <expr><c-@> neocomplete#start_manual_complete()
 let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_ignore_case = 1
-"let g:neocomplete#disable_auto_complete = 1
-"let g:neocomplete#enable_auto_select = 1
 let g:neocomplete#max_list = 5
-call neobundle#config('neocomplete.vim', {
-      \ 'lazy' : 1,
-      \ 'autoload' : {
-      \   'insert' : 1,
-      \   'commands' : 'NeoCompleteBufferMakeCache',
-      \ } })
-"call neobundle#config('supermomonga/neocomplete-rsense.vim', {
-"      \ 'lazy' : 1,
-"      \ 'depends' : 'Shougo/neocomplete',
-"      \ 'autoload' : { 'filetypes' : 'ruby' }
-"      \ })
-call neobundle#config('neosnippet', {
-      \ 'lazy' : 1,
-      \ 'autoload' : {
-      \   'insert' : 1,
-      \   'filetypes' : 'snippet',
-      \   'unite_sources' : ['snippet', 'neosnippet/user', 'neosnippet/runtime'],
-      \ } })
-let g:neocomplete#sources#rsense#home_directory= '/user/local/bin'
-" https://github.com/jakzal/dotfiles/blob/master/.vimrc.local
-" Enable heavy omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown,eruby setlocal omnifunc=htmlcomplete#CompleteTags
-" omni patterns
-autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-if !exists('g:neocomplete#force_omni_input_patterns')
-  let g:neocomplete#force_omni_input_patterns = {}
-endif
-let g:neocomplete#force_overwrite_completefunc = 1
-let g:neocomplete#force_omni_input_patterns.c =
-      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*'
-let g:neocomplete#force_omni_input_patterns.cpp =
-      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
-let g:neocomplete#force_omni_input_patterns.objc =
-      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*'
-let g:neocomplete#force_omni_input_patterns.objcpp =
-      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
-let g:neocomplete#force_omni_input_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
-let g:clang_complete_auto = 0
-let g:clang_auto_select = 0
-let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/'
 " Vimshell
 let g:vimshell_enable_smart_case   = 1
 let g:vimshell_prompt = '$ '
-let g:vimshell_right_prompt        = 'system("date")'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
@@ -232,10 +183,8 @@ set nobackup
 set noswapfile
 set hidden
 " remember more commands and search history
-set history=10000
+set history=1000
 set laststatus=2
-" show mathing paren
-set showmatch
 " search options
 set incsearch
 set hlsearch
@@ -247,7 +196,7 @@ set winwidth=79
 " http://www.shallowsky.com/linux/noaltscreen.html
 set t_ti= t_te=
 " keep more context when scrolling off the end of a buffer
-set scrolloff=3
+"set scrolloff=3
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 " display incomplete commands
@@ -284,11 +233,19 @@ augroup vimrcEx
     \ endif
 
   autocmd! BufRead,BufNewFile *.sass setlocal filetype=sass
+  autocmd! BufRead,BufNewFile *.scss setlocal filetype=scss
+  autocmd! BufRead,BufNewFile *.coffee setlocal filetype=coffee
+  autocmd! BufRead,BufNewFile *.less setlocal filetype=less
   autocmd! BufRead,BufNewFile *.json setlocal filetype=javascript
   autocmd! BufRead,BufNewFile Gemfile,Procfile,Podfile,VagrantFile setlocal filetype=ruby
   autocmd! BufRead,BufNewFile .pryrc setlocal filetype=ruby
   " replace markdown by github markdown everywhere
   autocmd! BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
+
+  " omni complete functions
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown,eruby setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 
   " auto removing of ending spaces
   autocmd FileType ruby,python,javascript,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
@@ -331,7 +288,6 @@ nnoremap <C-i> <C-l>:Unite -resume file_rec/async buffer<cr>
 nnoremap <leader>/ :Unite grep:.<cr>
 nnoremap <leader>. :Unite history/yank<cr>
 nnoremap <leader>m :Unite outline<cr>
-nnoremap <leader>] :UniteWithCursorWord tag<cr>
 nnoremap <leader>c :Unite -start-insert kawaii-calc<cr>
 " emmet starts with Ctrl-e on the Mac
 let g:user_emmet_leader_key = ','
