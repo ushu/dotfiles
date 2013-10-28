@@ -85,8 +85,12 @@ NeoBundle 'Shougo/neocomplete', {
          \ 'depends' : 'Shougo/context_filetype.vim',
          \ 'disabled' : !has('lua'),
          \ }
-"NeoBundleLazy 'supermomonga/neocomplete-rsense.vim'
+NeoBundle 'supermomonga/neocomplete-rsense.vim'
 NeoBundle 'Shougo/neosnippet'
+" clang_complete
+NeoBundle 'Rip-Rip/clang_complete', { 'build': {
+         \   'unix': 'make install',
+         \ } }
 " color parenthesis
 NeoBundle 'amdt/vim-niji'
 " a lot of iabbrev for common errors
@@ -165,7 +169,13 @@ let g:vimfiler_tree_closed_icon = '▸'
 let g:vimfiler_file_icon = '-'
 let g:vimfiler_marked_file_icon = '*'
 " neocomplete
+inoremap <expr><c-@> neocomplete#start_manual_complete()
+snoremap <expr><c-@> neocomplete#start_manual_complete()
 let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_ignore_case = 1
+"let g:neocomplete#disable_auto_complete = 1
+"let g:neocomplete#enable_auto_select = 1
+let g:neocomplete#max_list = 5
 call neobundle#config('neocomplete.vim', {
       \ 'lazy' : 1,
       \ 'autoload' : {
@@ -189,11 +199,28 @@ let g:neocomplete#sources#rsense#home_directory= '/user/local/bin'
 " Enable heavy omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown,eruby setlocal omnifunc=htmlcomplete#CompleteTags
-if !exists('g:neocomplete#omni_patterns')
-  let g:neocomplete#omni_patterns = {}
+" omni patterns
+autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+if !exists('g:neocomplete#force_omni_input_patterns')
+  let g:neocomplete#force_omni_input_patterns = {}
 endif
-let g:neocomplete#omni_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
-let g:neocomplete#sources#syntax#min_keyword_length = 2
+let g:neocomplete#force_overwrite_completefunc = 1
+let g:neocomplete#force_omni_input_patterns.c =
+      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*'
+let g:neocomplete#force_omni_input_patterns.cpp =
+      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+let g:neocomplete#force_omni_input_patterns.objc =
+      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*'
+let g:neocomplete#force_omni_input_patterns.objcpp =
+      \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+let g:neocomplete#force_omni_input_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
+let g:clang_complete_auto = 0
+let g:clang_auto_select = 0
+let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/'
+" Vimshell
+let g:vimshell_enable_smart_case   = 1
+let g:vimshell_prompt = '$ '
+let g:vimshell_right_prompt        = 'system("date")'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
@@ -306,9 +333,9 @@ nnoremap <leader>. :Unite history/yank<cr>
 nnoremap <leader>m :Unite outline<cr>
 nnoremap <leader>] :UniteWithCursorWord tag<cr>
 nnoremap <leader>c :Unite -start-insert kawaii-calc<cr>
-" emmet starts with Ctrl-Space on the Mac
+" emmet starts with Ctrl-e on the Mac
 let g:user_emmet_leader_key = ','
-let g:user_emmet_expandabbr_key = '<C-@>'
+let g:user_emmet_expandabbr_key = '<C-e>'
 " retrying fugitive :)
 " added a bunch of gX commands, overriding existing shortcuts..
 " ( but I don't want to depend on <leader> !)
