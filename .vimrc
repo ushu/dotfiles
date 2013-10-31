@@ -12,6 +12,26 @@ if has('vim_starting')
 endif
 call neobundle#rc(expand('~/.vim/bundle/'))
 
+" NeoBundle lazyloading
+" NeoBundleLazy 'github/repo', {
+"       \ 'build': {
+"       \   'windows': 'make -f make_mingw32.mak',
+"       \   'cygwin': 'make -f make_cygwin.mak',
+"       \   'mac': 'make -f make_mac.mak',
+"       \   'unix': 'make -f make_unix.mak',
+"       \ },
+"       \ 'depends' : 'other/bundle',
+"       \ 'autoload' : {
+"       \   'commands' : [
+"       \     'Command',
+"       \     'OtherCommand'
+"       \   ],
+"       \   'mappings' : '<c-p>',
+"       \   'insert' : 1,
+"       \   'filetypes' : [ 'html', 'css', 'sass', 'eruby']
+"       \ }
+"       \ }
+
 """""""" keep package manager up-to-date
 NeoBundleFetch 'Shougo/neobundle.vim'
 """""""" syntaxes
@@ -36,8 +56,11 @@ NeoBundleLazy 'kchmck/vim-coffee-script', {
       \   'autoload': {
       \     'filetypes': 'coffee'
       \ } }
-NeoBundle 'jtratner/vim-flavored-markdown'
-NeoBundle 'rodjek/vim-puppet'
+NeoBundle 'jtratner/vim-flavored-markdown', {
+      \   'autoload': {
+      \     'filetypes': 'ghmarkdown'
+      \ } }
+"NeoBundle 'rodjek/vim-puppet'
 """""""" plugins
 " better status line
 NeoBundle 'bling/vim-airline'
@@ -50,55 +73,11 @@ NeoBundleLazy 'mattn/gist-vim', {
       \   'autoload': {
       \     'commands': [ 'Gist' ]
       \ } }
-" Unite for search/completion
-NeoBundleLazy 'Shougo/vimproc', { 'build': {
-      \   'windows': 'make -f make_mingw32.mak',
-      \   'cygwin': 'make -f make_cygwin.mak',
-      \   'mac': 'make -f make_mac.mak',
-      \   'unix': 'make -f make_unix.mak',
-      \ } }
-" unite + plugins
-NeoBundleLazy 'Shougo/unite.vim', {
-      \ 'depends' : 'Shougo/vimproc',
+NeoBundleLazy 'kien/ctrlp.vim', {
       \   'autoload' : {
-      \       'commands' : [ "Unite", "UniteWithCursorWord" ]
+      \       'commands' : [ 'CtrlP' ],
       \   }
       \}
-NeoBundleLazy 'Shougo/vimshell', {
-      \ 'depends' : 'Shougo/vimproc',
-      \ 'autoload' : {
-      \   'commands' : [{ 'name' : 'VimShell',
-      \                   'complete' : 'customlist,vimshell#complete'},
-      \                 'VimShellExecute', 'VimShellInteractive',
-      \                 'VimShellTerminal', 'VimShellPop']
-      \ }}
-NeoBundleLazy 'Shougo/unite-outline', { 'autoload' : {
-      \ 'unite_sources' : 'outline',
-      \ }}
-"NeoBundle 'thinca/vim-unite-history'
-" file explorer
-NeoBundleLazy 'Shougo/vimfiler', {
-      \ 'depends' : 'Shougo/unite.vim',
-      \ 'autoload' : {
-      \   'commands' : [{ 'name' : 'VimFiler',
-      \                   'complete' : 'customlist,vimfiler#complete' },
-      \                   'VimFilerExplorer', 'VimFilerBufferDir', 'VimFilerCurrentdir'],
-      \ } }
-" neocomplete
-NeoBundleLazy 'Shougo/context_filetype.vim'
-NeoBundleLazy 'Shougo/neocomplete', {
-         \ 'depends' : 'Shougo/context_filetype.vim',
-         \ 'disabled' : !has('lua'),
-         \ 'autoload' : {
-         \   'insert' : 1,
-         \   'commands' : 'NeoCompleteBufferMakeCache',
-         \ } }
-NeoBundleLazy 'Shougo/neosnippet', {
-      \ 'autoload' : {
-      \   'insert' : 1,
-      \   'filetypes' : 'snippet',
-      \   'unite_sources' : ['snippet', 'neosnippet/user', 'neosnippet/runtime'],
-      \ } }
 " emmet
 NeoBundleLazy 'mattn/emmet-vim', {
       \ 'autoload' : {
@@ -141,38 +120,10 @@ let g:airline_right_sep=''
 """""""" Syntastic
 " use google's gslint
 let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
-" Unite
-" https://github.com/ujihisa/config/blob/master/_vimrc
-let s:file_rec_ignore_pattern=
- \'\%(^\|/\)\.$\|\~$\|\.\%(o\|exe\|dll\|ba\?k\|sw[po]\|tmp\|png\)$\|\%(^\|/\)\.\%(hg\|git\|bzr\|svn\)\%($\|/\)\|node_modules\|vendor/bundle\|public/assets\|app/assets/images\|tmp/\|public/upload'
-call unite#custom#source('file_rec/async', 'ignore_pattern', s:file_rec_ignore_pattern)
-call unite#custom#source('grep', 'ignore_pattern', s:file_rec_ignore_pattern)
-" https://raw.github.com/Shougo/shougo-s-github/master/vim/.vimrc
-call unite#custom#source(
-      \ 'file_rec/async',
-      \ 'matchers', ['converter_tail', 'matcher_fuzzy'])
-call unite#custom#source(
-      \ 'file_rec/async', 'converters',
-      \ ['converter_file_directory'])
-call unite#filters#sorter_default#use(['sorter_rank'])
-let g:unite_source_file_rec_max_cache_files = 1000
-if executable('ag')
-  let g:unite_source_grep_command = 'ag'
-  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
-  let g:unite_source_grep_recursive_opt = ''
-endif
-" vim-filer
-let g:vimfiler_as_default_explorer = 0
-let g:vimfiler_safe_mode_by_default = 0
-" neocomplete
-inoremap <expr><c-@> neocomplete#start_manual_complete()
-snoremap <expr><c-@> neocomplete#start_manual_complete()
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_ignore_case = 1
-let g:neocomplete#max_list = 5
-" Vimshell
-let g:vimshell_enable_smart_case   = 1
-let g:vimshell_prompt = '$ '
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules$|vendor',
+  \ 'file': '\v\.(exe|so|dll)$'
+  \ }
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
@@ -238,15 +189,11 @@ augroup vimrcEx
   autocmd! BufRead,BufNewFile *.coffee setlocal filetype=coffee
   autocmd! BufRead,BufNewFile *.less setlocal filetype=less
   autocmd! BufRead,BufNewFile *.json setlocal filetype=javascript
+  autocmd! BufRead,BufNewFile *.feature setlocal filetype=cucumber
   autocmd! BufRead,BufNewFile Gemfile,Procfile,Podfile,VagrantFile setlocal filetype=ruby
   autocmd! BufRead,BufNewFile .pryrc setlocal filetype=ruby
   " replace markdown by github markdown everywhere
   autocmd! BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
-
-  " omni complete functions
-  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-  autocmd FileType html,markdown,eruby setlocal omnifunc=htmlcomplete#CompleteTags
-  autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 
   " auto removing of ending spaces
   autocmd FileType ruby,python,javascript,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
@@ -276,20 +223,8 @@ nnoremap <leader><leader> <c-^>
 " %% = current directory
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
 map <leader>e :e %%<cr>
-map <leader>q :VimFilerExplorer .<cr>
-map <leader><s-q> :VimFilerExplorer %%<cr>
-" remove the man shortcut arrrrrg
-map <s-k> :VimFilerBufferDir<cr>
-map <leader>k :VimFilerCurrentDir<cr>
 " keys for Gist
 nnoremap <leader>l :Gist -l<cr>
-" Unite
-nnoremap <C-p> <C-l>:Unite -start-insert -immediately -winheight=10 file_rec/async buffer<cr>
-nnoremap <C-i> <C-l>:Unite -resume file_rec/async buffer<cr>
-nnoremap <leader>/ :Unite grep:.<cr>
-nnoremap <leader>. :Unite history/yank<cr>
-nnoremap <leader>m :Unite outline<cr>
-nnoremap <leader>c :Unite -start-insert kawaii-calc<cr>
 " emmet starts with Ctrl-e on the Mac
 let g:user_emmet_leader_key = ','
 let g:user_emmet_expandabbr_key = '<C-e>'
@@ -302,8 +237,8 @@ nnoremap ga :Gwrite<CR>
 nnoremap gc :Gcommit<CR>
 nnoremap gb :Gblame<CR>
 nnoremap gd :Gdiff<CR>
-" pop shell
-:nmap <leader><space> :VimShellPop<cr>
+" CtrlP
+nnoremap <c-p> :CtrlP<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " HANDLING THE EMPTY LINES END OEL SPACES
@@ -315,29 +250,16 @@ match ExtraWhitespace /\s\+$\| \+\ze\t/
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "" VERY fast Tab completion from Gary Bernhart's vimrc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"
-"" and change the mapping to hit emmet in HTML/CSS files
-"function! CallEmmet()
-"  let col = col('.') - 1
-"  if !col || getline('.')[col - 1] !~ '\k'
-"    return "\<tab>"
-"  else
-"     return "\<c-g>u\<esc>:call emmet#expandAbbr(0,\"\")\<cr>a"
-"  endif
-"endfunction
-"autocmd FileType html,eruby,css,scss inoremap <buffer> <tab> <c-r>=CallEmmet()<cr>
-"autocmd FileType html,eruby,css,scss map <buffer> <c-n> <leader>n
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
-" For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
+function! InsertTabWrapper()
+  let col = col('.') - 1
+  if !col || getline('.')[col - 1] !~ '\k'
+    return "\<tab>"
+  else
+    return "\<c-p>"
+  endif
+endfunction
+inoremap <tab> <c-r>=InsertTabWrapper()<cr>
+inoremap <s-tab> <c-n>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Clear the search buffer when hitting return
@@ -345,11 +267,11 @@ endif
 function! MapCR()
   nnoremap <cr> :nohlsearch<cr>
 endfunction
+ call MapCR()
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " GARY BENRHART's macros
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 " rename file
 function! RenameFile()
     let old_name = expand('%')
