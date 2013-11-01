@@ -134,21 +134,14 @@ set nocompatible
 set nobackup
 set noswapfile
 set hidden
-" remember more commands and search history
-set history=1000
-set laststatus=2
 " search options
 set incsearch
 set hlsearch
 " make searches case-sensitive only if they contain upper-case characters
 set switchbuf=useopen
-set numberwidth=5
 set winwidth=79
-" Prevent Vim from clobbering the scrollback buffer. See
-" http://www.shallowsky.com/linux/noaltscreen.html
+" Avoid clobbering the scrollback buffere " http://www.shallowsky.com/linux/noaltscreen.html
 set t_ti= t_te=
-" keep more context when scrolling off the end of a buffer
-"set scrolloff=3
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 " display incomplete commands
