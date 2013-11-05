@@ -12,78 +12,46 @@ if has('vim_starting')
 endif
 call neobundle#rc(expand('~/.vim/bundle/'))
 
-" NeoBundle lazyloading
-" NeoBundleLazy 'github/repo', {
-"       \ 'build': {
-"       \   'windows': 'make -f make_mingw32.mak',
-"       \   'cygwin': 'make -f make_cygwin.mak',
-"       \   'mac': 'make -f make_mac.mak',
-"       \   'unix': 'make -f make_unix.mak',
-"       \ },
-"       \ 'depends' : 'other/bundle',
-"       \ 'autoload' : {
-"       \   'commands' : [
-"       \     'Command',
-"       \     'OtherCommand'
-"       \   ],
-"       \   'mappings' : '<c-p>',
-"       \   'insert' : 1,
-"       \   'filetypes' : [ 'html', 'css', 'sass', 'eruby']
-"       \ }
-"       \ }
-
 """""""" keep package manager up-to-date
 NeoBundleFetch 'Shougo/neobundle.vim'
 """""""" syntaxes
-NeoBundleLazy 'pangloss/vim-javascript', {
-      \   'autoload': {
-      \     'filetypes': 'javascript'
-      \ } }
-NeoBundleLazy 'othree/html5.vim', {
-      \   'autoload': {
-      \     'filetypes': 'html'
-      \ } }
-NeoBundleLazy 'lunaru/vim-less', {
-      \   'autoload': {
-      \     'filetypes': 'less'
-      \ } }
-NeoBundleLazy 'tpope/vim-cucumber'
-NeoBundleLazy 'cakebaker/scss-syntax.vim', {
-      \   'autoload': {
-      \     'filetypes': 'scss'
-      \ } }
-NeoBundleLazy 'kchmck/vim-coffee-script', {
-      \   'autoload': {
-      \     'filetypes': 'coffee'
-      \ } }
-NeoBundle 'jtratner/vim-flavored-markdown', {
-      \   'autoload': {
-      \     'filetypes': 'ghmarkdown'
-      \ } }
+NeoBundleLazy 'pangloss/vim-javascript', {'autoload': { 'filetypes': 'javascript'}}
+NeoBundleLazy 'othree/html5.vim', {'autoload': {'filetypes': 'html'}}
+NeoBundleLazy 'lunaru/vim-less', {'autoload': {'filetypes': 'less'}}
+NeoBundleLazy 'tpope/vim-cucumber', {'autoload': {'filetypes': 'feature'}}
+NeoBundleLazy 'cakebaker/scss-syntax.vim', {'autoload': {'filetypes': 'scss'}}
+NeoBundleLazy 'kchmck/vim-coffee-script', {'autoload': {'filetypes': 'coffee'}}
+NeoBundleLazy 'jtratner/vim-flavored-markdown', {'autoload': {'filetypes': 'ghmarkdown'}}
 "NeoBundle 'rodjek/vim-puppet'
 """""""" plugins
 " better status line
 NeoBundle 'bling/vim-airline'
 " smart syntax checker
-NeoBundle 'scrooloose/syntastic'
+NeoBundleLazy 'scrooloose/syntastic', {
+      \ 'autoload' : {
+      \   'filetypes' : [ 'ruby', 'eruby', 'javascript', 'cucumber', 'coffee' ],
+      \ }}
 " connect to Gist
 NeoBundleLazy 'mattn/webapi-vim'
 NeoBundleLazy 'mattn/gist-vim', {
       \   'depends': 'mattn/webapi-vim',
-      \   'autoload': {
-      \     'commands': [ 'Gist' ]
-      \ } }
+      \   'autoload': {'commands': 'Gist'}
+      \ }
 NeoBundleLazy 'kien/ctrlp.vim', {
       \   'autoload' : {
-      \       'commands' : [ 'CtrlP' ],
-      \   }
-      \}
+      \       'commands' : [ 'CtrlP', 'CtrlPClearCache' ],
+      \ }}
 " emmet
 NeoBundleLazy 'mattn/emmet-vim', {
       \ 'autoload' : {
       \   'insert' : 1,
       \   'filetypes' : [ 'html', 'css', 'sass', 'eruby'],
-      \ } }
+      \ }}
+" Ack search
+NeoBundleLazy 'mileszs/ack.vim', {
+      \ 'autoload' : {
+      \       'commands' : [ 'Ack' ],
+      \ }}
 " solarized color scheme
 NeoBundle 'altercation/vim-colors-solarized'
 " Git fugitive
@@ -170,8 +138,7 @@ set nocindent
 augroup vimrcEx
 
   autocmd!
-  " Jump to last cursor position unless it's invalid or in an event handler
-  " (in vim doc...)
+  " Jump to last cursor position (in vim doc...)
   autocmd BufReadPost *
     \ if line("'\"") > 0 && line("'\"") <= line("$") |
     \   exe "normal g`\"" |
@@ -210,17 +177,12 @@ nnoremap <c-l> <c-w>l
 nnoremap <leader>s <c-w>s
 nnoremap <leader>v <c-w>v
 nnoremap <leader>d <c-w>c
-" Can't be bothered to understand ESC vs <c-c> in insert mode
 imap <c-c> <esc>
-nnoremap <leader><leader> <c-^>
-" %% = current directory
-cnoremap %% <C-R>=expand('%:h').'/'<cr>
-map <leader>e :e %%<cr>
 " keys for Gist
 nnoremap <leader>l :Gist -l<cr>
 " emmet starts with Ctrl-e on the Mac
 let g:user_emmet_leader_key = ','
-let g:user_emmet_expandabbr_key = '<C-e>'
+let g:user_emmet_expandabbr_key = '<C-@>'
 " retrying fugitive :)
 " added a bunch of gX commands, overriding existing shortcuts..
 " ( but I don't want to depend on <leader> !)
@@ -231,7 +193,16 @@ nnoremap gc :Gcommit<CR>
 nnoremap gb :Gblame<CR>
 nnoremap gd :Gdiff<CR>
 " CtrlP
+" navigation
+nnoremap <leader><leader> <c-^>
+cnoremap %% <C-R>=expand('%:h').'/'<cr>
+map <leader>e :e %%<cr>
 nnoremap <c-p> :CtrlP<cr>
+let g:ctrlp_prompt_mappings = { 'PrtClearCache()': ['<c-l>'] }
+if executable('ag')
+  "let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " HANDLING THE EMPTY LINES END OEL SPACES
