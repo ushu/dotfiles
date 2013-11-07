@@ -55,6 +55,10 @@ NeoBundleLazy 'mileszs/ack.vim', {
       \ 'autoload' : {
       \       'commands' : [ 'Ack' ],
       \ }}
+NeoBundleLazy 'arecarn/crunch', {
+      \ 'autoload' : {
+      \       'commands' : [ 'Crunch', 'CrunchLine' ],
+      \ }}
 " solarized color scheme
 NeoBundle 'altercation/vim-colors-solarized'
 " Git fugitive
@@ -195,17 +199,21 @@ nnoremap ga :Gwrite<CR>
 nnoremap gc :Gcommit<CR>
 nnoremap gb :Gblame<CR>
 nnoremap gd :Gdiff<CR>
-" CtrlP
 " navigation
 nnoremap <leader><leader> <c-^>
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
 map <leader>e :e %%<cr>
 nnoremap <c-p> :CtrlP<cr>
+" CtrlP
 let g:ctrlp_prompt_mappings = { 'PrtClearCache()': ['<c-l>'] }
 if executable('ag')
   "let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 endif
+" Crunch
+nnoremap <leader>c :Crunch<cr>
+vnoremap <leader>c :<c-u>CrunchLine<cr>
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " HANDLING THE EMPTY LINES END OEL SPACES
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
