@@ -41,8 +41,12 @@ endif
 
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()
-  call unite#filters#sorter_default#use(['sorter_rank'])
+  call unite#filters#sorter_default#use('sorter_reverse')
+  call unite#filters#matcher_default#use(['converter_tail', 'matcher_fuzzy'])
+  call unite#filters#converter_default#use(['converter_file_directory'])
   " slow !
+  "call unite#filters#sorter_default#use(['sorter_length', 'sorter_rank'])
+  "call unite#filters#converter_default#use(['converter_file_directory'])
   "call unite#filters#matcher_default#use(['matcher_fuzzy'])
 endfunction
 " https://raw.github.com/Shougo/shougo-s-github/master/vim/.vimrc
