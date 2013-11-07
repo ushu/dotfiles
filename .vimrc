@@ -12,22 +12,8 @@ if has('vim_starting')
 endif
 call neobundle#rc(expand('~/.vim/bundle/'))
 
-" Unite for search/completion
- NeoBundleLazy 'Shougo/vimproc', { 'build': {
-       \ 'windows': 'make -f make_mingw32.mak',
-       \ 'cygwin': 'make -f make_cygwin.mak',
-       \ 'mac': 'make -f make_mac.mak',
-       \ 'unix': 'make -f make_unix.mak',
-       \ } }
-NeoBundleLazy 'Shougo/unite.vim', 'if_lua', {
-      \ 'depends' : 'vimproc',
-      \ 'autoload' : {
-      \ 'commands' : [ "Unite", "UniteWithCursorWord" ]
-      \ }
-      \}
-NeoBundleLazy 'Shougo/unite-outline', { 'autoload' : {
-      \ 'unite_sources' : 'outline',
-      \ }}
+" exported unite conf
+source $HOME/.vim/.uniterc
 
 """""""" keep package manager up-to-date
 NeoBundleFetch 'Shougo/neobundle.vim'
@@ -49,7 +35,7 @@ NeoBundleLazy 'scrooloose/syntastic', {
       \   'filetypes' : [ 'ruby', 'eruby', 'javascript', 'cucumber', 'coffee' ],
       \ }}
 " connect to Gist
-NeoBundleLazy 'mattn/webapi-vim'
+NeoBundle 'mattn/webapi-vim'
 NeoBundleLazy 'mattn/gist-vim', {
       \   'depends': 'mattn/webapi-vim',
       \   'autoload': {'commands': 'Gist'}
@@ -219,15 +205,7 @@ let g:ctrlp_prompt_mappings = { 'PrtClearCache()': ['<c-l>'] }
 if executable('ag')
   "let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-  let g:unite_source_grep_command = 'ag'
-  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
-  let g:unite_source_grep_recursive_opt = ''
 endif
-" https://raw.github.com/Shougo/shougo-s-github/master/vim/.vimrc
-nnoremap <leader>/ :Unite grep:.<cr>
-nnoremap <leader>m :Unite outline<cr>
-
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " HANDLING THE EMPTY LINES END OEL SPACES
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
