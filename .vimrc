@@ -99,6 +99,8 @@ let g:ctrlp_custom_ignore = {
   \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules$|vendor',
   \ 'file': '\v\.(exe|so|dll)$'
   \ }
+let g:gist_get_multiplefile = 1
+let g:gist_post_private = 1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
