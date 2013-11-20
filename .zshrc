@@ -37,3 +37,8 @@ alias s="git st"
 alias l="git lg"
 alias ac="git aa && git ci"
 alias ci="git ci"
+alias be="bundle exec"
+
+vagrant_sprinkle() {
+  sprinkle -c -s "$HOME/.dotfiles/vagrant.rb"
+}

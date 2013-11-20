@@ -203,7 +203,7 @@ main () {
 
   # setup Ruby 2 with usefull gems !
   rvm --default use 2.0
-  gem install rak sass compass rails nokogiri capistrano sinatra chef
+  gem install rak sass compass rails nokogiri capistrano sinatra chef sprinkle
 
   if is_osx; then
     # register custom theme
