@@ -1,4 +1,3 @@
-$users = ['toto']
 require File.join(File.dirname(__FILE__),'packages.rb')
 
 deployment do

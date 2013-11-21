@@ -125,6 +125,7 @@ end
 package :nginx, provides: :webserver do
   description 'install latest Nginx from ppa repository'
   requires :ppa
+  requires :ufw_add_profile, profile: 'Nginx Full'
   apt 'nginx-full' do
     pre :install, "apt-add-repository ppa:nginx/stable"
     pre :install, "apt-get update"
@@ -226,17 +227,6 @@ package :base do
   requires :build_essential
   requires :base_tools
   requires :base_security
+  requires :firewall
   requires :create_users if $users.any?
 end
-
-# policies
-
-policy :webserver, roles: :webserver  do
-  requires :base
-  requires :webserver
-  requires :database
-  requires :cache
-  requires :firewall
-  requires :ufw_add_profile, profile: 'Nginx Full'
-end
-
