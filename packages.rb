@@ -48,15 +48,10 @@ package :update_locales, sudo: true do
 end
 
 # create users
-if $users.any?
-  $users.each do |user|
-    package "create_#{user}".to_sym do
-      #requires "create_#{user}_group"
-      add_user user, in_group: user, flags: "--disabled-password"
-      verify do
-        has_user user, in_group: user
-      end
-     end
+package "ensure_account" do
+  add_user opts[:user], in_group: opts[:user], flags: "--disabled-password"
+  verify do
+    has_user opts[:user], in_group: opts[:user]
   end
 end
 
@@ -203,6 +198,12 @@ package :memcached, provides: :cache do
     has_apt 'memcached'
     has_executable 'memcached'
   end
+end
+
+# app-installation packages
+package :rails_app do
+  description 'prepare for deploying a ruby app'
+  requires :ensure_account, user: opts[:app_name]
 end
 
 # meta packages
