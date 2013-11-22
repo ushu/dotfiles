@@ -39,7 +39,7 @@ package :ssh do
   end
 end
 
-package :update_locales, sudo: true do
+package :update_locales do
   apt %w{en fr}.collect { |l| "language-pack-#{l}" } do
     post :install, 'locale-gen'
     post :install, 'update-locale LANGUAGE=en_US.UTF8 LC_MESSAGES=POSIX'
@@ -117,10 +117,9 @@ package :ssh_hardening do
 end
 
 # webserver
-package :nginx, provides: :webserver do
+package :nginx_ppa, provides: :webserver do
   description 'install latest Nginx from ppa repository'
   requires :ppa
-  requires :ufw_add_profile, profile: 'Nginx Full'
   apt 'nginx-full' do
     pre :install, "apt-add-repository ppa:nginx/stable"
     pre :install, "apt-get update"
@@ -133,6 +132,12 @@ package :nginx, provides: :webserver do
   end
 end
 
+package :nginx, provides: :webserver do
+  description 'install Nginx'
+  requires :nginx_ppa
+  requires :ufw_add_profile, profile: 'Nginx Full'
+end
+
 package :apache, provides: :webserver do
   description 'install Apached httpd from apt'
   apt 'apache2'
@@ -143,13 +148,20 @@ package :apache, provides: :webserver do
 end
 
 # database
+package :postgresql_repository do
+  description 'install official PostgreSQL repository and keys'
+  file '/etc/apt/sources.list.d/pgdg.list', content: 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main'
+  runner 'wget https://www.postgresql.org/media/keys/ACCC4CF8.asc; apt-key add ACCC4CF8.asc; rm ACCC4CF8.asc'
+  runner 'apt-get update'
+  verify do
+    has_file '/etc/apt/sources.list.d/pgdg.list'
+  end
+end
+
 package :postgresql, provides: :database do
   description 'install latest PostgreSQL'
-  file '/etc/apt/sources.list.d/pgdg.list', content: 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main', sudo: true
-  apt 'postgresql' do
-    pre :install, 'wget https://www.postgresql.org/media/keys/ACCC4CF8.asc; apt-key add ACCC4CF8.asc; rm ACCC4CF8.asc'
-    pre :install, 'apt-get update'
-  end
+  requires :postgresql_repository
+  apt 'postgresql'
   verify do
     has_apt 'postgresql'
     has_user 'postgres'
@@ -180,7 +192,6 @@ package :redis_source, provides: :cache do
   description 'install Redis from source'
   requires :build_essential
 
-
   source "http://download.redis.io/redis-stable.tar.gz" do
     pre :install, "killall -9 redis-server || true"
     custom_install 'make install'
@@ -198,12 +209,6 @@ package :memcached, provides: :cache do
     has_apt 'memcached'
     has_executable 'memcached'
   end
-end
-
-# app-installation packages
-package :rails_app do
-  description 'prepare for deploying a ruby app'
-  requires :ensure_account, user: opts[:app_name]
 end
 
 # meta packages
