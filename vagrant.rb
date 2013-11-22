@@ -1,8 +1,12 @@
 require File.join(File.dirname(__FILE__),'packages.rb')
 
+policy :rails, roles: :rails do
+  requires :rails_stack, app_name: 'toto'
+end
+
 deployment do
   delivery :capistrano do
-    role :webserver, "127.0.0.1"
+    role :rails, "127.0.0.1"
 
     set :user, "vagrant"
     set :run_method, :sudo

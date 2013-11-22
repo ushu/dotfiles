@@ -48,16 +48,10 @@ package :update_locales, sudo: true do
 end
 
 # create users
-package "ensure_account" do
-  add_user opts[:user], in_group: opts[:user], flags: "--disabled-password"
+package :user do
+  add_user opts[:name], in_group: opts[:name], flags: "--disabled-password"
   verify do
-    has_user opts[:user], in_group: opts[:user]
-  end
-end
-
-package :create_users do
-  $users.each do |user|
-    requires "create_#{user}"
+    has_user opts[:name], in_group: opts[:name]
   end
 end
 
@@ -117,10 +111,9 @@ package :ssh_hardening do
 end
 
 # webserver
-package :nginx, provides: :webserver do
+package :nginx_ppa, provides: :webserver do
   description 'install latest Nginx from ppa repository'
   requires :ppa
-  requires :ufw_add_profile, profile: 'Nginx Full'
   apt 'nginx-full' do
     pre :install, "apt-add-repository ppa:nginx/stable"
     pre :install, "apt-get update"
@@ -131,6 +124,11 @@ package :nginx, provides: :webserver do
     has_user 'www-data'
     has_executable 'nginx'
   end
+end
+package :nginx, provides: :webserver do
+  description 'install latest Nginx'
+  requires :nginx_ppa
+  requires :ufw_add_profile, profile: 'Nginx Full'
 end
 
 package :apache, provides: :webserver do
@@ -176,21 +174,6 @@ package :redis, provides: :cache do
   end
 end
 
-package :redis_source, provides: :cache do
-  description 'install Redis from source'
-  requires :build_essential
-
-
-  source "http://download.redis.io/redis-stable.tar.gz" do
-    pre :install, "killall -9 redis-server || true"
-    custom_install 'make install'
-  end
-  verify do
-    has_executable 'redis-server'
-    #has_executable_with_version('redis-server', '2.1.10', '--version')
-  end
-end
-
 package :memcached, provides: :cache do
   description 'install Memcache using apt'
   apt 'memcached'
@@ -198,12 +181,6 @@ package :memcached, provides: :cache do
     has_apt 'memcached'
     has_executable 'memcached'
   end
-end
-
-# app-installation packages
-package :rails_app do
-  description 'prepare for deploying a ruby app'
-  requires :ensure_account, user: opts[:app_name]
 end
 
 # meta packages
@@ -219,15 +196,28 @@ end
 package :base_security do
   requires :fail2ban
   requires :ssh_hardening
+  requires :firewall
 end
 
 package :base do
   description 'Stuff I install on all servers'
+  # check environment
   requires :apt_update
   requires :update_locales
-  requires :build_essential
+  # install vim, git ...
   requires :base_tools
+  # basic node security tools
   requires :base_security
-  requires :firewall
-  requires :create_users if $users.any?
+end
+
+package :rails_stack do
+  requires :base
+  requires :nginx
+  requires :postgresql
+  requires :redis
+
+  app = opts[:app_name]
+  requires :user, name: app
+  runner "mkdir /home/#{app}/app"
+  runner "chown -R #{app} /home/#{app}/app"
 end
