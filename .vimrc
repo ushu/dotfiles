@@ -12,57 +12,16 @@ if has('vim_starting')
 endif
 call neobundle#rc(expand('~/.vim/bundle/'))
 
-" exported unite conf
-source $HOME/.vim/.uniterc
-
 """""""" keep package manager up-to-date
 NeoBundleFetch 'Shougo/neobundle.vim'
-"""""""" syntaxes
-NeoBundleLazy 'pangloss/vim-javascript', {'autoload': { 'filetypes': 'javascript'}}
-NeoBundleLazy 'othree/html5.vim', {'autoload': {'filetypes': 'html'}}
-NeoBundleLazy 'lunaru/vim-less', {'autoload': {'filetypes': 'less'}}
-NeoBundleLazy 'tpope/vim-cucumber', {'autoload': {'filetypes': 'feature'}}
-NeoBundleLazy 'cakebaker/scss-syntax.vim', {'autoload': {'filetypes': 'scss'}}
-NeoBundleLazy 'kchmck/vim-coffee-script', {'autoload': {'filetypes': 'coffee'}}
-NeoBundleLazy 'jtratner/vim-flavored-markdown', {'autoload': {'filetypes': 'ghmarkdown'}}
-"NeoBundle 'rodjek/vim-puppet'
+
 """""""" plugins
-" better status line
-NeoBundle 'bling/vim-airline'
-" smart syntax checker
-NeoBundleLazy 'scrooloose/syntastic', {
-      \ 'autoload' : {
-      \   'filetypes' : [ 'ruby', 'eruby', 'javascript', 'cucumber', 'coffee' ],
-      \ }}
-" connect to Gist
-NeoBundle 'mattn/webapi-vim'
-NeoBundleLazy 'mattn/gist-vim', {
-      \   'depends': 'mattn/webapi-vim',
-      \   'autoload': {'commands': 'Gist'}
-      \ }
-NeoBundleLazy 'kien/ctrlp.vim', {
-      \   'autoload' : {
-      \       'commands' : [ 'CtrlP', 'CtrlPClearCache' ],
-      \ }}
-" emmet
-NeoBundleLazy 'mattn/emmet-vim', {
-      \ 'autoload' : {
-      \   'insert' : 1,
-      \   'filetypes' : [ 'html', 'css', 'sass', 'eruby'],
-      \ }}
-" Ack search
-NeoBundleLazy 'mileszs/ack.vim', {
-      \ 'autoload' : {
-      \       'commands' : [ 'Ack' ],
-      \ }}
-NeoBundleLazy 'arecarn/crunch', {
-      \ 'autoload' : {
-      \       'commands' : [ 'Crunch', 'CrunchLine' ],
-      \ }}
-" solarized color scheme
-NeoBundle 'altercation/vim-colors-solarized'
-" Git fugitive
-NeoBundle 'tpope/vim-fugitive'
+source $HOME/.vim/plugins
+" exported unite conf
+source $HOME/.vim/unite
+
+"""""""" syntaxes
+source $HOME/.vim/syntax-plugins
 
 NeoBundleCheck
 

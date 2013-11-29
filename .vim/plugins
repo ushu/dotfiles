@@ -1,0 +1,70 @@
+" Vimproc
+NeoBundleLazy 'Shougo/vimproc', { 'build': {
+     \ 'windows': 'make -f make_mingw32.mak',
+     \ 'cygwin': 'make -f make_cygwin.mak',
+     \ 'mac': 'make -f make_mac.mak',
+     \ 'unix': 'make -f make_unix.mak',
+     \ } }
+NeoBundleLazy 'Shougo/vimshell', {
+      \ 'depends' : 'Shougo/vimproc',
+      \ 'autoload' : {
+      \  'commands' : [{ 'name' : 'VimShell',
+      \                  'complete' : 'customlist,vimshell#complete'},
+      \                 'VimShellExecute', 'VimShellInteractive',
+      \                 'VimShellTerminal', 'VimShellPop']
+      \ }}
+"""""""" plugins
+" better status line
+NeoBundle 'bling/vim-airline'
+NeoBundle 'Zuckonit/vim-airline-tomato', {
+      \ 'depends': 'bling/vim-airline'
+      \ }
+" smart syntax checker
+NeoBundleLazy 'scrooloose/syntastic', {
+      \ 'autoload' : {
+      \   'filetypes' : [ 'ruby', 'eruby', 'javascript', 'cucumber', 'coffee' ],
+      \ }}
+" connect to Gist
+NeoBundle 'mattn/webapi-vim'
+NeoBundleLazy 'mattn/gist-vim', {
+      \   'depends': 'mattn/webapi-vim',
+      \   'autoload': {'commands': 'Gist'}
+      \ }
+NeoBundleLazy 'kien/ctrlp.vim', {
+      \   'autoload' : {
+      \     'commands' : [ 'CtrlP', 'CtrlPClearCache' ],
+      \ }}
+" emmet
+NeoBundleLazy 'mattn/emmet-vim', {
+      \ 'autoload' : {
+      \   'insert' : 1,
+      \   'filetypes' : [ 'html', 'css', 'sass', 'eruby'],
+      \ }}
+" Ack search
+NeoBundleLazy 'mileszs/ack.vim', {
+      \ 'autoload' : {
+      \       'commands' : [ 'Ack' ],
+      \ }}
+NeoBundleLazy 'arecarn/crunch', {
+      \ 'autoload' : {
+      \  'commands' : [ 'Crunch', 'CrunchLine' ],
+      \ }}
+" solarized color scheme
+NeoBundle 'altercation/vim-colors-solarized'
+" Git fugitive
+NeoBundle 'tpope/vim-fugitive'
+" Live-Reload
+" commented because it is not working ...
+"NeoBundle 'flomotlik/vim-livereload', { 'build': {
+"      \ 'mac': 'rake',
+"      \ 'unix': 'rake'
+"      \ }, 'autoload' : {
+"      \   'filetypes' : [ 'html', 'eruby' ],
+"      \ }}
+" Live-Style
+NeoBundleLazy 'mattn/livestyle-vim', { 'build': {
+      \ 'mac': 'go get code.google.com/p/go.net/websocket && go build -o livestyled/livestyled livestyled/livestyled.go',
+      \ 'unix': 'go get code.google.com/p/go.net/websocket && go build -o livestyled/livestyled livestyled/livestyled.go',
+      \ }, 'autoload' : {
+      \  'commands' : [ 'LiveStyle' ],
+      \ }}

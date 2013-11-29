@@ -1,0 +1,20 @@
+NeoBundleLazy 'pangloss/vim-javascript', {'autoload': { 'filetypes': 'javascript'}}
+NeoBundleLazy 'othree/html5.vim', {'autoload': {'filetypes': 'html'}}
+NeoBundleLazy 'lunaru/vim-less', {'autoload': {'filetypes': 'less'}}
+NeoBundleLazy 'tpope/vim-cucumber', {'autoload': {'filetypes': 'feature'}}
+NeoBundleLazy 'cakebaker/scss-syntax.vim', {'autoload': {'filetypes': 'scss'}}
+NeoBundleLazy 'kchmck/vim-coffee-script', {'autoload': {'filetypes': 'coffee'}}
+NeoBundleLazy 'jtratner/vim-flavored-markdown', {'autoload': {'filetypes': 'ghmarkdown'}}
+NeoBundleLazy 'elzr/vim-json', {'autoload': {'filetypes': 'json'}}
+
+autocmd! BufRead,BufNewFile *.sass setlocal filetype=sass
+autocmd! BufRead,BufNewFile *.scss setlocal filetype=scss
+autocmd! BufRead,BufNewFile *.coffee setlocal filetype=coffee
+autocmd! BufRead,BufNewFile *.less setlocal filetype=less
+autocmd! BufRead,BufNewFile *.json setlocal filetype=json
+autocmd! BufRead,BufNewFile *.feature setlocal filetype=cucumber
+autocmd! BufRead,BufNewFile Gemfile,Procfile,Podfile,VagrantFile setlocal filetype=ruby
+autocmd! BufRead,BufNewFile .pryrc setlocal filetype=ruby
+autocmd! BufRead,BufNewFile Cheffile setlocal filetype=ruby
+" replace markdown by github markdown everywhere
+autocmd! BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
