@@ -262,6 +262,7 @@ function! SetTestFile()
     let t:grb_test_file=@%
 endfunction
 
+let g:test_allow_bundle=1
 function! RunTests(filename)
     " Write the file and run tests for the given filename
     if expand("%") != ""
@@ -271,7 +272,7 @@ function! RunTests(filename)
       if !empty(glob('.zeus.sock')) && !empty(a:filename)
         exec ":!zeus cucumber " . a:filename
       else
-        if filereadable("Gemfile")
+        if g:test_allow_bundle && filereadable("Gemfile")
             exec ":!bundle exec cucumber " . a:filename
         else
             exec ":!cucumber " . a:filename
@@ -281,10 +282,10 @@ function! RunTests(filename)
       if !empty(glob('.zeus.sock')) && !empty(a:filename)
         exec ":!zeus rspec " . a:filename
       else
-        if filereadable("Gemfile")
-            exec ":!bundle exec rspec -fd --color " . a:filename
+        if g:test_allow_bundle && filereadable("Gemfile")
+            exec ":!bundle exec rspec --color " . a:filename
         else
-            exec ":!rspec -fd --color " . a:filename
+            exec ":!rspec --color " . a:filename
         end
       end
     end
