@@ -41,6 +41,8 @@ if use_heroku
   heroku_app_name = ask('Name for the heroku app (leave empty to skip creation) ?').strip
 end
 
+use_capistrano = yes? 'add capistrano configuration for VPS deployment ?'
+
 use_sendgrid = yes? 'use sendgrid for mail delivery ?'
 
 gemfile_template =  <<-EOF
@@ -111,7 +113,7 @@ group :development, :test do
 end
 
 # Deployment
-gem 'capistrano', group: :development
+<% if use_capistrano %>gem 'capistrano', group: :development<% end %>
 group :development, :test do
   gem 'thin'
   gem 'sqlite3'
@@ -251,8 +253,42 @@ if Rails.env.development?
 end
 EOF
 
-if use_heroku && heroku_app_name.empty?
-  run "heroku create #{heroku_app_name}"
+if use_capistrano
+  run 'echo config/database.yml >> .gitignore'
+  run capify .
+
+  remove_file 'config/deploy.rb'
+  create_file 'config/deploy.rb', <<-EOF
+require "bundler/capistrano"
+
+server "xxx.xxx.xxx.xxx", :web, :app, :db, primary: true
+
+set :application, "#{@app_name}"
+set :user, "#{@app_name}"
+set :user_home, "/home/\#{user}/database.yml"
+set :deploy_to, "/home/\#{user}/app/\#{application}"
+set :deploy_via, :remote_cache
+set :use_sudo, false
+
+set :scm, "git"
+#set :repository, "git@github.com:ushu/#{@app_name}.git"
+set :branch, "master"
+
+default_run_options[:pty] = true
+ssh_options[:forward_agent] = true
+
+after "deploy", "deploy:cleanup" # keep only the last 5 releases
+namespace :deploy do
+  task :symlink_config, roles: :app do
+    run "ln -nfs \#{user_home}/config/database.yml #{release_path}/config/database.yml"
+  end
+  after "deploy:finalize_update", "deploy:symlink_config"
+end
+EOF
 end
 
 git add: ".", commit: "-m 'Initial commit'"
+
+if use_heroku && heroku_app_name.empty?
+  run "heroku create #{heroku_app_name}"
+end
