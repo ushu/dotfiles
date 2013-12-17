@@ -43,7 +43,7 @@ NeoBundleLazy 'mattn/emmet-vim', {
 " Ack search
 NeoBundleLazy 'mileszs/ack.vim', {
       \ 'autoload' : {
-      \       'commands' : [ 'Ack' ],
+      \   'commands' : [ 'Ack' ],
       \ }}
 NeoBundleLazy 'arecarn/crunch', {
       \ 'autoload' : {
@@ -67,4 +67,9 @@ NeoBundleLazy 'mattn/livestyle-vim', { 'build': {
       \ 'unix': 'go get code.google.com/p/go.net/websocket && go build -o livestyled/livestyled livestyled/livestyled.go',
       \ }, 'autoload' : {
       \  'commands' : [ 'LiveStyle' ],
+      \ }}
+
+NeoBundleLazy 'DrawIt', {
+      \ 'autoload' : {
+      \   'commands' : [ 'DrawIt' ],
       \ }}

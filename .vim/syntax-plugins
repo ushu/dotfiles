@@ -4,7 +4,8 @@ NeoBundleLazy 'lunaru/vim-less', {'autoload': {'filetypes': 'less'}}
 NeoBundleLazy 'tpope/vim-cucumber', {'autoload': {'filetypes': 'feature'}}
 NeoBundleLazy 'cakebaker/scss-syntax.vim', {'autoload': {'filetypes': 'scss'}}
 NeoBundleLazy 'kchmck/vim-coffee-script', {'autoload': {'filetypes': 'coffee'}}
-NeoBundleLazy 'jtratner/vim-flavored-markdown', {'autoload': {'filetypes': 'ghmarkdown'}}
+"NeoBundleLazy 'jtratner/vim-flavored-markdown', {'autoload': {'filetypes': 'ghmarkdown'}}
+NeoBundleLazy 'plasticboy/vim-markdown', {'autoload': {'filetypes': 'ghmarkdown'}}
 NeoBundleLazy 'elzr/vim-json', {'autoload': {'filetypes': 'json'}}
 
 autocmd! BufRead,BufNewFile *.sass setlocal filetype=sass
@@ -17,4 +18,4 @@ autocmd! BufRead,BufNewFile Gemfile,Procfile,Podfile,VagrantFile setlocal filety
 autocmd! BufRead,BufNewFile .pryrc setlocal filetype=ruby
 autocmd! BufRead,BufNewFile Cheffile setlocal filetype=ruby
 " replace markdown by github markdown everywhere
-autocmd! BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
+autocmd! BufNewFile,BufRead *.md,*.markdown setlocal filetype=mkd
