@@ -177,6 +177,8 @@ main () {
     [ -f "$HOME/.zprofile" ] || ln -s "$DOTFILES/.zprofile" "$HOME/.zprofile"
     # default options for rails new ...
     [ -f "$HOME/.railsrc" ] || ln -s "$DOTFILES/.railsrc" "$HOME/.railsrc"
+    # tmux config
+    [ -f "$HOME/.tmux.conf" ] || ln -s "$DOTFILES/.tmux.conf" "$HOME/.tmux.conf" && chsh -s /bin/zsh
   fi
 
   if check_command_and_dependencies rvm curl bash git; then
