@@ -113,7 +113,14 @@ group :development, :test do
 end
 
 # Deployment
-<% if use_capistrano %>gem 'capistrano', group: :development<% end %>
+<% if use_capistrano %>
+group :development do
+  gem 'capistrano'
+  #gem 'capistrano-rvm'
+  gem 'capistrano-rbenv'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rails'
+end<% end %>
 group :development, :test do
   gem 'thin'
   gem 'sqlite3'
@@ -259,31 +266,128 @@ if use_capistrano
 
   remove_file 'config/deploy.rb'
   create_file 'config/deploy.rb', <<-EOF
-require "bundler/capistrano"
+# if ssh forwarding does not work run `ssh-agent add ~/.ssh/id_rsa` on local machine
 
-server "xxx.xxx.xxx.xxx", :web, :app, :db, primary: true
+# app info
+set :application, '#{@app_name}'
+set :deploy_to, '/home/#{@app_name}/app'
+set :deploy_via, :remote_cache # keep a git repo and only update on redeploy
+set :rails_env, 'production'
 
-set :application, "#{@app_name}"
-set :user, "#{@app_name}"
-set :user_home, "/home/\#{user}/database.yml"
-set :deploy_to, "/home/\#{user}/app/\#{application}"
-set :deploy_via, :remote_cache
-set :use_sudo, false
+# git repo
+set :repo_url, 'git@github.com:ushu/XXXXXXXXXXX.git'
+set :branch, 'master'
 
-set :scm, "git"
-#set :repository, "git@github.com:ushu/#{@app_name}.git"
-set :branch, "master"
+# allow ssh credential forwarding
+set :ssh_options, {
+  forward_agent: true
+  # keys: %w(/home/rlisowski/.ssh/id_rsa),
+  # auth_methods: %w(password),
+}
 
-default_run_options[:pty] = true
-ssh_options[:forward_agent] = true
+# global files to link
+set :linked_files, %w{config/database.yml}
+set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
-after "deploy", "deploy:cleanup" # keep only the last 5 releases
-namespace :deploy do
-  task :symlink_config, roles: :app do
-    run "ln -nfs \#{user_home}/config/database.yml #{release_path}/config/database.yml"
+# rbenv support: https://github.com/capistrano/rbenv
+set :rbenv_type, :user # or :system
+set :rbenv_ruby, '2.0.0-p353'
+
+# bundler support
+set :bundle_path, ->{ shared_path.join('vendor/bundle') }
+
+# number of previous releases to keep for rollback
+set :keep_releases, 5
+
+# test agent forwarding
+# idea from http://www.capistranorb.com/documentation/getting-started/cold-start/
+desc "Check if agent forwarding is working"
+task :forwarding do
+  on roles(:all) do |h|
+    if test("env | grep SSH_AUTH_SOCK")
+      info "Agent forwarding is up to \#{h}"
+    else
+      error "Agent forwarding is NOT up to \#{h}"
+    end
   end
-  after "deploy:finalize_update", "deploy:symlink_config"
 end
+
+namespace :deploy do
+
+  desc 'Restart application'
+  task :restart do
+    on roles(:app), in: :sequence, wait: 5 do
+      # for phusion passenger
+      #execute :touch, release_path.join('tmp/restart.txt')
+      # Unicorn: send USR2
+      pid_file = "#{shared_path}/pids/unicorn.pid"
+      run "kill -s USR2 `cat #{pid_file}`" if File.exists?(pid_file)
+    end
+  end
+
+  after :finishing, 'deploy:cleanup'
+
+end
+EOF
+  remove_file 'config/deploy/staging.rb'
+  remove_file 'config/deploy/production.rb'
+  create_file 'config/deploy/production.rb', <<-EOF
+set :stage, :production
+
+# Simple Role Syntax
+# ==================
+# Supports bulk-adding hosts to roles, the primary
+# server in each group is considered to be the first
+# unless any hosts have the primary property set.
+#role :app, %w{deploy@example.com}
+#role :web, %w{deploy@example.com}
+#role :db,  %w{deploy@example.com}
+
+# Extended Server Syntax
+# ======================
+# This can be used to drop a more detailed server
+# definition into the server list. The second argument
+# something that quacks like a hash can be used to set
+# extended properties on the server.
+server 'example.com',
+  user: '#{@app_name}',
+  roles: %w{web app db},
+  primary: true
+# ssh_options: {
+#   keys: %w(/home/ushu/.ssh/id_rsa),
+#   forward_agent: false,
+#   auth_methods: %w(publickey password),
+#   password: 'please use keys'
+# }
+
+# fetch(:default_env).merge!(rails_env: :production)
+EOF
+  remove_file 'Capfile'
+  create_file 'Capfile', <<-EOF
+# Load DSL and Setup Up Stages
+require 'capistrano/setup'
+
+# default deployment tasks
+require 'capistrano/deploy'
+
+# Plugins (add to Gemfile first !)
+
+# https://github.com/capistrano/rvm
+# require 'capistrano/rvm'
+#
+# https://github.com/capistrano/rbenv
+require 'capistrano/rbenv'
+
+# https://github.com/capistrano/bundler
+require 'capistrano/bundler'
+
+# https://github.com/capistrano/rails/tree/master/assets
+require 'capistrano/rails/assets'
+# https://github.com/capistrano/rails/tree/master/migrations
+require 'capistrano/rails/migrations'
+
+# Loads custom tasks from `lib/capistrano/tasks' (if any)
+Dir.glob('lib/capistrano/tasks/*.cap').each { |r| import r }
 EOF
 end
 
