@@ -96,6 +96,13 @@ augroup vimrcEx
     \   exe "normal g`\"" |
     \ endif
 
+  " Enable omni completion.
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
   " auto removing of ending spaces
   autocmd FileType ruby,python,javascript,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
 
@@ -133,16 +140,17 @@ vnoremap <leader>c :<c-u>CrunchLine<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "" MACROS
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! InsertTabWrapper()
-  let col = col('.') - 1
-  if !col || getline('.')[col - 1] !~ '\k'
-    return "\<tab>"
-  else
-    return "\<c-p>"
-  endif
-endfunction
-inoremap <tab> <c-r>=InsertTabWrapper()<cr>
-inoremap <s-tab> <c-n>
+" simple tab completion
+"function! InsertTabWrapper()
+"  let col = col('.') - 1
+"  if !col || getline('.')[col - 1] !~ '\k'
+"    return "\<tab>"
+"  else
+"    return "\<c-p>"
+"  endif
+"endfunction
+"inoremap <tab> <c-r>=InsertTabWrapper()<cr>
+"inoremap <s-tab> <c-n>
 
 " Clear the search buffer when hitting return
 function! MapCR()

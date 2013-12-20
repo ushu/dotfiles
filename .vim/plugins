@@ -74,6 +74,9 @@ NeoBundleLazy 'DrawIt', {
       \   'commands' : [ 'DrawIt' ],
       \ }}
 
+" Neo-Complete
+NeoBundle 'Shougo/neocomplete.vim'
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " KEY MAPS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -116,7 +119,18 @@ let g:ctrlp_custom_ignore = {
 " Gist
 let g:gist_get_multiplefile = 1
 let g:gist_post_private = 1
-"
+
 " fix ugly airline in Terminal.app
 let g:airline_left_sep=''
 let g:airline_right_sep=''
+
+" neocomplete
+let g:acp_enableAtStartup = 0
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
+" <TAB>: completion.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return neocomplete#close_popup() . "\<CR>"
+endfunction
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
