@@ -6,6 +6,9 @@ let mapleader=","
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " LOAD PLUGINS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" fix airline bug
+set laststatus=2
+
 " Load package manager
 if has('vim_starting')
   set runtimepath+=~/.vim/bundle/neobundle.vim/
@@ -17,23 +20,21 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
 """""""" plugins
 source $HOME/.vim/plugins
-" exported unite conf
-source $HOME/.vim/unite
 
 """""""" syntaxes
-source $HOME/.vim/syntax-plugins
+source $HOME/.vim/syntaxes
+
+"""""""" color scheme
+NeoBundle 'altercation/vim-colors-solarized'
 
 NeoBundleCheck
-
-" enable everything
 filetype plugin indent on
-syntax on
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" COLORS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 colorscheme solarized
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" MAKE TERMINAL.APP HAPPY
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " solarized with fix for Terminal.app https://github.com/altercation/solarized/issues/146
 if has('gui_macvim')
   set transparency=0
@@ -44,27 +45,12 @@ if !has('gui_running') && $TERM_PROGRAM == 'Apple_Terminal'
   colorscheme solarized
 endif
 
-" fix ugly airline in Terminal.app
-let g:airline_left_sep=''
-let g:airline_right_sep=''
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" OPTIONS FOR PLUGINS
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"""""""" Syntastic
-" use google's gslint
-let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules$|vendor',
-  \ 'file': '\v\.(exe|so|dll)$'
-  \ }
-let g:gist_get_multiplefile = 1
-let g:gist_post_private = 1
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " TONS OF OPTIONS
 " (these are mostly copied from Gary Bernhart's .vimrc)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" enable syntax highlighting
+syntax on
 " cowboy mode on
 set nocompatible
 set nobackup
@@ -73,35 +59,33 @@ set hidden
 " search options
 set incsearch
 set hlsearch
+set ignorecase smartcase
 " make searches case-sensitive only if they contain upper-case characters
-set switchbuf=useopen
+set switchbuf=useopen,usetab
 set winwidth=79
 " Avoid clobbering the scrollback buffere " http://www.shallowsky.com/linux/noaltscreen.html
 set t_ti= t_te=
-" allow backspacing over everything in insert mode
+" imprive command line insert mode
 set backspace=indent,eol,start
-" display incomplete commands
 set showcmd
-" use emacs-style tab completion when selecting files, etc
 set wildmode=longest,list
-" make tab completion for files/buffers act like bash
 set wildmenu
-" Fix slow O inserts
-:set timeout timeoutlen=1000 ttimeoutlen=100
+" Fix slow inserts
+set timeout timeoutlen=1000 ttimeoutlen=100
 " make shell work with Rails
 set shell=bash
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" EDIT OPTIONS
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" indent 2 spaces by default
 set expandtab
-set ignorecase smartcase
-
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
+" indent mode = autoindent
 set autoindent
 set nocindent
+
+" color in rend EOL spaces and empty lines
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$\| \+\ze\t/
 
 augroup vimrcEx
 
@@ -111,17 +95,6 @@ augroup vimrcEx
     \ if line("'\"") > 0 && line("'\"") <= line("$") |
     \   exe "normal g`\"" |
     \ endif
-
-  autocmd! BufRead,BufNewFile *.sass setlocal filetype=sass
-  autocmd! BufRead,BufNewFile *.scss setlocal filetype=scss
-  autocmd! BufRead,BufNewFile *.coffee setlocal filetype=coffee
-  autocmd! BufRead,BufNewFile *.less setlocal filetype=less
-  autocmd! BufRead,BufNewFile *.json setlocal filetype=javascript
-  autocmd! BufRead,BufNewFile *.feature setlocal filetype=cucumber
-  autocmd! BufRead,BufNewFile Gemfile,Procfile,Podfile,VagrantFile setlocal filetype=ruby
-  autocmd! BufRead,BufNewFile .pryrc setlocal filetype=ruby
-  " replace markdown by github markdown everywhere
-  autocmd! BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
 
   " auto removing of ending spaces
   autocmd FileType ruby,python,javascript,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
@@ -141,49 +114,24 @@ nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
-" more split joy
+" split commands
 nnoremap <leader>s <c-w>s
 nnoremap <leader>v <c-w>v
 nnoremap <leader>d <c-w>c
+" c-C == ESC
 imap <c-c> <esc>
-" keys for Gist
-nnoremap <leader>l :Gist -l<cr>
-" emmet starts with Ctrl-e on the Mac
-let g:user_emmet_leader_key = ','
-let g:user_emmet_expandabbr_key = '<C-@>'
-" retrying fugitive :)
-" added a bunch of gX commands, overriding existing shortcuts..
-" ( but I don't want to depend on <leader> !)
-nnoremap g<Space> :Git<Space>
-nnoremap gs :Gstatus<CR>
-nnoremap ga :Gwrite<CR>
-nnoremap gc :Gcommit<CR>
-nnoremap gb :Gblame<CR>
-nnoremap gd :Gdiff<CR>
+
 " navigation
 nnoremap <leader><leader> <c-^>
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
 map <leader>e :e %%<cr>
-nnoremap <c-p> :CtrlP<cr>
-" CtrlP
-let g:ctrlp_prompt_mappings = { 'PrtClearCache()': ['<c-l>'] }
-if executable('ag')
-  "let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-endif
+
 " Crunch
 nnoremap <leader>c :Crunch<cr>
 vnoremap <leader>c :<c-u>CrunchLine<cr>
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" HANDLING THE EMPTY LINES END OEL SPACES
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" color in rend EOL spaces and empty lines
-highlight ExtraWhitespace ctermbg=red guibg=red
-match ExtraWhitespace /\s\+$\| \+\ze\t/
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"" VERY fast Tab completion from Gary Bernhart's vimrc
+"" MACROS
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! InsertTabWrapper()
   let col = col('.') - 1
@@ -196,9 +144,7 @@ endfunction
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>
 inoremap <s-tab> <c-n>
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Clear the search buffer when hitting return
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! MapCR()
   nnoremap <cr> :nohlsearch<cr>
 endfunction

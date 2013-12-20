@@ -1,58 +1,55 @@
 " Vimproc
 NeoBundleLazy 'Shougo/vimproc', { 'build': {
-     \ 'windows': 'make -f make_mingw32.mak',
-     \ 'cygwin': 'make -f make_cygwin.mak',
-     \ 'mac': 'make -f make_mac.mak',
-     \ 'unix': 'make -f make_unix.mak',
-     \ } }
-NeoBundleLazy 'Shougo/vimshell', {
-      \ 'depends' : 'Shougo/vimproc',
-      \ 'autoload' : {
-      \  'commands' : [{ 'name' : 'VimShell',
-      \                  'complete' : 'customlist,vimshell#complete'},
-      \                 'VimShellExecute', 'VimShellInteractive',
-      \                 'VimShellTerminal', 'VimShellPop']
-      \ }}
-"""""""" plugins
+       \ 'windows': 'make -f make_mingw32.mak',
+       \ 'cygwin': 'make -f make_cygwin.mak',
+       \ 'mac': 'make -f make_mac.mak',
+       \ 'unix': 'make -f make_unix.mak',
+       \ } }
+
+" Unite plugins
+" exported unite conf
+source $HOME/.vim/unite
+
 " better status line
 NeoBundle 'bling/vim-airline'
-NeoBundle 'Zuckonit/vim-airline-tomato', {
-      \ 'depends': 'bling/vim-airline'
-      \ }
+"NeoBundle 'Zuckonit/vim-airline-tomato', {
+"      \ 'depends': 'bling/vim-airline'
+"      \ }
+
 " smart syntax checker
 NeoBundleLazy 'scrooloose/syntastic', {
       \ 'autoload' : {
       \   'filetypes' : [ 'ruby', 'eruby', 'javascript', 'cucumber', 'coffee' ],
       \ }}
+
 " connect to Gist
 NeoBundle 'mattn/webapi-vim'
 NeoBundleLazy 'mattn/gist-vim', {
       \   'depends': 'mattn/webapi-vim',
       \   'autoload': {'commands': 'Gist'}
       \ }
+
+" CtrlP
 NeoBundleLazy 'kien/ctrlp.vim', {
       \   'autoload' : {
       \     'commands' : [ 'CtrlP', 'CtrlPClearCache' ],
       \ }}
+
 " emmet
 NeoBundleLazy 'mattn/emmet-vim', {
       \ 'autoload' : {
       \   'insert' : 1,
       \   'filetypes' : [ 'html', 'css', 'sass', 'eruby'],
       \ }}
-" Ack search
-NeoBundleLazy 'mileszs/ack.vim', {
-      \ 'autoload' : {
-      \   'commands' : [ 'Ack' ],
-      \ }}
+
 NeoBundleLazy 'arecarn/crunch', {
       \ 'autoload' : {
       \  'commands' : [ 'Crunch', 'CrunchLine' ],
       \ }}
-" solarized color scheme
-NeoBundle 'altercation/vim-colors-solarized'
+
 " Git fugitive
 NeoBundle 'tpope/vim-fugitive'
+
 " Live-Reload
 " commented because it is not working ...
 "NeoBundle 'flomotlik/vim-livereload', { 'build': {
@@ -62,6 +59,8 @@ NeoBundle 'tpope/vim-fugitive'
 "      \   'filetypes' : [ 'html', 'eruby' ],
 "      \ }}
 " Live-Style
+
+" LiveStyle
 NeoBundleLazy 'mattn/livestyle-vim', { 'build': {
       \ 'mac': 'go get code.google.com/p/go.net/websocket && go build -o livestyled/livestyled livestyled/livestyled.go',
       \ 'unix': 'go get code.google.com/p/go.net/websocket && go build -o livestyled/livestyled livestyled/livestyled.go',
@@ -69,7 +68,55 @@ NeoBundleLazy 'mattn/livestyle-vim', { 'build': {
       \  'commands' : [ 'LiveStyle' ],
       \ }}
 
+" DrawIt
 NeoBundleLazy 'DrawIt', {
       \ 'autoload' : {
       \   'commands' : [ 'DrawIt' ],
       \ }}
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" KEY MAPS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" c-l to list/open Gist
+nnoremap <leader>l :Gist -l<cr>
+
+" c-SPACE => emmet
+let g:user_emmet_leader_key = ','
+let g:user_emmet_expandabbr_key = '<C-@>'
+
+" fugitive
+" <leader>-SPACE to enter any git command
+nnoremap g<Space> :Git<Space>
+" g-X for git command (X = first letter of the command)
+nnoremap gs :Gstatus<CR>
+nnoremap ga :Gwrite<CR>
+nnoremap gc :Gcommit<CR>
+nnoremap gb :Gblame<CR>
+nnoremap gd :Gdiff<CR>
+
+" Ctrl-P
+nnoremap <c-p> :CtrlP<cr>
+let g:ctrlp_prompt_mappings = { 'PrtClearCache()': ['<c-l>'] }
+if executable('ag')
+  "let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" OPTIONS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Syntastic
+" use google's gslint
+let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules$|vendor',
+  \ 'file': '\v\.(exe|so|dll)$'
+  \ }
+
+" Gist
+let g:gist_get_multiplefile = 1
+let g:gist_post_private = 1
+"
+" fix ugly airline in Terminal.app
+let g:airline_left_sep=''
+let g:airline_right_sep=''
