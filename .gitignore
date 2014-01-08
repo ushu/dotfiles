@@ -1,6 +1,8 @@
-.vim
+.vim/bundle
 !.vim/bundle/neobundle.vim
 *.backup
 
 .DS_Store
 .vim/bundle/.neobundle
+.vim/.netrwhist
+.vim/colors

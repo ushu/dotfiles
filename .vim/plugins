@@ -47,6 +47,11 @@ NeoBundleLazy 'arecarn/crunch', {
       \  'commands' : [ 'Crunch', 'CrunchLine' ],
       \ }}
 
+NeoBundleLazy 'scrooloose/nerdtree', {
+      \ 'autoload' : {
+      \  'commands' : [ 'NERDTreeToggle' ],
+      \ }}
+
 " Git fugitive
 NeoBundle 'tpope/vim-fugitive'
 
@@ -134,3 +139,8 @@ function! s:my_cr_function()
   return neocomplete#close_popup() . "\<CR>"
 endfunction
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
+" NERD Tree
+noremap <c-N> :NERDTreeToggle<cr>
+let NERDTreeHijackNetrw=0
+
