@@ -93,11 +93,12 @@ install_homebrew () {
     echo "add additional sources"
     brew tap homebrew/dupes
     brew tap homebrew/versions
+    brew tap josegonzalez/php
 
     # patch /etc/paths to help homebrew
     echo "patch /etc/paths (old version in $DOTFILES/.paths.backup)"
     cp /etc/paths .paths.backup
-    sed '/[/]usr[/]local[/]bin/d' /etc/paths | sed '1 i\
+    sed '/[/]usr[/]local[/]s*bin/d' /etc/paths | sed '1 i\
 /usr/local/bin
 ' > "$DOTFILES/paths"
     sudo mv "$DOTFILES/paths" /etc/paths
@@ -121,6 +122,9 @@ main () {
     # for ruby/rails
     check_commands autoconf automake libtool
     check_brew_dependencies libyaml libxml2 libxslt libksba sqlite apple-gcc42 gcc49 ag qt grok
+    # let's brew php (with debug options
+    #brew install php56 --with-fpm --with-imap --without-apache --with-debug
+    brew install php56 --with-fpm
   fi
 
   if [ ${#MISSING_PACKAGES[@]} -ne 0 ]; then
@@ -210,8 +214,8 @@ main () {
     if check_commands brew; then
       if ! check_brew_dependency vim; then
         # install vim/macvim with lua/python/ruby enabled
-        brew install vim --with-cscope --with-lua --HEAD --with-python --with-ruby
-        brew install macvim --with-cscope --with-lua --HEAD --with-python --with-ruby
+        brew install vim --with-lua
+        brew install macvim --with-lua
       fi
     fi
   fi

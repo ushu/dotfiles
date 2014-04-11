@@ -29,10 +29,11 @@ endif
 
 " basic conf for Unite: matcher and filters
 " ideas here: https://raw.github.com/Shougo/shougo-s-github/master/vim/.vimrc
-call unite#filters#matcher_default#use(['converter_tail', 'matcher_fuzzy'])
+"call unite#filters#matcher_default#use(['converter_tail', 'matcher_fuzzy'])
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#custom#source('file_mru', 'max_candidates', 5)
 call unite#custom#source('file_rec/async', 'sorters', 'sorter_length')
-call unite#custom#source('file_rec/async', 'ignore_pattern', '(vendor/\|log/\|tmp/)')
+call unite#custom#source('file_rec/async', 'ignore_pattern', '(vendor/\|log/\|tmp/\|.git)')
 
 " key bindings
 nnoremap <c-I> :Unite -start-insert file_rec/async:<cr>
