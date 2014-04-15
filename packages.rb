@@ -1,6 +1,7 @@
 require 'set'
 
-$users ||= Set.new
+$locales = %w{en fr}
+$ufw_profiles = [ 'Nginx Full' ]
 
 # utilities
 package :apt_update do
@@ -8,39 +9,22 @@ package :apt_update do
   runner 'apt-get update'
 end
 
-package :python_software_properties do
-  apt 'python-software-properties'
-  verify do
-    has_apt 'python-software-properties'
+%w{python-software-properties
+build-essential
+git-core
+ufw
+fail2ban
+}.each do |p|
+  description "install #{p}"
+  package p do
+    apt p
+    verify { has_apt p }
   end
 end
 
-package :ppa do
-  description 'support for ppa repositories with apt-add-repository'
-  requires :python_software_properties
-  verify do
-    has_executable 'apt-add-repository'
-  end
-end
-
-package :build_essential do
-  apt 'build-essential'
-  verify do
-    has_apt 'build-essential'
-  end
-end
-
-package :ssh do
-  description 'OpsnSSH client and daemon'
-  apt %w{openssh-client openssh-server}
-  verify do
-    %w{sshd ssh}.each { |e| has_executable e }
-    has_process 'sshd'
-  end
-end
-
-package :update_locales do
-  apt %w{en fr}.collect { |l| "language-pack-#{l}" } do
+package :fix_locales do
+  description "fix locales (buggy by default if not US)"
+  apt $locales.collect { |l| "language-pack-#{l}" } do
     post :install, 'locale-gen'
     post :install, 'update-locale LANGUAGE=en_US.UTF8 LC_MESSAGES=POSIX'
     post :install, 'dpkg-reconfigure locales'
@@ -49,32 +33,14 @@ end
 
 # create users
 package :user do
+  description "create a user with a group of the same name"
   add_user opts[:name], in_group: opts[:name], flags: "--disabled-password"
-  verify do
-    has_user opts[:name], in_group: opts[:name]
-  end
-end
-
-# scm
-package :git, provides: :scm do
-  apt 'git-core'
-  verify do
-    has_apt 'git'
-    has_executable 'git'
-  end
+  verify { has_user opts[:name], in_group: opts[:name] }
 end
 
 # firewall
-package :ufw_add_profile do
-  requires :ufw
-  runner "ufw allow \"#{opts[:profile]}\""
-  verify do
-    runs_without_error "ufw status | grep \"#{opts[:profile]}\""
-  end
-end
-
 package :ufw, provides: :firewall do
-  apt 'ufw'
+  requires 'ufw'
   runner 'ufw default deny'
   runner 'ufw allow OpenSSH'
   runner  'ufw --force enable'
@@ -86,22 +52,20 @@ package :ufw, provides: :firewall do
   end
 end
 
-# security packages
-package :fail2ban do
-  requires :ssh
-  apt 'fail2ban'
-  verify do
-    has_apt 'fail2ban'
-  end
+package :ufw_add_profile do
+  requires :ufw
+  runner "ufw allow \"#{opts[:profile]}\""
+  verify { runs_without_error "ufw status | grep \"#{opts[:profile]}\"" }
 end
 
 package :ssh_hardening do
   key = File.read(File.expand_path('~/.ssh/id_rsa.pub')).chomp
-
   push_text key, '~/.ssh/authorized_keys'
+
   replace_text 'PasswordAuthentication yes', 'PasswordAuthentication no', '/etc/ssh/sshd_config'
   replace_text 'X11Forwarding yes', 'X11Forwarding no', '/etc/ssh/sshd_config'
   replace_text 'UsePAM yes', 'UsePAM no', '/etc/ssh/sshd_config'
+
   verify do
     file_contains '~/.ssh/authorized_keys', key
     file_contains '/etc/ssh/sshd_config', 'PasswordAuthentication no'
@@ -111,44 +75,44 @@ package :ssh_hardening do
 end
 
 # webserver
-package :nginx_ppa, provides: :webserver do
-  description 'install latest Nginx from ppa repository'
-  requires :ppa
+package :nginx_repo do
+  description 'install repository'
+  requires 'python-software-properties'
+
   apt 'nginx-full' do
     pre :install, "apt-add-repository ppa:nginx/stable"
     pre :install, "apt-get update"
     post :install, 'update-rc.d nginx defaults'
   end
+
   verify do
     has_apt 'nginx-full'
     has_user 'www-data'
     has_executable 'nginx'
   end
 end
-package :nginx, provides: :webserver do
-  description 'install latest Nginx'
-  requires :nginx_ppa
-  requires :ufw_add_profile, profile: 'Nginx Full'
-end
 
 package :nginx, provides: :webserver do
-  description 'install Nginx'
-  requires :nginx_ppa
-  requires :ufw_add_profile, profile: 'Nginx Full'
-end
+  description 'install latest Nginx from ppa repository'
+  requires 'python-software-properties'
 
-package :apache, provides: :webserver do
-  description 'install Apached httpd from apt'
-  apt 'apache2'
+  apt 'nginx-full' do
+    pre :install, "apt-add-repository ppa:nginx/stable"
+    pre :install, "apt-get update"
+    post :install, 'update-rc.d nginx defaults'
+  end
+
   verify do
-    has_apt 'apache2'
+    has_apt 'nginx-full'
     has_user 'www-data'
+    has_executable 'nginx'
   end
 end
 
 # database
 package :postgresql_repository do
   description 'install official PostgreSQL repository and keys'
+
   file '/etc/apt/sources.list.d/pgdg.list', content: 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main'
   runner 'wget https://www.postgresql.org/media/keys/ACCC4CF8.asc; apt-key add ACCC4CF8.asc; rm ACCC4CF8.asc'
   runner 'apt-get update'
@@ -165,15 +129,6 @@ package :postgresql, provides: :database do
     has_apt 'postgresql'
     has_user 'postgres'
     has_process 'postgres'
-  end
-end
-
-package :mysql, provides: :database do
-  description 'install MySQL using apt'
-  apt 'mysql-server'
-  verify do
-    has_apt 'mysql-server'
-    has_user 'mysql'
   end
 end
 

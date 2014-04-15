@@ -12,9 +12,6 @@ source $HOME/.vim/unite
 
 " better status line
 NeoBundle 'bling/vim-airline'
-"NeoBundle 'Zuckonit/vim-airline-tomato', {
-"      \ 'depends': 'bling/vim-airline'
-"      \ }
 
 " smart syntax checker
 NeoBundleLazy 'scrooloose/syntastic', {
@@ -28,12 +25,6 @@ NeoBundleLazy 'mattn/gist-vim', {
       \   'depends': 'mattn/webapi-vim',
       \   'autoload': {'commands': 'Gist'}
       \ }
-
-" CtrlP
-NeoBundleLazy 'kien/ctrlp.vim', {
-      \   'autoload' : {
-      \     'commands' : [ 'CtrlP', 'CtrlPClearCache' ],
-      \ }}
 
 " emmet
 NeoBundleLazy 'mattn/emmet-vim', {
@@ -73,11 +64,11 @@ NeoBundleLazy 'mattn/livestyle-vim', { 'build': {
       \  'commands' : [ 'LiveStyle' ],
       \ }}
 
-" DrawIt
-NeoBundleLazy 'DrawIt', {
-      \ 'autoload' : {
-      \   'commands' : [ 'DrawIt' ],
-      \ }}
+"" DrawIt
+"NeoBundleLazy 'DrawIt', {
+"      \ 'autoload' : {
+"      \   'commands' : [ 'DrawIt' ],
+"      \ }}
 
 " Neo-Complete
 NeoBundle 'Shougo/neocomplete.vim'
@@ -102,24 +93,16 @@ nnoremap gc :Gcommit<CR>
 nnoremap gb :Gblame<CR>
 nnoremap gd :Gdiff<CR>
 
-" Ctrl-P
-nnoremap <c-p> :CtrlP<cr>
-let g:ctrlp_prompt_mappings = { 'PrtClearCache()': ['<c-l>'] }
-if executable('ag')
-  "let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-endif
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPTIONS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Syntastic
 " use google's gslint
 let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules$|vendor',
-  \ 'file': '\v\.(exe|so|dll)$'
-  \ }
+"let g:ctrlp_custom_ignore = {
+"  \ 'dir':  '\v[\/]\.(git|hg|svn)|node_modules$|vendor',
+"  \ 'file': '\v\.(exe|so|dll)$'
+"  \ }
 
 " Gist
 let g:gist_get_multiplefile = 1
@@ -144,3 +127,5 @@ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 noremap <c-N> :NERDTreeToggle<cr>
 let NERDTreeHijackNetrw=0
 
+" Crunch
+noremap <leader-c> :CrunchLine<CR>

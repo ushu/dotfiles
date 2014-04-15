@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 MISSING_PACKAGES=()
 DOTFILES="$HOME/.dotfiles"
 
@@ -12,9 +13,9 @@ is_osx () {
 }
 
 command_available () {
-  [[ -e `command -v $1` ]] && return 0
+  [[ -e `command -v "$1"` ]] && return 0
   # is it a bash function ?
-  declare -f $1 > /dev/null
+  declare -f "$1" >/dev/null 2>&1
 }
 
 register_package_to_install () {
@@ -22,26 +23,26 @@ register_package_to_install () {
 }
 
 check_command() {
-  if ! command_available $1; then
-    register_package_to_install $2
+  if ! command_available "$1"; then
+    register_package_to_install "$2"
   fi
 }
 
 check_commands() {
   for c in $@; do
-    check_command $c $c
+    check_command "$c" "$c"
   done
 }
 
 check_command_and_dependencies () {
-  if command_available $1; then
+  if command_available "$1"; then
     echo $1 "is already available on this machine: skipping"
     return 1
   else
     local missing=()
-    for c in ${@:2}; do
-      if ! command_available $c; then
-        missing=( ${missing[@]} $c )
+    for c in "${@:2}"; do
+      if ! command_available "$c"; then
+        missing=( ${missing[@]} "$c" )
       fi
     done
     if [ ${#missing[@]} -ne 0 ]; then
@@ -91,12 +92,13 @@ install_homebrew () {
     # add repo for gcc
     echo "add additional sources"
     brew tap homebrew/dupes
-    brew tap homebrew/versions/gcc49
+    brew tap homebrew/versions
+    brew tap josegonzalez/php
 
     # patch /etc/paths to help homebrew
     echo "patch /etc/paths (old version in $DOTFILES/.paths.backup)"
     cp /etc/paths .paths.backup
-    sed '/[/]usr[/]local[/]bin/d' /etc/paths | sed '1 i\
+    sed '/[/]usr[/]local[/]s*bin/d' /etc/paths | sed '1 i\
 /usr/local/bin
 ' > "$DOTFILES/paths"
     sudo mv "$DOTFILES/paths" /etc/paths
@@ -119,7 +121,10 @@ main () {
     check_commands curl git zsh vim
     # for ruby/rails
     check_commands autoconf automake libtool
-    check_brew_dependencies libyaml libxml2 libxslt libksba sqlite apple-gcc42 gcc49 ag qt
+    check_brew_dependencies libyaml libxml2 libxslt libksba sqlite apple-gcc42 gcc49 ag qt grok
+    # let's brew php (with debug options
+    #brew install php56 --with-fpm --with-imap --without-apache --with-debug
+    brew install php56 --with-fpm
   fi
 
   if [ ${#MISSING_PACKAGES[@]} -ne 0 ]; then
@@ -132,26 +137,27 @@ main () {
     easy_install http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz
   fi
 
+  if check_command nvm; then
+    if [ -f "$HOME/.nvm/nvm.sh" ]; then
+      source "$HOME/.nvm/nvm.sh"
+    fi
+  fi
   if check_command_and_dependencies nvm curl git; then
     curl https://raw.github.com/creationix/nvm/master/install.sh | sh
-    source "$HOME/.nvm/nvm.sh"
   fi
 
-  if check_command_and_dependencies node nvm; then
-    nvm install 0.10
-  else
-   if ! nvm ls | grep 0.10; then
-     nvm install 0.10
-   fi
+  LATEST_NODE=$(nvm ls-remote | tail -n1 | xargs)
+  if ! nvm ls | grep "$LATEST_NODE" >/dev/null; then
+    nvm install "$LATEST_NODE"
   fi
 
-  nvm use 0.10
-  nvm alias default 0.10
+  nvm use "$LATEST_NODE"
+  nvm alias default "$LATEST_NODE"
 
   # node-based tools
-  for c in grunt-cli "less" bower yo generator-webapp; do
-    if check_command_and_dependencies $c npm; then
-      npm install -g $c
+  for c in "grunt-cli" "less" bower yo "generator-webapp"; do
+    if check_command_and_dependencies "$c" npm; then
+      npm install -g "$c"
     fi
   done
 
@@ -194,19 +200,12 @@ main () {
     source "$HOME/.rvm/scripts/rvm"
   fi
 
-  if ! rvm list | grep -q 1.9.3; then
-    # grab the last available binary version
-    RUBY19=$(rvm list --remote | grep 1.9.3 | tail -n 1 | cut -d\  -f3)
-    if [ -z $RUBY19 ]; then
-      rvm install $RUBY19 --binary
-    else
-      rvm install 1.9.3
-    fi
-  fi
-  if ! rvm list | grep -q 2.0; then
-    rvm install 2.0
+  LATEST_RUBY=$(rvm list --remote | grep ruby- | tail -n1 | xargs)
+  if ! rvm list | grep -q "$LATEST_RUBY"; then
+    rvm install $LATEST_RUBY --binary
   fi
 
+<<<<<<< HEAD
   # setup Ruby 2 as default
   rvm --default use 2.0
 
@@ -233,15 +232,23 @@ main () {
   # test tools
   gem install rspec cucumber capybara poltergeist
   gem install rspec-rails cucumber-rails
+=======
+  # setup Ruby 2 with usefull gems !
+  rvm --default use "$LATEST_RUBY"
+  rvm gemset use global # using global gemset == bin are always available
+  gem install bundler rak sass compass rails nokogiri capistrano sinatra chef sprinkle
+>>>>>>> 01b0dc63762df8504a5c56aa440b8bb59b151041
 
   if is_osx; then
     # register custom theme
     open "$DOTFILES/Flat-bigFont.terminal"
 
     if check_commands brew; then
-      # install vim/macvim with lua/python/ruby enabled
-      brew install vim --with-cscope --with-lua --HEAD --with-python --with-ruby
-      brew install macvim --with-cscope --with-lua --HEAD --with-python --with-ruby
+      if ! check_brew_dependency vim; then
+        # install vim/macvim with lua/python/ruby enabled
+        brew install vim --with-lua
+        brew install macvim --with-lua
+      fi
     fi
   fi
 }
