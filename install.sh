@@ -91,6 +91,7 @@ install_homebrew () {
     # add repo for gcc
     echo "add additional sources"
     brew tap homebrew/dupes
+    brew tap homebrew/versions/gcc49
 
     # patch /etc/paths to help homebrew
     echo "patch /etc/paths (old version in $DOTFILES/.paths.backup)"
@@ -183,11 +184,14 @@ main () {
 
   if check_command_and_dependencies rvm curl bash git; then
     curl -L https://get.rvm.io | bash -s stable --rails --autolibs=enabled
+  elif check_commands rvm; then
+    rvm get stable
+  fi
+
+  if [ -d "$HOME/.rvm" ]; then
     # load RVM into current shell sessions
     export PATH="$PATH:$HOME/.rvm/bin"
     source "$HOME/.rvm/scripts/rvm"
-  elif check_commands rvm; then
-    rvm get stable
   fi
 
   if ! rvm list | grep -q 1.9.3; then
@@ -203,9 +207,32 @@ main () {
     rvm install 2.0
   fi
 
-  # setup Ruby 2 with usefull gems !
+  # setup Ruby 2 as default
   rvm --default use 2.0
-  gem install bundler rak sass compass rails nokogiri capistrano sinatra chef sprinkle
+
+  # move to global gemset
+  if ! rvm gemset list | grep global; then
+    rvm gemset create global
+  fi
+  rvm gemset use global
+
+  # basic gems
+  gem install bundler rak pry
+  # useful libs
+  gem install nokogiri thor rmagick
+  gem install aws fog unf
+  # web dev
+  gem install sass compass rails sinatra jekyll
+  # Rails <3
+  gem install rails bcrypt-ruby
+  gem install autoprefixr-rails email_validator date_validator omniauth-google-oauth2 omniauth-facebook omniauth-twitter carrierwave mime-types # plugins
+  gem install omniauth-google-oauth2 omniauth-facebook omniauth-twitter devise  # auth
+  gem install figaro zeus jazz_hands coffee-rails-source-maps sass-rails-source-maps better_errors annotate bullet # dev tools
+  # deployment gems
+  gem install chef sprinkle capistrano mina
+  # test tools
+  gem install rspec cucumber capybara poltergeist
+  gem install rspec-rails cucumber-rails
 
   if is_osx; then
     # register custom theme
