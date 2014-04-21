@@ -73,6 +73,9 @@ NeoBundleLazy 'mattn/livestyle-vim', { 'build': {
 " Neo-Complete
 NeoBundle 'Shougo/neocomplete.vim'
 
+" Copty as RTF
+NeoBundle 'zerowidth/vim-copy-as-rtf'
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " KEY MAPS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -92,6 +95,10 @@ nnoremap ga :Gwrite<CR>
 nnoremap gc :Gcommit<CR>
 nnoremap gb :Gblame<CR>
 nnoremap gd :Gdiff<CR>
+nnoremap gD <c-w>h<c-w>c
+nnoremap gl :Glog<CR>
+vnoremap <leader>p :diffput<CR>:diffupdate<CR>
+vnoremap <leader>o :diffget<CR>:diffupdate<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " OPTIONS
