@@ -89,11 +89,11 @@ install_homebrew () {
     sudo chmod -R g+w /Library/Caches/Homebrew
     sudo chmod g+x /Library/Caches/Homebrew
 
-    # add repo for gcc
-    echo "add additional sources"
-    brew tap homebrew/dupes
-    brew tap homebrew/versions
-    brew tap josegonzalez/php
+    ## add repo for gcc
+    #echo "add additional sources"
+    #brew tap homebrew/dupes
+    #brew tap homebrew/versions
+    #brew tap josegonzalez/php
 
     # patch /etc/paths to help homebrew
     echo "patch /etc/paths (old version in $DOTFILES/.paths.backup)"
@@ -105,61 +105,118 @@ install_homebrew () {
   fi
 }
 
-main () {
-  # linux ??
-  if is_osx; then
-    install_homebrew
+install_nvm_tools () {
+  # load nvm
+  . "$HOME/.nvm/nvm.sh"
 
+  # ensure the latest node is installed through nvm
+  LATEST_NODE=$(nvm ls-remote | tail -n1 | xargs)
+  if ! nvm ls | grep "$LATEST_NODE" >/dev/null; then
+    nvm install "$LATEST_NODE"
   fi
 
+  # setup as current+default node
+  nvm use "$LATEST_NODE"
+  nvm alias default "$LATEST_NODE"
+
+  # Install node packages
+  NODE_TOOLS=(grunt-cli less bower yo express)
+  for c in ${NODE_TOOLS[@]}; do
+    if check_command_and_dependencies "$c" npm; then
+      npm install -g "$c"
+    fi
+  done
+}
+
+install_system_packages () {
+  # find missing packages
   if is_debian; then
+
+    # install common tools
     check_commands curl git bash zsh autoconf libtool bison pkg-config
-    check_command vim vim-nox
+
+    # install vim
+    check_commands vim vim-nox
+
+    # install common libs for Rails
     check_apt_dependencies libreadline6-dev zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libgdbm-dev libncurses5-dev libffi-dev
+
   elif is_osx; then
-    # common dependencies
-    check_commands curl git zsh vim
-    # for ruby/rails
-    check_commands autoconf automake libtool
-    check_brew_dependencies libyaml libxml2 libxslt libksba sqlite apple-gcc42 gcc49 ag qt grok
-    # let's brew php (with debug options
-    #brew install php56 --with-fpm --with-imap --without-apache --with-debug
-    brew install php56 --with-fpm
+
+    # latest version of common tools
+    check_commands wget curl git zsh gawk
+
+    # userful dev tools
+    #check_commands autoconf automake libtool
+    check_commands grok ag
+
+    # base runtimes
+    check_commands ruby python3 nodejs
+
+    # runtime version managers
+    check_commands ruby-install chruby pyenv-virtualenv pyenv-virtualenvwrapper nvm
+
+    # libraries for Rails dev
+    check_brew_dependencies libyaml libxml2 libxslt libksba sqlite
+
+    ## let's brew php (with debug options)
+    ##brew install php56 --with-fpm --with-imap --without-apache --with-debug
+    #brew install php56 --with-fpm
   fi
 
+  # install missing packages
   if [ ${#MISSING_PACKAGES[@]} -ne 0 ]; then
     if is_debian; then
       sudo apt-get install ${MISSING_PACKAGES[@]}
     elif is_osx; then
       brew install ${MISSING_PACKAGES[@]}
     fi
-    # add gjslint
-    easy_install http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz
+    ## add gjslint
+    #easy_install http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz
+  fi
+}
+
+install_ruby () {
+  # load chruby
+  source /usr/local/share/chruby/chruby.sh
+
+  LATEST_AVAILABLE_RUBY=$(ruby-install | grep 'stable: ' | head -n1 | sed "s/ *stable: //")
+  LATEST_RUBY=$(chruby | tail -n1 | sed "s/ *ruby-//")
+
+  if [ $LATEST_RUBY != $LATEST_AVAILABLE_RUBY ]; then
+    echo "installing ruby $LATEST_AVAILABLE_RUBY"
+
+    # install latest ruby
+    ruby-install ruby stable
+
+    # reload chruby
+    source /usr/local/share/chruby/chruby.sh
+
+    LATEST_RUBY="$LATEST_AVAILABLE_RUBY"
   fi
 
-  if check_command nvm; then
-    if [ -f "$HOME/.nvm/nvm.sh" ]; then
-      source "$HOME/.nvm/nvm.sh"
-    fi
-  fi
-  if check_command_and_dependencies nvm curl git; then
-    curl https://raw.github.com/creationix/nvm/master/install.sh | sh
+  # load as current ruby
+  chruby $LATEST_RUBY
+
+  # pre-install fat gems
+  gem install bundler pry nokogiri
+  # web tools
+  gem install sass compass rails sinatra jekyll
+  # other tools
+  gem install vagrant
+}
+
+main () {
+  # linux ??
+  if is_osx; then
+    install_homebrew
   fi
 
-  LATEST_NODE=$(nvm ls-remote | tail -n1 | xargs)
-  if ! nvm ls | grep "$LATEST_NODE" >/dev/null; then
-    nvm install "$LATEST_NODE"
-  fi
+  install_system_packages
 
-  nvm use "$LATEST_NODE"
-  nvm alias default "$LATEST_NODE"
+  install_ruby
 
-  # node-based tools
-  for c in "grunt-cli" "less" bower yo "generator-webapp"; do
-    if check_command_and_dependencies "$c" npm; then
-      npm install -g "$c"
-    fi
-  done
+  install_nvm_tools
 
   if check_command git; then
     if [ -d "$DOTFILES" ]; then
@@ -168,7 +225,7 @@ main () {
       # clone and init all submodules
       git clone http://github.com/ushu/dotfiles.git $DOTFILES
       cd $DOTFILES
-      git submudule init
+      git submodule init
       cd ..
     fi
 
@@ -188,70 +245,27 @@ main () {
     [ -f "$HOME/.tmux.conf" ] || ln -s "$DOTFILES/.tmux.conf" "$HOME/.tmux.conf" && chsh -s /bin/zsh
   fi
 
-  if check_command_and_dependencies rvm curl bash git; then
-    curl -L https://get.rvm.io | bash -s stable --rails --autolibs=enabled
-  elif check_commands rvm; then
-    rvm get stable
-  fi
-
-  if [ -d "$HOME/.rvm" ]; then
-    # load RVM into current shell sessions
-    export PATH="$PATH:$HOME/.rvm/bin"
-    source "$HOME/.rvm/scripts/rvm"
-  fi
-
-  LATEST_RUBY=$(rvm list --remote | grep ruby- | tail -n1 | xargs)
-  if ! rvm list | grep -q "$LATEST_RUBY"; then
-    rvm install $LATEST_RUBY --binary
-  fi
-
-<<<<<<< HEAD
-  # setup Ruby 2 as default
-  rvm --default use 2.0
-
-  # move to global gemset
-  if ! rvm gemset list | grep global; then
-    rvm gemset create global
-  fi
-  rvm gemset use global
-
-  # basic gems
-  gem install bundler rak pry
-  # useful libs
-  gem install nokogiri thor rmagick
-  gem install aws fog unf
-  # web dev
-  gem install sass compass rails sinatra jekyll
-  # Rails <3
-  gem install rails bcrypt-ruby
-  gem install autoprefixr-rails email_validator date_validator omniauth-google-oauth2 omniauth-facebook omniauth-twitter carrierwave mime-types # plugins
-  gem install omniauth-google-oauth2 omniauth-facebook omniauth-twitter devise  # auth
-  gem install figaro zeus jazz_hands coffee-rails-source-maps sass-rails-source-maps better_errors annotate bullet # dev tools
-  # deployment gems
-  gem install chef sprinkle capistrano mina
-  # test tools
-  gem install rspec cucumber capybara poltergeist
-  gem install rspec-rails cucumber-rails
-=======
-  # setup Ruby 2 with usefull gems !
-  rvm --default use "$LATEST_RUBY"
-  rvm gemset use global # using global gemset == bin are always available
-  gem install bundler rak sass compass rails nokogiri capistrano sinatra chef sprinkle
->>>>>>> 01b0dc63762df8504a5c56aa440b8bb59b151041
-
   if is_osx; then
-    # register custom theme
-    open "$DOTFILES/Flat-bigFont.terminal"
-
-    if check_commands brew; then
-      if ! check_brew_dependency vim; then
-        # install vim/macvim with lua/python/ruby enabled
-        brew install vim --with-lua
-        brew install macvim --with-lua
-      fi
+    if ! check_brew_dependency vim; then
+      # install vim/macvim with lua/python/ruby enabled
+      brew install vim --with-lua
+      brew install macvim --with-lua
     fi
+  fi
+
+  # install ievms ?
+  if ! "$HOME/.ievms"; then
+    read -r -p "Install IEVMS [y/N] ? " response
+    case $response in
+      [yY][eE][sS]|[yY])
+        curl -s https://raw.githubusercontent.com/xdissent/ievms/master/ievms.sh | env INSTALL_PATH="$HOME/.ievms" bash
+        ;;
+      *)
+        echo "Aborted..."
+        ;;
+    esac
   fi
 }
 
+# Proceed
 main
-

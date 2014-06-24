@@ -20,9 +20,10 @@ export PATH="$PATH:$HOME/.dotfiles/bin"
 # Options
 ################################################################################
 
-source ~/.nvm/nvm.sh
+source /usr/local/share/chruby/chruby.sh
+source /usr/local/share/chruby/auto.sh
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+source ~/.nvm/nvm.sh
 
 ################################################################################
 # Custom commands
@@ -46,3 +47,6 @@ sprinkle_vagrant() {
 sprinkle_init() {
   ruby "$HOME/.dotfiles/sprinkle_init.rb" init
 }
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
