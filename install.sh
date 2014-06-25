@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 MISSING_PACKAGES=()
 DOTFILES="$HOME/.dotfiles"
 
@@ -203,7 +202,7 @@ install_ruby () {
   # web tools
   gem install sass compass rails sinatra jekyll
   # other tools
-  gem install vagrant
+  gem install vagrant cocoapods
 }
 
 main () {
