@@ -147,7 +147,7 @@ install_system_packages () {
 
     # userful dev tools
     #check_commands autoconf automake libtool
-    check_commands grok ag
+    check_commands grok ag pkg-config
 
     # base runtimes
     check_commands ruby python3 nodejs
@@ -157,6 +157,9 @@ install_system_packages () {
 
     # libraries for Rails dev
     check_brew_dependencies libyaml libxml2 libxslt libksba sqlite
+
+    # install deployment tools
+    check_commands ansible
 
     ## let's brew php (with debug options)
     ##brew install php56 --with-fpm --with-imap --without-apache --with-debug
