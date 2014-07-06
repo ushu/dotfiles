@@ -23,7 +23,8 @@ export PATH="$PATH:$HOME/.dotfiles/bin"
 source /usr/local/share/chruby/chruby.sh
 source /usr/local/share/chruby/auto.sh
 
-source ~/.nvm/nvm.sh
+source $(brew --prefix nvm)/nvm.sh
+export NVM_DIR=~/.nvm
 
 ################################################################################
 # Custom commands
