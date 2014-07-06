@@ -56,14 +56,6 @@ NeoBundle 'tpope/vim-fugitive'
 "      \ }}
 " Live-Style
 
-" LiveStyle
-NeoBundleLazy 'mattn/livestyle-vim', { 'build': {
-      \ 'mac': 'go get code.google.com/p/go.net/websocket && go build -o livestyled/livestyled livestyled/livestyled.go',
-      \ 'unix': 'go get code.google.com/p/go.net/websocket && go build -o livestyled/livestyled livestyled/livestyled.go',
-      \ }, 'autoload' : {
-      \  'commands' : [ 'LiveStyle' ],
-      \ }}
-
 "" DrawIt
 "NeoBundleLazy 'DrawIt', {
 "      \ 'autoload' : {
