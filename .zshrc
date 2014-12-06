@@ -51,3 +51,7 @@ sprinkle_init() {
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
+
+randompwd() {
+  openssl rand -base64 64 | sed -e 's/[\/=]//g' | cut -c1-50 | head -n1
+}
