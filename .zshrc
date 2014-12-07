@@ -41,14 +41,6 @@ alias ac="git aa && git ci"
 alias ci="git ci"
 alias be="bundle exec"
 
-sprinkle_vagrant() {
-  sprinkle -c -s "$HOME/.dotfiles/vagrant.rb"
-}
-
-sprinkle_init() {
-  ruby "$HOME/.dotfiles/sprinkle_init.rb" init
-}
-
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 
