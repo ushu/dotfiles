@@ -12,14 +12,47 @@ if has('vim_starting')
   set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
 call neobundle#rc(expand('~/.vim/bundle/'))
-
-"""""""" keep package manager up-to-date
+" keep package manager up-to-date
 NeoBundleFetch 'Shougo/neobundle.vim'
 
-"""""""" plugins
-source $HOME/.vimpackages
+"" editorconfig (reads ~/.editorconfig)
+NeoBundle 'editorconfig/editorconfig-vim'
+"
+NeoBundle 'bling/vim-airline'
+NeoBundle 'tpope/vim-fugitive'
 
-"""""""" color scheme
+"" plugins with custom build
+NeoBundle 'Valloric/YouCompleteMe', { 'build': {
+       \ 'mac': './install.sh --clang-completer',
+       \ 'unix': './install.sh --clang-completer' }}
+
+" lazy-loaded plugins by file type
+NeoBundleLazy 'scrooloose/syntastic', { 'autoload' : {
+       \ 'filetypes' : [ 'ruby', 'eruby', 'javascript', 'cucumber', 'coffee' ] }}
+NeoBundleLazy 'mattn/emmet-vim', { 'autoload' : {
+       \ 'insert' : 1,
+       \ 'filetypes' : [ 'html', 'css', 'sass', 'eruby'] }}
+
+" lazy-loaded plugins by command
+
+NeoBundleLazy 'scrooloose/nerdtree', { 'autoload' : {
+       \ 'commands' : [ 'NERDTreeToggle' ] }}
+NeoBundleLazy 'kien/ctrlp.vim', { 'autoload' : {
+       \ 'commands' : [ 'CtrlP' ] }}
+NeoBundleLazy 'zerowidth/vim-copy-as-rtf', { 'autoload' : {
+       \ 'commands' : [ 'CopyRTF' ] }}
+
+" custom syntax coloring
+NeoBundleLazy 'pangloss/vim-javascript', {'autoload': { 'filetypes': 'javascript'}}
+NeoBundleLazy 'othree/html5.vim', {'autoload': {'filetypes': 'html'}}
+NeoBundleLazy 'lunaru/vim-less', {'autoload': {'filetypes': 'less'}}
+NeoBundleLazy 'tpope/vim-cucumber', {'autoload': {'filetypes': 'feature'}}
+NeoBundleLazy 'cakebaker/scss-syntax.vim', {'autoload': {'filetypes': 'scss'}}
+NeoBundleLazy 'kchmck/vim-coffee-script', {'autoload': {'filetypes': 'coffee'}}
+NeoBundleLazy 'plasticboy/vim-markdown', {'autoload': {'filetypes': 'mkd'}}
+NeoBundleLazy 'elzr/vim-json', {'autoload': {'filetypes': 'json'}}
+
+" color scheme
 NeoBundle 'altercation/vim-colors-solarized'
 
 NeoBundleCheck
@@ -39,6 +72,23 @@ if !has('gui_running') && $TERM_PROGRAM == 'Apple_Terminal'
   let g:solarized_termtrans = 1
   colorscheme solarized
 endif
+
+" per-extension syntax coloring
+augroup syntaxEx
+
+  autocmd! BufRead,BufNewFile *.sass setlocal filetype=sass
+  autocmd! BufRead,BufNewFile *.scss setlocal filetype=scss
+  autocmd! BufRead,BufNewFile *.coffee setlocal filetype=coffee
+  autocmd! BufRead,BufNewFile *.less setlocal filetype=less
+  autocmd! BufRead,BufNewFile *.json setlocal filetype=json
+  autocmd! BufRead,BufNewFile *.feature setlocal filetype=cucumber
+  autocmd! BufRead,BufNewFile Gemfile,Procfile,Podfile,VagrantFile,Cheffile setlocal filetype=ruby
+  autocmd! BufRead,BufNewFile .pryrc setlocal filetype=ruby
+
+  " replace markdown by github markdown everywhere
+  autocmd! BufNewFile,BufRead *.md,*.markdown setlocal filetype=mkd
+
+augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COMMON EDITOR OPTIONS
@@ -74,7 +124,47 @@ set autoindent
 set nocindent
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" AVOID EOL WHITESPACES
+" OPTIONS FOR PLUGINS
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:user_emmet_leader_key = ','
+let g:user_emmet_expandabbr_key = '<C-@>'
+
+" fugitive
+" <leader>-SPACE to enter any git command
+nnoremap g<Space> :Git<Space>
+" g-X for git command (X = first letter of the command)
+nnoremap gs :Gstatus<CR>
+nnoremap ga :Gwrite<CR>
+nnoremap gc :Gcommit<CR>
+nnoremap gb :Gblame<CR>
+nnoremap gd :Gdiff<CR>
+nnoremap gD <c-w>h<c-w>c
+nnoremap gl :Glog<CR>
+vnoremap <leader>p :diffput<CR>:diffupdate<CR>
+vnoremap <leader>o :diffget<CR>:diffupdate<CR>
+
+" Syntastic
+" use google's gslint
+let g:syntastic_javascript_checkers = ['gjslint', 'jslint']
+
+" fix ugly airline in Terminal.app
+let g:airline_left_sep=''
+let g:airline_right_sep=''
+
+" NERD Tree
+noremap <c-N> :NERDTreeToggle<cr>
+let NERDTreeHijackNetrw=0
+
+" CtrlP
+nnoremap <leader>i :CtrlP<CR>
+let g:ctrlp_map = '<leader>i'
+let g:ctrlp_cmd = 'CtrlP'
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.exe
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|swp)$'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" RULES TO AVOID EOL WHITESPACES
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " color in rend EOL spaces and empty lines
@@ -144,10 +234,10 @@ autocmd BufReadPost *
 function! MapCR()
   nnoremap <cr> :nohlsearch<cr>
 endfunction
- call MapCR()
+call MapCR()
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" GARY BENRHART's macros
+" GARY BENRHART's spec macros
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " rename file
@@ -237,3 +327,4 @@ function! RunTests(filename)
       end
     end
 endfunction
+

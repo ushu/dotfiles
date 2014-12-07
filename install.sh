@@ -106,7 +106,7 @@ install_homebrew () {
   sudo mv "$DOTFILES/paths" /etc/paths
 }
 
-install_nvm_tools () {
+install_node () {
   # load nvm
   . "$HOME/.nvm/nvm.sh"
 
@@ -220,7 +220,7 @@ main () {
 
   install_ruby
 
-  install_nvm_tools
+  install_node
 
   if check_command git; then
     if [ -d "$DOTFILES" ]; then
@@ -242,12 +242,15 @@ main () {
     [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
     # zsh config
     [ -d "$HOME/.oh-my-zsh" ] || git clone git://github.com/robbyrussell/oh-my-zsh.git "$HOME/.oh-my-zsh"
-    [ -f "$HOME/.zshrc" ] || ln -s "$DOTFILES/.zshrc" "$HOME/.zshrc" && chsh -s /bin/zsh
+    [ -f "$HOME/.zshrc" ] || ln -s "$DOTFILES/.zshrc" "$HOME/.zshrc"
     [ -f "$HOME/.zprofile" ] || ln -s "$DOTFILES/.zprofile" "$HOME/.zprofile"
     # default options for rails new ...
     [ -f "$HOME/.railsrc" ] || ln -s "$DOTFILES/.railsrc" "$HOME/.railsrc"
     # tmux config
-    [ -f "$HOME/.tmux.conf" ] || ln -s "$DOTFILES/.tmux.conf" "$HOME/.tmux.conf" && chsh -s /bin/zsh
+    [ -f "$HOME/.tmux.conf" ] || ln -s "$DOTFILES/.tmux.conf" "$HOME/.tmux.conf"
+
+    # ensure zsh is the default shell
+    chsh -s /bin/zsh
   fi
 
   if is_osx; then
