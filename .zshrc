@@ -30,10 +30,6 @@ export NVM_DIR=~/.nvm
 # Custom commands
 ################################################################################
 
-rn() {
-  rails new $1 -m "$HOME/.dotfiles/rails_template.rb" -T -B
-}
-
 alias d="git dc"
 alias s="git st"
 alias l="git lg"
