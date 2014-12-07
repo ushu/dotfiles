@@ -78,30 +78,32 @@ check_brew_dependency () {
 }
 
 install_homebrew () {
-  if ! command_available brew; then
+  if command_available brew; then
+    brew update
+  else
     ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
+  fi
 
-    echo "Preparing brew for multi-user"
-    sudo chgrp -R admin /usr/local
-    sudo chmod -R g+w /usr/local
-    sudo chgrp -R admin /Library/Caches/Homebrew
-    sudo chmod -R g+w /Library/Caches/Homebrew
-    sudo chmod g+x /Library/Caches/Homebrew
+  echo "Checking brew permissions"
+  sudo chgrp -R admin /usr/local
+  sudo chmod -R g+w /usr/local
+  sudo chgrp -R admin /Library/Caches/Homebrew
+  sudo chmod -R g+w /Library/Caches/Homebrew
+  sudo chmod g+x /Library/Caches/Homebrew
 
-    ## add repo for gcc
-    #echo "add additional sources"
-    #brew tap homebrew/dupes
-    #brew tap homebrew/versions
-    #brew tap josegonzalez/php
+  ## add repo for gcc
+  #echo "add additional sources"
+  #brew tap homebrew/dupes
+  #brew tap homebrew/versions
+  #brew tap josegonzalez/php
 
-    # patch /etc/paths to help homebrew
-    echo "patch /etc/paths (old version in $DOTFILES/.paths.backup)"
-    cp /etc/paths .paths.backup
-    sed '/[/]usr[/]local[/]s*bin/d' /etc/paths | sed '1 i\
+  # patch /etc/paths to help homebrew
+  echo "patch /etc/paths (old version in $DOTFILES/.paths.backup)"
+  cp /etc/paths .paths.backup
+  sed '/[/]usr[/]local[/]s*bin/d' /etc/paths | sed '1 i\
 /usr/local/bin
 ' > "$DOTFILES/paths"
-    sudo mv "$DOTFILES/paths" /etc/paths
-  fi
+  sudo mv "$DOTFILES/paths" /etc/paths
 }
 
 install_nvm_tools () {
@@ -235,6 +237,7 @@ main () {
     # vim config
     [ -f "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
     [ -d "$HOME/.vim" ] || ln -s "$DOTFILES/.vim" "$HOME/.vim"
+    [ -d "$HOME/.editorconfig" ] || ln -s "$DOTFILES/.editorconfig" "$HOME/.editorconfig"
     # git config
     [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
     # zsh config

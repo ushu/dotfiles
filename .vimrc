@@ -6,8 +6,6 @@ let mapleader=","
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " LOAD PLUGINS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" fix airline bug
-set laststatus=2
 
 " Load package manager
 if has('vim_starting')
@@ -19,10 +17,7 @@ call neobundle#rc(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 """""""" plugins
-source $HOME/.vim/plugins
-
-"""""""" syntaxes
-source $HOME/.vim/syntaxes
+source $HOME/.vimpackages
 
 """""""" color scheme
 NeoBundle 'altercation/vim-colors-solarized'
@@ -46,8 +41,8 @@ if !has('gui_running') && $TERM_PROGRAM == 'Apple_Terminal'
 endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" TONS OF OPTIONS
-" (these are mostly copied from Gary Bernhart's .vimrc)
+" COMMON EDITOR OPTIONS
+" (no .swp, buffers/tabs options etc. mostly from Gary Bernhart's .vimrc)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " enable syntax highlighting
 syntax on
@@ -56,7 +51,7 @@ set nocompatible
 set nobackup
 set noswapfile
 set hidden
-" search options
+" search options: incremental + highlight + case insensitive
 set incsearch
 set hlsearch
 set ignorecase smartcase
@@ -65,7 +60,7 @@ set switchbuf=useopen,usetab
 set winwidth=79
 " Avoid clobbering the scrollback buffere " http://www.shallowsky.com/linux/noaltscreen.html
 set t_ti= t_te=
-" imprive command line insert mode
+" improve command line insert mode
 set backspace=indent,eol,start
 set showcmd
 set wildmode=longest,list
@@ -74,27 +69,28 @@ set wildmenu
 set timeout timeoutlen=1000 ttimeoutlen=100
 " make shell work with Rails
 set shell=bash
-" indent 2 spaces by default
-set expandtab
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
 " indent mode = autoindent
 set autoindent
 set nocindent
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" AVOID EOL WHITESPACES
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " color in rend EOL spaces and empty lines
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$\| \+\ze\t/
 
-augroup vimrcEx
+" auto removing of ending spaces
+augroup RemoveEOL
+  autocmd FileType ruby,python,javascript,sh,css autocmd BufWritePre <buffer> :%s/\s\+$//e
+augroup END
 
-  autocmd!
-  " Jump to last cursor position (in vim doc...)
-  autocmd BufReadPost *
-    \ if line("'\"") > 0 && line("'\"") <= line("$") |
-    \   exe "normal g`\"" |
-    \ endif
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ENABLE OMNICOMPLETION
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+augroup OmniCompletion
 
   " Enable omni completion.
   autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -103,28 +99,29 @@ augroup vimrcEx
   autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
-  " auto removing of ending spaces
-  autocmd FileType ruby,python,javascript,sh autocmd BufWritePre <buffer> :%s/\s\+$//e
-
 augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " CUSTOM KEY MAPS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" Disable arrow navigation
 map <Left> <Nop>
 map <Right> <Nop>
 map <Up> <Nop>
 map <Down> <Nop>
+
 " Move around splits with <c-hjkl>
 nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
+
 " split commands
 nnoremap <leader>s <c-w>s
 nnoremap <leader>v <c-w>v
 nnoremap <leader>d <c-w>c
+
 " c-C == ESC
 imap <c-c> <esc>
 
@@ -133,24 +130,15 @@ nnoremap <leader><leader> <c-^>
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
 map <leader>e :e %%<cr>
 
-" Crunch
-nnoremap <leader>c :Crunch<cr>
-vnoremap <leader>c :<c-u>CrunchLine<cr>
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "" MACROS
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" simple tab completion
-"function! InsertTabWrapper()
-"  let col = col('.') - 1
-"  if !col || getline('.')[col - 1] !~ '\k'
-"    return "\<tab>"
-"  else
-"    return "\<c-p>"
-"  endif
-"endfunction
-"inoremap <tab> <c-r>=InsertTabWrapper()<cr>
-"inoremap <s-tab> <c-n>
+
+" Jump to last cursor position when opening file (from vim doc)
+autocmd BufReadPost *
+  \ if line("'\"") > 0 && line("'\"") <= line("$") |
+  \   exe "normal g`\"" |
+  \ endif
 
 " Clear the search buffer when hitting return
 function! MapCR()
@@ -161,6 +149,7 @@ endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " GARY BENRHART's macros
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 " rename file
 function! RenameFile()
     let old_name = expand('%')
@@ -173,16 +162,20 @@ function! RenameFile()
 endfunction
 map <leader>n :call RenameFile()<cr>
 
-"" promote to let
-"function! PromoteToLet()
-"  :normal! dd
-"" :exec '?^\s*it\>'
-"  :normal! P
-"  :.s/\(\w\+\) = \(.*\)$/let(:\1) { \2 }/
-"  :normal ==
-"endfunction
-":command! PromoteToLet :call PromoteToLet()
-":map <leader>p :PromoteToLet<cr>
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" GARY BENRHART's Rspec macros
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" promote to let
+function! PromoteToLet()
+  :normal! dd
+" :exec '?^\s*it\>'
+  :normal! P
+  :.s/\(\w\+\) = \(.*\)$/let(:\1) { \2 }/
+  :normal ==
+endfunction
+:command! PromoteToLet :call PromoteToLet()
+:map <leader>p :PromoteToLet<cr>
 
 " test files
 map <leader>t :call RunTestFile()<cr>

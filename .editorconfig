@@ -1,0 +1,19 @@
+# top-most EditorConfig file
+root = true
+
+[*]
+# unix EOL + add newline to every file
+end_of_line = lf
+insert_final_newline = true
+
+# common options
+charset = utf-8
+indent_style = space # tab
+indent_size = 2
+
+## possible file matching
+#[*.{js,py}]
+#[*.py]
+#[*.js]
+#[lib/**.js]
+#[{package.json,.travis.yml}]
