@@ -12,6 +12,16 @@ if has('vim_starting')
   set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
 call neobundle#rc(expand('~/.vim/bundle/'))
+
+" Allow vim to run process in //
+" (speeds up neobundle a bit)
+NeoBundle 'Shougo/vimproc', { 'build': {
+       \ 'windows': 'make -f make_mingw32.mak',
+       \ 'cygwin': 'make -f make_cygwin.mak',
+       \ 'mac': 'make -f make_mac.mak',
+       \ 'unix': 'make -f make_unix.mak',
+       \ } }
+
 " keep package manager up-to-date
 NeoBundleFetch 'Shougo/neobundle.vim'
 
@@ -34,7 +44,6 @@ NeoBundleLazy 'mattn/emmet-vim', { 'autoload' : {
        \ 'filetypes' : [ 'html', 'css', 'sass', 'eruby'] }}
 
 " lazy-loaded plugins by command
-
 NeoBundleLazy 'scrooloose/nerdtree', { 'autoload' : {
        \ 'commands' : [ 'NERDTreeToggle' ] }}
 NeoBundleLazy 'kien/ctrlp.vim', { 'autoload' : {
