@@ -46,6 +46,9 @@ NeoBundleLazy 'scrooloose/syntastic', { 'autoload' : {
 NeoBundleLazy 'mattn/emmet-vim', { 'autoload' : {
        \ 'insert' : 1,
        \ 'filetypes' : [ 'html', 'css', 'sass', 'eruby'] }}
+NeoBundleLazy 'fatih/vim-go', { 'autoload' : {
+       \ 'filetypes' : [ 'go' ],
+       \ 'commands' : [ 'GoInstallBinaries' ] }}
 
 " lazy-loaded plugins by command
 NeoBundleLazy 'scrooloose/nerdtree', { 'autoload' : {
@@ -102,6 +105,7 @@ augroup syntaxEx
   autocmd! BufRead,BufNewFile *.feature setlocal filetype=cucumber
   autocmd! BufRead,BufNewFile Gemfile,Procfile,Podfile,VagrantFile,Cheffile setlocal filetype=ruby
   autocmd! BufRead,BufNewFile .pryrc setlocal filetype=ruby
+  autocmd! BufRead,BufNewFile *.go setlocal filetype=go
 
   " replace markdown by github markdown everywhere
   autocmd! BufNewFile,BufRead *.md,*.markdown setlocal filetype=mkd

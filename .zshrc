@@ -31,6 +31,9 @@ export NVM_DIR=~/.nvm
 # don't enable cowsay in ansible
 export ANSIBLE_NOCOWS=1
 
+# Go needs this
+export GOPATH="$HOME"
+
 ################################################################################
 # Custom commands
 ################################################################################
