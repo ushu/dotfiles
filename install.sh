@@ -111,20 +111,22 @@ install_node () {
   . "$HOME/.nvm/nvm.sh"
 
   # ensure the latest node is installed through nvm
-  LATEST_NODE=$(nvm ls-remote | tail -n1 | xargs)
-  if ! nvm ls | grep "$LATEST_NODE" >/dev/null; then
-    nvm install "$LATEST_NODE"
+  LATEST_NODE=$(nvm ls-remote | tail -n1 | xargs | sed 's/^[^v]*v//')
+  if nvm ls | grep -F $LATEST_NODE >/dev/null; then
+    nvm install $LATEST_NODE
   fi
 
   # setup as current+default node
   nvm use "$LATEST_NODE"
   nvm alias default "$LATEST_NODE"
 
-  # Install node packages
+  # Install GLOBAL node packages
   NODE_TOOLS=(grunt-cli less bower yo express)
   for c in ${NODE_TOOLS[@]}; do
     if check_command_and_dependencies "$c" npm; then
       npm install -g "$c"
+    else
+      npm update -g "$c"
     fi
   done
 }
