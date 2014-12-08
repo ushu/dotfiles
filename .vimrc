@@ -61,6 +61,8 @@ NeoBundleLazy 'kien/ctrlp.vim', { 'autoload' : {
        \ 'commands' : [ 'CtrlP' ] }}
 NeoBundleLazy 'zerowidth/vim-copy-as-rtf', { 'autoload' : {
        \ 'commands' : [ 'CopyRTF' ] }}
+NeoBundleLazy 'majutsushi/tagbar', { 'autoload': {
+       \ 'commands' : [ 'TagbarToggle' ] }}
 
 " custom syntax coloring
 NeoBundleLazy 'pangloss/vim-javascript', {'autoload': { 'filetypes': 'javascript'}}
