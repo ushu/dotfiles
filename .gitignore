@@ -1,6 +1,7 @@
 .vim/bundle
 !.vim/bundle/neobundle.vim
 *.backup
+*.swp
 
 .DS_Store
 .vim/bundle/.neobundle
