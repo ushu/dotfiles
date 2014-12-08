@@ -35,6 +35,10 @@ NeoBundle 'editorconfig/editorconfig-vim'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'tpope/vim-fugitive'
 
+" Snippets support
+NeoBundle 'SirVer/ultisnips', { 'depends': 'vim-snippets' }
+NeoBundleLazy 'honza/vim-snippets'
+
 "" plugins with custom build
 NeoBundle 'Valloric/YouCompleteMe', { 'build': {
        \ 'mac': './install.sh --clang-completer',
