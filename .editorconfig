@@ -10,8 +10,14 @@ end_of_line = lf
 insert_final_newline = true
 
 # indent style 2 spaces
-indent_style = space # tab
+indent_style = space
 indent_size = 2
+tab_width = 2
+
+[Makefile]
+indent_style = tab
+indent_size = 1
+tab_width = 4
 
 ## possible file matching
 #[*.{js,py}]
