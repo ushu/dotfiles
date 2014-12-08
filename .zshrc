@@ -20,11 +20,16 @@ export PATH="$PATH:$HOME/.dotfiles/bin"
 # Options
 ################################################################################
 
+# load chruby functions
 source /usr/local/share/chruby/chruby.sh
 source /usr/local/share/chruby/auto.sh
 
+# enable nvm
 source $(brew --prefix nvm)/nvm.sh
 export NVM_DIR=~/.nvm
+
+# don't enable cowsay in ansible
+export ANSIBLE_NOCOWS=1
 
 ################################################################################
 # Custom commands
