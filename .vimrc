@@ -9,9 +9,13 @@ let mapleader=","
 
 " Load package manager
 if has('vim_starting')
+  if &compatible
+    set nocompatible
+  endif
+
   set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
-call neobundle#rc(expand('~/.vim/bundle/'))
+call neobundle#begin(expand('~/.vim/bundle/'))
 
 " Allow vim to run process in //
 " (speeds up neobundle a bit)
@@ -64,8 +68,13 @@ NeoBundleLazy 'elzr/vim-json', {'autoload': {'filetypes': 'json'}}
 " color scheme
 NeoBundle 'altercation/vim-colors-solarized'
 
-NeoBundleCheck
+call neobundle#end()
+
+" finish loading the plugins
 filetype plugin indent on
+
+"prompt on uninstalled packages:
+NeoBundleCheck
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " COLORS
@@ -105,8 +114,7 @@ augroup END
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " enable syntax highlighting
 syntax on
-" cowboy mode on
-set nocompatible
+" no backup & swap files
 set nobackup
 set noswapfile
 set hidden
