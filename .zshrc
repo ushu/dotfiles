@@ -15,6 +15,7 @@ unsetopt correct_all
 
 export PATH="$PATH:./node_modules/.bin"
 export PATH="$PATH:$HOME/.dotfiles/bin"
+export PATH="$PATH:$GOPATH/bin"
 
 ################################################################################
 # Options
@@ -51,3 +52,7 @@ export PATH="/usr/local/heroku/bin:$PATH"
 randompwd() {
   openssl rand -base64 64 | sed -e 's/[\/=]//g' | cut -c1-50 | head -n1
 }
+
+# Enable zmv
+autoload -U zmv
+
