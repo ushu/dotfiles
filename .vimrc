@@ -73,6 +73,17 @@ NeoBundle 'Shougo/unite.vim', {
 NeoBundleLazy 'Shougo/unite-outline', { 'autoload' : { 'unite_sources': 'outline' }}
 NeoBundleLazy 'kmnk/vim-unite-giti', { 'autoload' : { 'unite_sources': [ 'giti', 'git/branch', 'git/config', 'git/log', 'git/remote', 'git/status' ] }}
 
+" NeoComplete
+NeoBundle 'Shougo/neocomplete.vim', {
+      \ 'depends' : 'vimproc',
+       \ 'insert' : 1 }
+NeoBundle 'Shougo/neosnippet.vim', {
+      \ 'depends' : 'neocomplete.vim',
+       \ 'insert' : 1 }
+NeoBundle 'Shougo/neosnippet-snippets', {
+      \ 'depends' : 'neosnippet.vim',
+       \ 'insert' : 1 }
+
 " custom syntax coloring
 NeoBundleLazy 'pangloss/vim-javascript', {'autoload': { 'filetypes': 'javascript'}}
 NeoBundleLazy 'othree/html5.vim', {'autoload': {'filetypes': 'html'}}
@@ -200,11 +211,35 @@ if executable('ag')
   let g:unite_source_grep_recursive_opt = ''
 endif
 nnoremap <leader>i :Unite -start-insert file_rec/async:<cr>
+nnoremap <leader>b :Unite buffer<cr>
+nnoremap <leader>b :Unite buffer<cr>
 nnoremap <leader>/ :Unite grep:.<cr>
-nnoremap <leader>m :Unite outline<cr>
 nnoremap <leader>. :Unite outline<cr>
-"nnoremap <leader><space> :Unite -start-insert source<cr>
+nnoremap <leader><space> :Unite -start-insert source<cr>
 
+" NeoComplete (recommended settings from GitHub)
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#sources#syntax#min_keyword_length = 2
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+
+" NeoSnippet
+" expand/next with C-j
+imap <expr><C-j> neosnippet#expandable_or_jumpable() ?
+      \ "\<Plug>(neosnippet_expand_or_jump)"
+      \: pumvisible() ? "\<C-n>" : ""
+smap <expr><C-j> neosnippet#expandable_or_jumpable() ?
+      \ "\<Plug>(neosnippet_expand_or_jump)"
+      \: ""
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
+
+" Go
 augroup AutoMappings
   autocmd FileType go nnoremap <buffer> <leader>r :GoRun<CR>
 augroup END
@@ -267,7 +302,7 @@ cnoremap %% <C-R>=expand('%:h').'/'<cr>
 map <leader>e :e %%<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" GARY BENRHART's macros
+" (GARY BENRHART's) MACROS
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Jump to last cursor position when opening file (from vim doc)
