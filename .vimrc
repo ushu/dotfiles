@@ -17,36 +17,29 @@ if has('vim_starting')
 endif
 call neobundle#begin(expand('~/.vim/bundle/'))
 
-" Allow vim to run process in //
-" (speeds up neobundle a bit)
-NeoBundle 'Shougo/vimproc', { 'build': {
-       \ 'windows': 'make -f make_mingw32.mak',
-       \ 'cygwin': 'make -f make_cygwin.mak',
-       \ 'mac': 'make -f make_mac.mak',
-       \ 'unix': 'make -f make_unix.mak',
-       \ } }
-
 " keep package manager up-to-date
 NeoBundleFetch 'Shougo/neobundle.vim'
 
-"" editorconfig (reads ~/.editorconfig)
+" Allow vim to run processes
+NeoBundleLazy 'Shougo/vimproc', { 'build': {
+     \ 'windows': 'make -f make_mingw32.mak',
+     \ 'cygwin': 'make -f make_cygwin.mak',
+     \ 'mac': 'make -f make_mac.mak',
+     \ 'unix': 'make -f make_unix.mak',
+     \ }}
+
+" editorconfig (reads ~/.editorconfig)
 NeoBundle 'editorconfig/editorconfig-vim'
-"
+
+" A better status bar
 NeoBundle 'bling/vim-airline'
+
+" Git support
 NeoBundle 'tpope/vim-fugitive'
-
-" Snippets support
-NeoBundle 'SirVer/ultisnips', { 'depends': 'vim-snippets' }
-NeoBundleLazy 'honza/vim-snippets'
-
-"" plugins with custom build
-NeoBundle 'Valloric/YouCompleteMe', { 'build': {
-       \ 'mac': './install.sh --clang-completer',
-       \ 'unix': './install.sh --clang-completer' }}
 
 " lazy-loaded plugins by file type
 NeoBundleLazy 'scrooloose/syntastic', { 'autoload' : {
-       \ 'filetypes' : [ 'ruby', 'eruby', 'javascript', 'cucumber', 'coffee' ] }}
+       \ 'filetypes' : [ 'ruby', 'eruby', 'javascript', 'cucumber', 'coffee', 'go' ] }}
 NeoBundleLazy 'mattn/emmet-vim', { 'autoload' : {
        \ 'insert' : 1,
        \ 'filetypes' : [ 'html', 'css', 'sass', 'eruby'] }}
@@ -55,6 +48,13 @@ NeoBundleLazy 'fatih/vim-go', { 'autoload' : {
        \ 'commands' : [ 'GoInstallBinaries' ] }}
 
 " lazy-loaded plugins by command
+NeoBundleLazy 'Shougo/vimshell', {
+      \ 'depends' : 'Shougo/vimproc',
+      \ 'autoload' : {
+      \  'commands' : [ { 'name' : 'VimShell',
+      \                  'complete' : 'customlist,vimshell#complete' },
+      \                  'VimShellExecute', 'VimShellInteractive',
+      \                  'VimShellTerminal', 'VimShellPop' ] }}
 NeoBundleLazy 'scrooloose/nerdtree', { 'autoload' : {
        \ 'commands' : [ 'NERDTreeToggle' ] }}
 NeoBundleLazy 'kien/ctrlp.vim', { 'autoload' : {
@@ -63,6 +63,15 @@ NeoBundleLazy 'zerowidth/vim-copy-as-rtf', { 'autoload' : {
        \ 'commands' : [ 'CopyRTF' ] }}
 NeoBundleLazy 'majutsushi/tagbar', { 'autoload': {
        \ 'commands' : [ 'TagbarToggle' ] }}
+
+" Unite
+NeoBundle 'Shougo/unite.vim', {
+      \ 'depends' : 'vimproc',
+      \ 'autoload' : {
+      \ 'commands' : [ "Unite", "UniteWithCursorWord" ]
+      \ }}
+NeoBundleLazy 'Shougo/unite-outline', { 'autoload' : { 'unite_sources': 'outline' }}
+NeoBundleLazy 'kmnk/vim-unite-giti', { 'autoload' : { 'unite_sources': [ 'giti', 'git/branch', 'git/config', 'git/log', 'git/remote', 'git/status' ] }}
 
 " custom syntax coloring
 NeoBundleLazy 'pangloss/vim-javascript', {'autoload': { 'filetypes': 'javascript'}}
@@ -183,12 +192,22 @@ let g:airline_right_sep=''
 noremap <c-N> :NERDTreeToggle<cr>
 let NERDTreeHijackNetrw=0
 
-" CtrlP
-nnoremap <leader>i :CtrlP<CR>
-let g:ctrlp_map = '<leader>i'
-let g:ctrlp_cmd = 'CtrlP'
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.exe
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|swp)$'
+" Unite
+if executable('ag')
+  let g:unite_source_rec_async_command='ag --nocolor --nogroup --skip-vcs-ignores --ignore ''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'' --ignore ''_darcs'' --ignore ''bundle/'' --ignore ''tmp/'' --hidden -g ""'
+  let g:unite_source_grep_command = 'ag'
+  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
+  let g:unite_source_grep_recursive_opt = ''
+endif
+nnoremap <leader>i :Unite -start-insert file_rec/async:<cr>
+nnoremap <leader>/ :Unite grep:.<cr>
+nnoremap <leader>m :Unite outline<cr>
+nnoremap <leader>. :Unite outline<cr>
+"nnoremap <leader><space> :Unite -start-insert source<cr>
+
+augroup AutoMappings
+  autocmd FileType go nnoremap <buffer> <leader>r :GoRun<CR>
+augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " RULES TO AVOID EOL WHITESPACES
@@ -247,9 +266,9 @@ nnoremap <leader><leader> <c-^>
 cnoremap %% <C-R>=expand('%:h').'/'<cr>
 map <leader>e :e %%<cr>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"" MACROS
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" GARY BENRHART's macros
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Jump to last cursor position when opening file (from vim doc)
 autocmd BufReadPost *
@@ -263,10 +282,6 @@ function! MapCR()
 endfunction
 call MapCR()
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" GARY BENRHART's spec macros
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 " rename file
 function! RenameFile()
     let old_name = expand('%')
@@ -278,80 +293,3 @@ function! RenameFile()
     endif
 endfunction
 map <leader>n :call RenameFile()<cr>
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" GARY BENRHART's Rspec macros
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" promote to let
-function! PromoteToLet()
-  :normal! dd
-" :exec '?^\s*it\>'
-  :normal! P
-  :.s/\(\w\+\) = \(.*\)$/let(:\1) { \2 }/
-  :normal ==
-endfunction
-:command! PromoteToLet :call PromoteToLet()
-:map <leader>p :PromoteToLet<cr>
-
-" test files
-map <leader>t :call RunTestFile()<cr>
-map <leader>T :call RunNearestTest()<cr>
-map <leader>a :call RunTests('')<cr>
-
-function! RunTestFile(...)
-    if a:0
-        let command_suffix = a:1
-    else
-        let command_suffix = ""
-    endif
-
-    " Run the tests for the previously-marked file.
-    let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\)$') != -1
-    if in_test_file
-        call SetTestFile()
-    elseif !exists("t:grb_test_file")
-        return
-    end
-    call RunTests(t:grb_test_file . command_suffix)
-endfunction
-
-function! RunNearestTest()
-    let spec_line_number = line('.')
-    call RunTestFile(":" . spec_line_number)
-endfunction
-
-function! SetTestFile()
-    " Set the spec file that tests will be run for.
-    let t:grb_test_file=@%
-endfunction
-
-let g:test_allow_bundle=0
-function! RunTests(filename)
-    " Write the file and run tests for the given filename
-    if expand("%") != ""
-      :w
-    end
-    if match(a:filename, '\.feature$') != -1
-      if !empty(glob('.zeus.sock')) && !empty(a:filename)
-        exec ":!zeus cucumber " . a:filename
-      else
-        if g:test_allow_bundle && filereadable("Gemfile")
-            exec ":!bundle exec cucumber " . a:filename
-        else
-            exec ":!cucumber " . a:filename
-        end
-      end
-    else
-      if !empty(glob('.zeus.sock')) && !empty(a:filename)
-        exec ":!zeus test " . a:filename
-      else
-        if g:test_allow_bundle && filereadable("Gemfile")
-            exec ":!bundle exec rspec --color " . a:filename
-        else
-            exec ":!rspec --color " . a:filename
-        end
-      end
-    end
-endfunction
-
