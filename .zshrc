@@ -56,3 +56,7 @@ randompwd() {
 # Enable zmv
 autoload -U zmv
 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Github personal token
+[ -f ~/.github_token ] && source ~/.github_token

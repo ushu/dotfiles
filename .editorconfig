@@ -19,6 +19,11 @@ indent_style = tab
 indent_size = 1
 tab_width = 4
 
+[*.go]
+indent_style = tab
+indent_size = 1
+tab_width = 4
+
 ## possible file matching
 #[*.{js,py}]
 #[*.py]
