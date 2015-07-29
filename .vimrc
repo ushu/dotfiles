@@ -21,9 +21,10 @@ filetype plugin indent on
 " enable auto indent
 set autoindent
 set nocindent
-" default indent settings: 2 space-based shifts
-set tw=79 ts=2 sw=2 expandtab
-
+" default indent settings (overloaded by editorconfig most of the time)
+set tabstop=2 softtabstop=0 expandtab shiftwidth=4 smarttab
+" and a width of 80 chars
+set textwidth=79
 
 """
 """ FILETYPE-SPECIFIC SETTINGS
@@ -33,32 +34,27 @@ set tw=79 ts=2 sw=2 expandtab
 augroup SyntaxEx
 
   " HTML & Co
-  autocmd! BufRead,BufNewFile *.html setlocal filetype=html
+  autocmd! BufNewFile,BufRead *.html setlocal filetype=html
   " CSS & Co
-  autocmd! BufRead,BufNewFile *.sass setlocal filetype=sass
-  autocmd! BufRead,BufNewFile *.scss setlocal filetype=scss
-  autocmd! BufRead,BufNewFile *.coffee setlocal filetype=coffee
-  autocmd! BufRead,BufNewFile *.less setlocal filetype=less
-  autocmd! BufRead,BufNewFile *.styl setlocal filetype=stylus
+  autocmd! BufNewFile,BufRead *.sass setlocal filetype=sass
+  autocmd! BufNewFile,BufRead *.scss setlocal filetype=scss
+  autocmd! BufNewFile,BufRead *.coffee setlocal filetype=coffee
+  autocmd! BufNewFile,BufRead *.less setlocal filetype=less
+  autocmd! BufNewFile,BufRead *.styl setlocal filetype=stylus
   " JS
-  autocmd! BufRead,BufNewFile *.json setlocal filetype=json
+  autocmd! BufNewFile,BufRead *.json setlocal filetype=json
+  autocmd! BufNewFile,BufRead *.es6 setlocal filetype=javascript
+  autocmd! BufNewFile,BufRead *.ts setlocal filetype=typescript
   " Ruby (.rb detected by default)
-  autocmd! BufRead,BufNewFile *.erb setlocal filetype=eruby
-  autocmd! BufRead,BufNewFile *.feature setlocal filetype=cucumber
-  autocmd! BufRead,BufNewFile Gemfile,Procfile,Podfile,VagrantFile,Cheffile setlocal filetype=ruby
+  autocmd! BufNewFile,BufRead *.erb setlocal filetype=eruby
+  autocmd! BufNewFile,BufRead *.feature setlocal filetype=cucumber
+  autocmd! BufNewFile,BufRead Gemfile,Procfile,Podfile,VagrantFile,Cheffile setlocal filetype=ruby
   " Python (.py detected by default)
-  autocmd! BufRead,BufNewFile .pryrc setlocal filetype=ruby
+  autocmd! BufNewFile,BufRead .pryrc setlocal filetype=ruby
   " Go
-  autocmd! BufRead,BufNewFile *.go setlocal filetype=go
+  autocmd! BufNewFile,BufRead *.go setlocal filetype=go
   " Markdown (replace markdown by github markdown everywhere)
   autocmd! BufNewFile,BufRead *.md,*.markdown setlocal filetype=mkd
-
-augroup END
-
-" Indent
-augroup IndentEx
-
-  autocmd! BufRead,BufNewFile *.go setlocal tw=4 ts=4 sw=4 noexpandtab
 
 augroup END
 
@@ -172,7 +168,10 @@ Plug 'bling/vim-airline'
 Plug 'editorconfig/editorconfig-vim'
 
 " Check for errors on save
-Plug 'scrooloose/syntastic', { 'for' : [ 'ruby' ] }
+Plug 'scrooloose/syntastic', { 'for' : [ 'ruby', 'javascript' ] }
+
+" Not-too-smart completion
+Plug 'ajh17/VimCompletesMe'
 
 " HTML support
 Plug 'othree/html5.vim', { 'for': [ 'html' ] }
@@ -195,17 +194,16 @@ Plug 'nsf/gocode', { 'for': 'go', 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim
 
 " Git tools
 Plug 'tpope/vim-fugitive'
-Plug 'junegunn/vim-github-dashboard', { 'on': [ 'GHDashboard', 'GHActivity' ] }
 
 " Fuzzy finder for files
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 
-" Smart completion
-" All these plugins will be loaded *on demand*
-Plug 'ervandew/supertab', { 'on': [] }
-Plug 'SirVer/ultisnips', { 'on': [] }
-Plug 'honza/vim-snippets', { 'on': [] }
-Plug 'Valloric/YouCompleteMe', { 'on': [], 'do': './install.sh --clang-completer --gocode-completer' }
+" Javascript support
+Plug 'othree/yajs.vim'
+Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
+
+" Swift
+Plug 'keith/swift.vim'
 
 " Better grep
 Plug 'rking/ag.vim'
@@ -246,21 +244,12 @@ let g:syntastic_javascript_checkers = [ 'gjslint', 'jslint' ]
 " Avoid conflict between fugitive and editorconfig
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 
-" Custom keys for the completion engin
-" map all the plugins to TAB for expand + C-n/C-p for completions
-let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-let g:SuperTabDefaultCompletionType = '<C-n>'
-let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsJumpForwardTrigger = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+" TypeScript compiler options
+let g:typescript_compiler_options = '-sourcemap'
 
-" load plugins on insert only
-augroup load_us_ycm
-  autocmd!
-  autocmd InsertEnter * call plug#load('supertab', 'ultisnips', 'vim-snippets', 'YouCompleteMe')
-  autocmd InsertEnter * call youcompleteme#Enable() | autocmd! load_us_ycm
-augroup END
+" Golang support
+let g:go_fmt_command = "goimports"
+let g:go_fmt_autosave = 1
 
 " Emmet
 let g:user_emmet_expandabbr_key='<Tab>'
@@ -270,5 +259,4 @@ augroup load_emmet
   autocmd InsertEnter *.html,*.css,*.scss EmmetInstall
   autocmd InsertEnter imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 augroup END
-
 

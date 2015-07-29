@@ -15,7 +15,7 @@ unsetopt correct_all
 
 export PATH="$PATH:./node_modules/.bin"
 export PATH="$PATH:$HOME/.dotfiles/bin"
-export PATH="$PATH:$GOPATH/bin"
+export PATH="$HOME/go_appengine:$PATH"
 
 ################################################################################
 # Options
@@ -34,6 +34,10 @@ export ANSIBLE_NOCOWS=1
 
 # Go needs this
 export GOPATH="$HOME"
+export PATH="$PATH:$GOPATH/bin"
+
+# Faster fzf using ag
+export FZF_DEFAULT_COMMAND='ag -l -g ""'
 
 ################################################################################
 # Custom commands
