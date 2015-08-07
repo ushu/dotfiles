@@ -77,7 +77,7 @@ set t_ti= t_te=
 " improve command line insert mode
 set backspace=indent,eol,start
 set showcmd
-set wildmode=longest,list
+set wildmode=list:full
 set wildmenu
 
 " Fix slow inserts
@@ -89,6 +89,10 @@ set shell=bash
 """
 """ NAVIGATION
 """
+
+" Close buffer
+nnoremap <leader>q :q<CR>
+nnoremap <leader><S-q> :q!<CR>
 
 " Disable arrow navigation
 map <Left> <Nop>
@@ -168,7 +172,7 @@ Plug 'bling/vim-airline'
 Plug 'editorconfig/editorconfig-vim'
 
 " Check for errors on save
-Plug 'scrooloose/syntastic', { 'for' : [ 'ruby', 'javascript' ] }
+Plug 'scrooloose/syntastic', { 'for' : [ 'ruby', 'javascript', 'go' ] }
 
 " Not-too-smart completion
 Plug 'ajh17/VimCompletesMe'
@@ -195,18 +199,25 @@ Plug 'nsf/gocode', { 'for': 'go', 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim
 " Git tools
 Plug 'tpope/vim-fugitive'
 
+"C/C++ tools"
+Plug 'justmao945/vim-clang', { 'for': [ 'c', 'c++' ] }
+
 " Fuzzy finder for files
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 
 " Javascript support
 Plug 'othree/yajs.vim'
 Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
+Plug 'marijnh/tern_for_vim', { 'for': 'javascript', 'do': 'npm install' }
 
 " Swift
 Plug 'keith/swift.vim'
 
 " Better grep
 Plug 'rking/ag.vim'
+
+" Ad CopyRTF Command
+Plug 'zerowidth/vim-copy-as-rtf'
 
 call plug#end()
 
@@ -220,9 +231,14 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline_left_sep=''
 let g:airline_right_sep=''
 
+" C/C++ completion config
+let g:clang_c_options = '-std=gnu11'
+let g:clang_cpp_options = '-std=c++11 -stdlib=libc++'
+
 " Custom mapping the file finders
 nnoremap <leader>i :FZF<CR>
 nnoremap <leader>/ :Ag<space>-i<space>
+nnoremap <leader>o <c-w><c-o>
 
 " Custom mappings for Fugitive
 " <leader>-SPACE to enter any git command
@@ -237,6 +253,8 @@ nnoremap gD <c-w>h<c-w>c
 nnoremap gl :Glog<CR>
 vnoremap <leader>p :diffput<CR>:diffupdate<CR>
 vnoremap <leader>o :diffget<CR>:diffupdate<CR>
+" Map <C-n>/<C-p> to next/previous change
+au FilterWritePre * if &diff | exe 'nnoremap <buffer> <C-p> [c' | exe 'nnoremap <buffer> <C-n> ]c' | endif
 
 " Configuration sor Syntactic
 let g:syntastic_javascript_checkers = [ 'gjslint', 'jslint' ]
@@ -246,17 +264,23 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 
 " TypeScript compiler options
 let g:typescript_compiler_options = '-sourcemap'
+" Tern mappings
+nnoremap td :TernDoc<CR>
+nnoremap t<S-d> :TernDef<CR>
+nnoremap tt :TernType<CR>
+nnoremap tr :TernRename<CR>
+nnoremap t<S-r> :TernRefs<CR>
 
 " Golang support
 let g:go_fmt_command = "goimports"
 let g:go_fmt_autosave = 1
 
 " Emmet
-let g:user_emmet_expandabbr_key='<Tab>'
+let g:user_emmet_complete_tag = 1
 
 augroup load_emmet
   autocmd InsertEnter *.html,*.css,*.scss call plug#load('emmet-vim')
   autocmd InsertEnter *.html,*.css,*.scss EmmetInstall
-  autocmd InsertEnter imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
+  autocmd InsertEnter *.html,*.css,*.scss imap <buffer> <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 augroup END
 
