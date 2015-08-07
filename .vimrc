@@ -240,6 +240,11 @@ nnoremap <leader>i :FZF<CR>
 nnoremap <leader>/ :Ag<space>-i<space>
 nnoremap <leader>o <c-w><c-o>
 
+" merge commands (diff)
+vnoremap dp :diffput<CR>:diffupdate<CR>
+nnoremap dp :diffput<CR>:diffupdate<CR>
+nnoremap dg :diffget<CR>:diffupdate<CR>
+
 " Custom mappings for Fugitive
 " <leader>-SPACE to enter any git command
 nnoremap g<Space> :Git<Space>
@@ -251,8 +256,9 @@ nnoremap gb :Gblame<CR>
 nnoremap gd :Gdiff<CR>
 nnoremap gD <c-w>h<c-w>c
 nnoremap gl :Glog<CR>
-vnoremap <leader>p :diffput<CR>:diffupdate<CR>
-vnoremap <leader>o :diffget<CR>:diffupdate<CR>
+" merge commands (diff) speficif to fugitive merge
+nnoremap dh :diffget //2<CR>:diffupdate<CR>
+nnoremap dl :diffput //3<CR>:diffupdate<CR>
 " Map <C-n>/<C-p> to next/previous change
 au FilterWritePre * if &diff | exe 'nnoremap <buffer> <C-p> [c' | exe 'nnoremap <buffer> <C-n> ]c' | endif
 
