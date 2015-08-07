@@ -239,6 +239,8 @@ main () {
     # vim config
     [ -f "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
     [ -d "$HOME/.vim" ] || ln -s "$DOTFILES/.vim" "$HOME/.vim"
+    [ -f "$HOME/.nvimrc" ] || ln -s "$HOME/.vimrc" "$HOME/.nvimrc"
+    [ -d "$HOME/.nvim" ] || ln -s "$HOME/.vim" "$HOME/.nvim"
     [ -d "$HOME/.editorconfig" ] || ln -s "$DOTFILES/.editorconfig" "$HOME/.editorconfig"
     # git config
     [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
@@ -260,6 +262,7 @@ main () {
       # install vim/macvim with lua/python/ruby enabled
       brew install vim --with-lua --override-system-vim
       brew install macvim --with-cscope --with-lua --with-python
+      brew install --HEAD neovim/neovim/neovim
     fi
   fi
 
