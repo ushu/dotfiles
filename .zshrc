@@ -43,6 +43,8 @@ export FZF_DEFAULT_COMMAND='ag -l -g ""'
 # Custom commands
 ################################################################################
 
+alias n="nvim"
+alias v="vim"
 alias d="git dc"
 alias s="git st"
 alias l="git lg"
