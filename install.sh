@@ -262,7 +262,10 @@ main () {
       # install vim/macvim with lua/python/ruby enabled
       brew install vim --with-lua --override-system-vim
       brew install macvim --with-cscope --with-lua --with-python
+    fi
+    if ! check_brew_dependency vim; then
       brew install --HEAD neovim/neovim/neovim
+      pip3 install --user neovim
     fi
   fi
 
