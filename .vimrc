@@ -284,3 +284,12 @@ augroup load_emmet
   autocmd InsertEnter *.html,*.css,*.scss imap <buffer> <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 augroup END
 
+" Terminal config
+if has("nvim")
+  tnoremap <Esc> <C-\><C-n>
+  tnoremap <C-l> <C-\><C-n><C-w>l
+  tnoremap <C-k> <C-\><C-n><C-w>k
+  tnoremap <C-j> <C-\><C-n><C-w>j
+  tnoremap <C-h> <C-\><C-n><C-w>h
+  nnoremap <leader>t <C-w>s <C-w>j :terminal zsh<CR>
+end
