@@ -35,6 +35,7 @@ augroup SyntaxEx
 
   " HTML & Co
   autocmd! BufNewFile,BufRead *.html setlocal filetype=html
+  autocmd! BufNewFile,BufRead *.jade setlocal filetype=jade
   " CSS & Co
   autocmd! BufNewFile,BufRead *.sass setlocal filetype=sass
   autocmd! BufNewFile,BufRead *.scss setlocal filetype=scss
@@ -172,15 +173,15 @@ Plug 'bling/vim-airline'
 Plug 'editorconfig/editorconfig-vim'
 
 " Check for errors on save
-Plug 'scrooloose/syntastic', { 'for' : [ 'ruby', 'javascript', 'go' ] }
-
-" Not-too-smart completion
-Plug 'ajh17/VimCompletesMe'
+Plug 'scrooloose/syntastic', { 'for' : [ 'ruby', 'javascript', 'go', 'css' ] }
 
 " HTML support
 Plug 'othree/html5.vim', { 'for': [ 'html' ] }
 Plug 'tpope/vim-haml', { 'for': [ 'haml' ] }
-Plug 'mattn/emmet-vim', { 'on': [] }
+Plug 'mattn/emmet-vim'
+
+" Jade support
+Plug 'digitaltoad/vim-jade', { 'for': 'jade' }
 
 " CSS support
 Plug 'hail2u/vim-css3-syntax', { 'for': [ 'css', 'scss' ] }
@@ -216,7 +217,7 @@ Plug 'keith/swift.vim'
 " Better grep
 Plug 'rking/ag.vim'
 
-" Ad CopyRTF Command
+" Add CopyRTF Command
 Plug 'zerowidth/vim-copy-as-rtf'
 
 call plug#end()
@@ -270,6 +271,7 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 
 " TypeScript compiler options
 let g:typescript_compiler_options = '-sourcemap'
+
 " Tern mappings
 nnoremap td :TernDoc<CR>
 nnoremap t<S-d> :TernDef<CR>
@@ -281,14 +283,27 @@ nnoremap t<S-r> :TernRefs<CR>
 let g:go_fmt_command = "goimports"
 let g:go_fmt_autosave = 1
 
+" Space completion
+inoremap <C-@> <c-x><c-o>
+
+" Completion using Tab (from Gay Bernhardt's vimrc)
+function! InsertTabWrapper()
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k'
+        return "\<tab>"
+    else
+        return "\<c-p>"
+    endif
+endfunction
+inoremap <expr> <tab> InsertTabWrapper()
+inoremap <s-tab> <c-n>
+
 " Emmet
 let g:user_emmet_complete_tag = 1
-
-augroup load_emmet
-  autocmd InsertEnter *.html,*.css,*.scss call plug#load('emmet-vim')
-  autocmd InsertEnter *.html,*.css,*.scss EmmetInstall
-  autocmd InsertEnter *.html,*.css,*.scss imap <buffer> <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
-augroup END
+let g:user_emmet_install_global = 0
+let g:user_emmet_expandabbr_key = '<C-@>'
+autocmd FileType html,css,scss,eruby EmmetInstall
+autocmd FileType html,css,scss,eruby imap <buffer> <expr> <C-@> emmet#expandAbbrIntelligent("\<C-@>")
 
 " Terminal config
 if has("nvim")
@@ -297,5 +312,6 @@ if has("nvim")
   tnoremap <C-k> <C-\><C-n><C-w>k
   tnoremap <C-j> <C-\><C-n><C-w>j
   tnoremap <C-h> <C-\><C-n><C-w>h
-  nnoremap <leader>t <C-w>s <C-w>j :terminal zsh<CR>
+  nnoremap <leader><S-t> :terminal zsh<CR>
+  nnoremap <BS> <c-w>h
 end

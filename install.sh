@@ -121,7 +121,7 @@ install_node () {
   nvm alias default "$LATEST_NODE"
 
   # Install GLOBAL node packages
-  NODE_TOOLS=(grunt-cli less bower yo express)
+  NODE_TOOLS=(grunt-cli less bower yo express csslint)
   for c in ${NODE_TOOLS[@]}; do
     if check_command_and_dependencies "$c" npm; then
       npm install -g "$c"
