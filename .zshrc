@@ -66,3 +66,10 @@ autoload -U zmv
 
 # Github personal token
 [ -f ~/.github_token ] && source ~/.github_token
+
+# Run Docker images
+alias de='eval $(docker-machine env default)'
+alias dr='docker run -ti -v "$PWD":/app --rm ruby:latest'
+alias dp='docker run -ti -v "$PWD":/app --rm python:latest'
+alias dn='docker run -ti -v "$PWD":/app --rm node:latest'
+

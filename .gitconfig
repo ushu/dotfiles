@@ -23,6 +23,7 @@
   ri = "!f() { git rebase -i HEAD~"$1"; }; f"
   rt = "!f() { git ri `git today | wc -l | xargs echo`; }; f"
   abort = rebase --abort
+  ricm = "!f() { git filter-branch -f --msg-filter "echo '$2' && cat" HEAD~"$1"; }; f"
 [user]
 	name = Aurélien Noce
 	email = aurelien.noce@imagine-app.fr
