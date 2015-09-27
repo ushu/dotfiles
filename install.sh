@@ -1,287 +1,170 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-MISSING_PACKAGES=()
+
+if uname -a | grep -Fqs "Darwin"
+then
+  echo "Found OSX"
+else
+  echo "Sorry, unsupported OS"
+  exit 1
+fi
+
+# output all on stdin
+exec 2>&1
+
+set -a
+
+
+######################################################################
+# Copy config files
+######################################################################
+
 DOTFILES="$HOME/.dotfiles"
 
-is_debian () {
-  [ `uname -a | grep -ci "debian\|ubuntu"` -ne 0 ] && return 0
-}
-
-is_osx () {
-  [ `uname -a | grep -ci "darwin"` -ne 0 ] && return 0
-}
-
-command_available () {
-  [[ -e `command -v "$1"` ]] && return 0
-  # is it a bash function ?
-  declare -f "$1" >/dev/null 2>&1
-}
-
-register_package_to_install () {
-  MISSING_PACKAGES=( ${MISSING_PACKAGES[@]} $1 )
-}
-
-check_command() {
-  if ! command_available "$1"; then
-    register_package_to_install "$2"
-  fi
-}
-
-check_commands() {
-  for c in $@; do
-    check_command "$c" "$c"
-  done
-}
-
-check_command_and_dependencies () {
-  if command_available "$1"; then
-    echo $1 "is already available on this machine: skipping"
-    return 1
+function clone_config() {
+  if [[ -d "$DOTFILES" ]]; then
+    cd "$DOTFILES"; git pull origin master
   else
-    local missing=()
-    for c in "${@:2}"; do
-      if ! command_available "$c"; then
-        missing=( ${missing[@]} "$c" )
-      fi
-    done
-    if [ ${#missing[@]} -ne 0 ]; then
-      echo "cannot install" $1 "because of missing dependencies" ${missing[@]}
-      return 1
-    else
-      return 0
-    fi
+    git clone --recursive https://github.com/ushu/dotfiles "$DOTFILES"
   fi
 }
+clone_config
 
-check_apt_dependencies () {
-  for c in $@; do
-    if ! check_apt_dependency $c; then
-      MISSING_PACKAGES=( ${MISSING_PACKAGES[@]} $c )
-    fi
-  done
+function create_symlinks() {
+  # Linking files in HOME
+  # vim config
+  [ -f "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
+  [ -d "$HOME/.vim" ] || mkdir "$HOME/.vim"
+  [ -f "$HOME/.editorconfig" ] || ln -s "$DOTFILES/.editorconfig" "$HOME/.editorconfig"
+  # git config
+  [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
+  # zsh config
+  [ -f "$HOME/.zshrc" ] || ln -s "$DOTFILES/.zshrc" "$HOME/.zshrc"
+  # default options for rails new ...
+  [ -f "$HOME/.railsrc" ] || ln -s "$DOTFILES/.railsrc" "$HOME/.railsrc"
+  # tmux config
+  [ -f "$HOME/.tmux.conf" ] || ln -s "$DOTFILES/.tmux.conf" "$HOME/.tmux.conf"
+}
+create_symlinks
+
+
+######################################################################
+# Update the config files
+######################################################################
+
+# Create the .bash_profile if necessary
+test -f ~/.bash_profile || echo "[[ -s ~/.bashrc ]] && source ~/.bashrc" >> .bash_profile
+
+function config() {
+  local cmd="$1"
+  if ! grep -Fqs "$cmd" ~/.bashrc >/dev/null; then echo "$cmd" >> ~/.bashrc; fi
+  if ! grep -Fqs "$cmd" ~/.zshrc >/dev/null; then echo "$cmd" >> ~/.zshrc; fi
 }
 
-check_apt_dependency () {
-  apt-cache pkgnames | grep -q $1 && return 0
+function run_and_config() {
+  eval "$1" >/dev/null
+  config "$1"
 }
 
-check_brew_dependencies () {
-  for c in $@; do
-    if ! check_brew_dependency $c; then
-      MISSING_PACKAGES=( ${MISSING_PACKAGES[@]} $c )
-    fi
-  done
-}
 
-check_brew_dependency () {
-  brew list | grep -q $1 && return 0
-}
+######################################################################
+# Homebrew
+######################################################################
 
-install_homebrew () {
-  if command_available brew; then
-    brew update
+function install_homebrew() {
+  # Install homebrew
+  if command -v brew >/dev/null
+  then
+    echo "Updating Homebrew"
   else
-    ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
+    echo "Homebrew not found: installing"
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" >/dev/null
+  fi
+  
+  # installing brews
+  brew tap --repair homebrew/bundle >/dev/null
+  brew bundle >/dev/null
+}
+#install_homebrew
+
+
+######################################################################
+# Install node with nvm
+######################################################################
+
+run_and_config "source $(brew --prefix nvm)/nvm.sh"
+
+function install_nvm() {
+  echo "Installing node.js"
+  # Install node 0.10 and 0.12
+  nvm install -s "0.10" >/dev/null
+  nvm install -s "0.12" >/dev/null
+  # Set 0.12 as the default
+  nvm alias default "0.12" >/dev/null
+  
+  echo "Installing node.js programs"
+  # Install the commands
+  nvm use "0.12" >/dev/null
+  npm install --global grunt-cli gulp less bower yo express csslint cordova ionic >/dev/null
+}
+#install_nvm
+
+
+######################################################################
+# Install Ruby
+######################################################################
+
+# Load chruby
+run_and_config "source $(brew --prefix chruby)/share/chruby/chruby.sh"
+
+function add_ruby() {
+  local version="$1"
+  local rubies=$(chruby)
+  if ! echo "$rubies" | grep -Fqs "$version"; then
+    echo "Installing ruby v$1"
+    ruby-install ruby "$1" >/dev/null
   fi
 
-  echo "Checking brew permissions"
-  sudo chgrp -R admin /usr/local
-  sudo chmod -R g+w /usr/local
-  sudo chgrp -R admin /Library/Caches/Homebrew
-  sudo chmod -R g+w /Library/Caches/Homebrew
-  sudo chmod g+x /Library/Caches/Homebrew
-
-  ## add repo for gcc
-  #echo "add additional sources"
-  #brew tap homebrew/dupes
-  #brew tap homebrew/versions
-  #brew tap josegonzalez/php
-
-  # patch /etc/paths to help homebrew
-  echo "patch /etc/paths (old version in $DOTFILES/.paths.backup)"
-  cp /etc/paths .paths.backup
-  sed '/[/]usr[/]local[/]s*bin/d' /etc/paths | sed '1 i\
-/usr/local/bin
-' > "$DOTFILES/paths"
-  sudo mv "$DOTFILES/paths" /etc/paths
+  # reload chruby
+  source $(brew --prefix chruby)/share/chruby/chruby.sh
 }
 
-install_node () {
-  # load nvm
-  . "$HOME/.nvm/nvm.sh"
-
-  # ensure the latest node is installed through nvm
-  LATEST_NODE=$(nvm ls-remote | tail -n1 | xargs | sed 's/^[^v]*v//')
-  if nvm ls | grep -F $LATEST_NODE >/dev/null; then
-    nvm install $LATEST_NODE
-  fi
-
-  # setup as current+default node
-  nvm use "$LATEST_NODE"
-  nvm alias default "$LATEST_NODE"
-
-  # Install GLOBAL node packages
-  NODE_TOOLS=(grunt-cli less bower yo express csslint)
-  for c in ${NODE_TOOLS[@]}; do
-    if check_command_and_dependencies "$c" npm; then
-      npm install -g "$c"
-    else
-      npm update -g "$c"
+function add_gems() {
+  local gems="$@"
+  local local_gems=$(gem list)
+  for gem in $gems; do
+    if ! echo "$local_gems" | grep -Fqs "$gem"; then
+      echo "Installing $gem"
+      gem install "$gem" --no-ri --no-rdoc >/dev/null
     fi
   done
 }
 
-install_system_packages () {
-  # find missing packages
-  if is_debian; then
-
-    # install common tools
-    check_commands curl git bash zsh autoconf libtool bison pkg-config
-
-    # install vim
-    check_commands vim vim-nox
-
-    # install common libs for Rails
-    check_apt_dependencies libreadline6-dev zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libgdbm-dev libncurses5-dev libffi-dev
-
-  elif is_osx; then
-
-    # latest version of common tools
-    check_commands wget curl git zsh gawk
-
-    # userful dev tools
-    #check_commands autoconf automake libtool
-    check_commands grok ag pkg-config
-
-    # base runtimes
-    check_commands ruby python3 nodejs
-
-    # runtime version managers
-    check_commands ruby-install chruby pyenv-virtualenv pyenv-virtualenvwrapper nvm
-
-    # libraries for Rails dev
-    check_brew_dependencies libyaml libxml2 libxslt libksba sqlite
-
-    # install deployment tools
-    check_commands ansible
-
-    ## let's brew php (with debug options)
-    ##brew install php56 --with-fpm --with-imap --without-apache --with-debug
-    #brew install php56 --with-fpm
-  fi
-
-  # install missing packages
-  if [ ${#MISSING_PACKAGES[@]} -ne 0 ]; then
-    if is_debian; then
-      sudo apt-get install ${MISSING_PACKAGES[@]}
-    elif is_osx; then
-      brew install ${MISSING_PACKAGES[@]}
-    fi
-    ## add gjslint
-    #easy_install http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz
-  fi
+function install_ruby() {
+  add_ruby "2.2.3"
+  
+  # Loading ruby 2.2.3
+  chruby "2.2.3"
+  
+  echo "Installing gems"
+  # Tools
+  add_gems bundler pry sass rails vagrant cocoapods
+  # Libs
+  add_gems pry compass
 }
+#install_ruby
 
-install_ruby () {
-  # load chruby
-  source /usr/local/share/chruby/chruby.sh
+######################################################################
+# Configure vim
+######################################################################
 
-  LATEST_AVAILABLE_RUBY=$(ruby-install | grep 'stable: ' | head -n1 | sed "s/ *stable: //")
-  LATEST_RUBY=$(chruby | tail -n1 | sed "s/ *ruby-//")
-
-  if [ $LATEST_RUBY != $LATEST_AVAILABLE_RUBY ]; then
-    echo "installing ruby $LATEST_AVAILABLE_RUBY"
-
-    # install latest ruby
-    ruby-install ruby stable
-
-    # reload chruby
-    source /usr/local/share/chruby/chruby.sh
-
-    LATEST_RUBY="$LATEST_AVAILABLE_RUBY"
+function install_vim() {
+  if [[ ! -f "$HOME/.vim/autoload/plug.vim" ]]; then
+    echo "Installing vimplug"
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim>/dev/null
   fi
-
-  # load as current ruby
-  chruby $LATEST_RUBY
-
-  # pre-install fat gems
-  gem install bundler pry nokogiri
-  # web tools
-  gem install sass compass rails sinatra jekyll
-  # other tools
-  gem install vagrant cocoapods
+  
+  # Install vim plugins
+  vim -E +PlugInstall +qall
 }
-
-main () {
-  # linux ??
-  if is_osx; then
-    install_homebrew
-  fi
-
-  install_system_packages
-
-  install_ruby
-
-  install_node
-
-  if check_command git; then
-    if [ -d "$DOTFILES" ]; then
-      cd "$DOTFILES" && git pull origin master
-    else
-      # clone and init all submodules
-      git clone http://github.com/ushu/dotfiles.git $DOTFILES
-      cd $DOTFILES
-      git submodule init
-      cd ..
-    fi
-
-    # Linking files in HOME
-    # vim config
-    [ -f "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
-    [ -d "$HOME/.vim" ] || ln -s "$DOTFILES/.vim" "$HOME/.vim"
-    [ -f "$HOME/.nvimrc" ] || ln -s "$HOME/.vimrc" "$HOME/.nvimrc"
-    [ -d "$HOME/.nvim" ] || ln -s "$HOME/.vim" "$HOME/.nvim"
-    [ -d "$HOME/.editorconfig" ] || ln -s "$DOTFILES/.editorconfig" "$HOME/.editorconfig"
-    # git config
-    [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
-    # zsh config
-    [ -d "$HOME/.oh-my-zsh" ] || git clone git://github.com/robbyrussell/oh-my-zsh.git "$HOME/.oh-my-zsh"
-    [ -f "$HOME/.zshrc" ] || ln -s "$DOTFILES/.zshrc" "$HOME/.zshrc"
-    [ -f "$HOME/.zprofile" ] || ln -s "$DOTFILES/.zprofile" "$HOME/.zprofile"
-    # default options for rails new ...
-    [ -f "$HOME/.railsrc" ] || ln -s "$DOTFILES/.railsrc" "$HOME/.railsrc"
-    # tmux config
-    [ -f "$HOME/.tmux.conf" ] || ln -s "$DOTFILES/.tmux.conf" "$HOME/.tmux.conf"
-
-    # ensure zsh is the default shell
-    chsh -s /bin/zsh
-  fi
-
-  if is_osx; then
-    if ! check_brew_dependency vim; then
-      # install vim/macvim with lua/python/ruby enabled
-      brew install vim --with-lua --override-system-vim
-      brew install macvim --with-cscope --with-lua --with-python
-    fi
-    if ! check_brew_dependency vim; then
-      brew install --HEAD neovim/neovim/neovim
-      pip3 install --user neovim
-    fi
-  fi
-
-  # install ievms ?
-  if ! "$HOME/.ievms"; then
-    read -r -p "Install IEVMS [y/N] ? " response
-    case $response in
-      [yY][eE][sS]|[yY])
-        curl -s https://raw.githubusercontent.com/xdissent/ievms/master/ievms.sh | env INSTALL_PATH="$HOME/.ievms" bash
-        ;;
-      *)
-        echo "Aborted..."
-        ;;
-    esac
-  fi
-}
-
-# Proceed
-main
+install_vim
