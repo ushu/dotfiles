@@ -80,12 +80,22 @@ function install_homebrew() {
     echo "Homebrew not found: installing"
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" >/dev/null
   fi
-  
+
   # installing brews
   brew tap --repair homebrew/bundle >/dev/null
   brew bundle >/dev/null
 }
-#install_homebrew
+install_homebrew
+
+function patch_paths() {
+  echo "patch /etc/paths (old version in $DOTFILES/.paths.backup)"
+  cp /etc/paths .paths.backup
+  sed '/[/]usr[/]local[/]s*bin/d' /etc/paths | sed '1 i\
+/usr/local/bin
+' > "$DOTFILES/paths"
+  sudo mv "$DOTFILES/paths" /etc/paths
+}
+patch_paths
 
 
 ######################################################################
@@ -101,13 +111,13 @@ function install_nvm() {
   nvm install -s "0.12" >/dev/null
   # Set 0.12 as the default
   nvm alias default "0.12" >/dev/null
-  
+
   echo "Installing node.js programs"
   # Install the commands
   nvm use "0.12" >/dev/null
   npm install --global grunt-cli gulp less bower yo express csslint cordova ionic >/dev/null
 }
-#install_nvm
+install_nvm
 
 
 ######################################################################
@@ -142,17 +152,17 @@ function add_gems() {
 
 function install_ruby() {
   add_ruby "2.2.3"
-  
+
   # Loading ruby 2.2.3
   chruby "2.2.3"
-  
+
   echo "Installing gems"
   # Tools
   add_gems bundler pry sass rails vagrant cocoapods
   # Libs
   add_gems pry compass
 }
-#install_ruby
+install_ruby
 
 ######################################################################
 # Configure vim
@@ -163,8 +173,9 @@ function install_vim() {
     echo "Installing vimplug"
     curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim>/dev/null
   fi
-  
+
   # Install vim plugins
   vim -E +PlugInstall +qall
 }
 install_vim
+
