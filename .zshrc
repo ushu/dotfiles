@@ -2,9 +2,11 @@
 # Load oh-my-zsh
 ################################################################################
 
+# load PREZTO
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
 
-PREZTO="${ZDOTDIR:-$HOME}/.zprezto"
-source $PREZTO/init.zsh
 # disable autocorrect
 unsetopt correct_all
 

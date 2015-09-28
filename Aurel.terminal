@@ -14,8 +14,10 @@
 	</data>
 	<key>Bell</key>
 	<false/>
+	<key>BlinkText</key>
+	<true/>
 	<key>CommandString</key>
-	<string>tmux</string>
+	<string></string>
 	<key>CursorColor</key>
 	<data>
 	YnBsaXN0MDDUAQIDBAUGFRZYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3AS
@@ -28,7 +30,7 @@
 	<data>
 	YnBsaXN0MDDUAQIDBAUGGBlYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3AS
 	AAGGoKQHCBESVSRudWxs1AkKCwwNDg8QVk5TU2l6ZVhOU2ZGbGFnc1ZOU05hbWVWJGNs
-	YXNzI0AuAAAAAAAAEBCAAoADVk1vbmFjb9ITFBUWWiRjbGFzc25hbWVYJGNsYXNzZXNW
+	YXNzI0AqAAAAAAAAEBCAAoADVk1vbmFjb9ITFBUWWiRjbGFzc25hbWVYJGNsYXNzZXNW
 	TlNGb250ohUXWE5TT2JqZWN0XxAPTlNLZXllZEFyY2hpdmVy0RobVHJvb3SAAQgRGiMt
 	Mjc8QktSW2JpcnR2eH+Ej5ifoqu9wMUAAAAAAAABAQAAAAAAAAAcAAAAAAAAAAAAAAAA
 	AAAAxw==
@@ -38,9 +40,9 @@
 	<key>FontWidthSpacing</key>
 	<real>0.99596774193548387</real>
 	<key>ProfileCurrentVersion</key>
-	<real>2.02</real>
+	<real>2.04</real>
 	<key>RunCommandAsShell</key>
-	<false/>
+	<true/>
 	<key>SelectionColor</key>
 	<data>
 	YnBsaXN0MDDUAQIDBAUGFRZYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3AS
@@ -51,6 +53,20 @@
 	</data>
 	<key>ShouldLimitScrollback</key>
 	<integer>0</integer>
+	<key>ShowCommandKeyInTitle</key>
+	<false/>
+	<key>ShowComponentsWhenTabHasCustomTitle</key>
+	<true/>
+	<key>ShowDimensionsInTitle</key>
+	<false/>
+	<key>ShowRepresentedURLPathInTitle</key>
+	<true/>
+	<key>ShowShellCommandInTitle</key>
+	<true/>
+	<key>ShowTTYNameInTabTitle</key>
+	<false/>
+	<key>ShowTTYNameInTitle</key>
+	<false/>
 	<key>ShowWindowSettingsNameInTitle</key>
 	<false/>
 	<key>TextBoldColor</key>
@@ -70,17 +86,19 @@
 	rK+0AAAAAAAAAQEAAAAAAAAAGQAAAAAAAAAAAAAAAAAAALY=
 	</data>
 	<key>UseBoldFonts</key>
-	<false/>
+	<true/>
 	<key>UseBrightBold</key>
 	<true/>
 	<key>VisualBell</key>
 	<true/>
+	<key>VisualBellOnlyWhenMuted</key>
+	<false/>
 	<key>WindowTitle</key>
-	<string>Shell</string>
+	<string>Sell</string>
 	<key>columnCount</key>
-	<integer>124</integer>
+	<integer>140</integer>
 	<key>name</key>
-	<string>Aurel</string>
+	<string>Aurel custom</string>
 	<key>rowCount</key>
 	<integer>38</integer>
 	<key>shellExitAction</key>

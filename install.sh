@@ -61,6 +61,10 @@ function create_symlinks() {
   # shell configs
   [ -f "$HOME/.zshrc" ] && mv "$HOME/.zshrc" "$HOME/.zshrc-old"
   ln -s "$DOTFILES/.zshrc" "$HOME/.zshrc"
+  [ -f "$HOME/.zpreztorc" ] && mv "$HOME/.zpreztorc" "$HOME/.zpreztorc-old"
+  ln -s "$DOTFILES/.zpreztorc" "$HOME/.zpreztorc"
+  [ -f "$HOME/.zshenv" ] && mv "$HOME/.zshenv" "$HOME/.zshenv-old"
+  ln -s "$DOTFILES/.zshenv" "$HOME/.zshenv"
   [ -f "$HOME/.bashrc" ] || ln -s "$DOTFILES/.bashrc" "$HOME/.bashrc"
   # default options for rails new ...
   [ -f "$HOME/.railsrc" ] || ln -s "$DOTFILES/.railsrc" "$HOME/.railsrc"
