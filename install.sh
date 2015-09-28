@@ -22,12 +22,6 @@ PREZTOR_DIR="${ZDOTDIR:-$HOME}/.zprezto"
 if ! [[ -d "$PREZTOR_DIR" ]]; then
   # Clone source
   git clone --recursive https://github.com/sorin-ionescu/prezto.git "$PREZTOR_DIR"
-
-  # Copy default configs
-  setopt EXTENDED_GLOB
-  for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
-    ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
-  done
 fi
 
 if [[ "$SHELL" != "/bin/zsh" ]]; then
@@ -59,12 +53,12 @@ function create_symlinks() {
   # git config
   [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
   # shell configs
-  [ -f "$HOME/.zshrc" ] && mv "$HOME/.zshrc" "$HOME/.zshrc-old"
-  ln -s "$DOTFILES/.zshrc" "$HOME/.zshrc"
-  [ -f "$HOME/.zpreztorc" ] && mv "$HOME/.zpreztorc" "$HOME/.zpreztorc-old"
-  ln -s "$DOTFILES/.zpreztorc" "$HOME/.zpreztorc"
-  [ -f "$HOME/.zshenv" ] && mv "$HOME/.zshenv" "$HOME/.zshenv-old"
-  ln -s "$DOTFILES/.zshenv" "$HOME/.zshenv"
+  [ -f "$HOME/.zshrc" ] || ln -s "$DOTFILES/.zshrc" "$HOME/.zshrc"
+  [ -f "$HOME/.zpreztorc" ] || ln -s "$DOTFILES/.zpreztorc" "$HOME/.zpreztorc"
+  [ -f "$HOME/.zshenv" ] || ln -s "$DOTFILES/.zshenv" "$HOME/.zshenv"
+  [ -f "$HOME/.zlogin" ] || ln -s "$HOME/.zprezto/runcoms/zlogin" "$HOME/.zlogin"
+  [ -f "$HOME/.zlogout" ] || ln -s "$HOME/.zprezto/runcoms/zlogout" "$HOME/.zlogout"
+  [ -f "$HOME/.zprofile" ] || ln -s "$HOME/.zprezto/runcoms/zprofile" "$HOME/.zprofile"
   [ -f "$HOME/.bashrc" ] || ln -s "$DOTFILES/.bashrc" "$HOME/.bashrc"
   # default options for rails new ...
   [ -f "$HOME/.railsrc" ] || ln -s "$DOTFILES/.railsrc" "$HOME/.railsrc"
