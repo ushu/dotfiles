@@ -2,14 +2,9 @@
 # Load oh-my-zsh
 ################################################################################
 
-ZSH=$HOME/.oh-my-zsh
 
-# theme
-ZSH_THEME="cloud"
-# plugins
-plugins=(git rails ruby)
-
-source $ZSH/oh-my-zsh.sh
+PREZTO="${ZDOTDIR:-$HOME}/.zprezto"
+source $PREZTO/init.zsh
 # disable autocorrect
 unsetopt correct_all
 

@@ -14,6 +14,26 @@ exec 2>&1
 
 set -a
 
+######################################################################
+# Configure shell
+######################################################################
+
+PREZTOR_DIR="${ZDOTDIR:-$HOME}/.zprezto"
+if ! [[ -d "$PREZTOR_DIR" ]]; then
+  # Clone source
+  git clone --recursive https://github.com/sorin-ionescu/prezto.git "$PREZTOR_DIR"
+
+  # Copy default configs
+  setopt EXTENDED_GLOB
+  for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
+    ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
+  done
+fi
+
+if [[ "$SHELL" != "/bin/zsh" ]]; then
+  echo "Setting SHELL to zsh"
+  chsh -s /bin/zsh
+fi
 
 ######################################################################
 # Copy config files
@@ -39,7 +59,8 @@ function create_symlinks() {
   # git config
   [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
   # shell configs
-  [ -f "$HOME/.zshrc" ] || ln -s "$DOTFILES/.zshrc" "$HOME/.zshrc"
+  [ -f "$HOME/.zshrc" ] && mv "$HOME/.zshrc" "$HOME/.zshrc-old"
+  ln -s "$DOTFILES/.zshrc" "$HOME/.zshrc"
   [ -f "$HOME/.bashrc" ] || ln -s "$DOTFILES/.bashrc" "$HOME/.bashrc"
   # default options for rails new ...
   [ -f "$HOME/.railsrc" ] || ln -s "$DOTFILES/.railsrc" "$HOME/.railsrc"
@@ -96,7 +117,6 @@ function patch_paths() {
     sed '/[/]usr[/]local[/]s*bin/d' /etc/paths | sed '1 i\
 /usr/local/bin
 '   > "$DOTFILES/paths"
-    sudo mv "$DOTFILES/paths" /etc/paths
   fi
 }
 patch_paths
@@ -183,15 +203,4 @@ function install_vim() {
 }
 install_vim
 
-######################################################################
-# Configure shell
-######################################################################
-
-PREZTOR_DIR="${ZDOTDIR:-$HOME}/.zprezto"
-[[ -d "$PREZTOR_DIR" ]] || git clone --recursive https://github.com/sorin-ionescu/prezto.git "$PREZTOR_DIR"
-
-if [[ "$SHELL" != "/bin/zsh" ]]; then
-  echo "Setting SHELL to zsh"
-  chsh -s /bin/zsh
-fi
 
