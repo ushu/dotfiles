@@ -38,8 +38,9 @@ function create_symlinks() {
   [ -f "$HOME/.editorconfig" ] || ln -s "$DOTFILES/.editorconfig" "$HOME/.editorconfig"
   # git config
   [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
-  # zsh config
+  # shell configs
   [ -f "$HOME/.zshrc" ] || ln -s "$DOTFILES/.zshrc" "$HOME/.zshrc"
+  [ -f "$HOME/.bashrc" ] || ln -s "$DOTFILES/.bashrc" "$HOME/.bashrc"
   # default options for rails new ...
   [ -f "$HOME/.railsrc" ] || ln -s "$DOTFILES/.railsrc" "$HOME/.railsrc"
   # tmux config
@@ -82,18 +83,21 @@ function install_homebrew() {
   fi
 
   # installing brews
+  cd "$DOTFILES"
   brew tap --repair homebrew/bundle >/dev/null
   brew bundle >/dev/null
 }
 install_homebrew
 
 function patch_paths() {
-  echo "patch /etc/paths (old version in $DOTFILES/.paths.backup)"
-  cp /etc/paths .paths.backup
-  sed '/[/]usr[/]local[/]s*bin/d' /etc/paths | sed '1 i\
+  if ! cat /etc/paths | head -n1 | grep -Fqs "/usr/local/bin"; then
+    echo "patch /etc/paths (old version in $DOTFILES/.paths.backup)"
+    cp /etc/paths .paths.backup
+    sed '/[/]usr[/]local[/]s*bin/d' /etc/paths | sed '1 i\
 /usr/local/bin
-' > "$DOTFILES/paths"
-  sudo mv "$DOTFILES/paths" /etc/paths
+'   > "$DOTFILES/paths"
+    sudo mv "$DOTFILES/paths" /etc/paths
+  fi
 }
 patch_paths
 
@@ -178,4 +182,16 @@ function install_vim() {
   vim -E +PlugInstall +qall
 }
 install_vim
+
+######################################################################
+# Configure shell
+######################################################################
+
+PREZTOR_DIR="${ZDOTDIR:-$HOME}/.zprezto"
+[[ -d "$PREZTOR_DIR" ]] || git clone --recursive https://github.com/sorin-ionescu/prezto.git "$PREZTOR_DIR"
+
+if [[ "$SHELL" != "/bin/zsh" ]]; then
+  echo "Setting SHELL to zsh"
+  chsh -s /bin/zsh
+fi
 
