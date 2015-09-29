@@ -202,3 +202,7 @@ function install_vim() {
 install_vim
 
 
+# Run GUI Installers
+echo "Launching lastpass installer at /opt/homebrew-cask/Caskroom/lastpass/latest/LastPass Installer.app"
+open "/opt/homebrew-cask/Caskroom/lastpass/latest/LastPass Installer.app"
+
