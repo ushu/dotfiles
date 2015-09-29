@@ -7,13 +7,16 @@ brew "gnu-sed"
 
 # Development tools
 brew "pkg-config"
-brew "vim"
+brew "vim", args: [ 'with-python', 'with-lua', 'with-luajit' ]
 brew "sqlite"
 brew "postgresql"
 brew "redis"
 brew "memcached"
+brew "mongodb"
 brew "ansible"
 brew "phantomjs"
+brew "imagemagick"
+brew "openssl"
 
 # Better tooling
 brew "zsh"
@@ -35,6 +38,9 @@ brew "pyenv-virtualenvwrapper"
 brew "nodejs"
 brew "nvm"
 
+# Java
+#
+
 # Common libraries
 brew "libyaml"
 brew "libxml2"
@@ -43,8 +49,13 @@ brew "libksba"
 
 # Cask
 brew "caskroom/cask/brew-cask"
+cask "launchrocket"
 
+# Browsers
 cask "google-chrome"
 cask "firefox"
 cask "opera"
+
+# Java
+cask 'java' unless system '/usr/libexec/java_home --failfast >/dev/null'
 
