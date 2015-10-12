@@ -220,6 +220,9 @@ Plug 'rking/ag.vim'
 " Add CopyRTF Command
 Plug 'zerowidth/vim-copy-as-rtf'
 
+" toml support
+Plug 'cespare/vim-toml'
+
 call plug#end()
 
 " Configure color scheme
