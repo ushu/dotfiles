@@ -131,13 +131,15 @@ function install_nvm() {
   # Install node 0.10 and 0.12
   nvm install -s "0.10" >/dev/null
   nvm install -s "0.12" >/dev/null
+  nvm install -s "5.3" >/dev/null
+  nvm install -s "5.4" >/dev/null
   # Set 0.12 as the default
-  nvm alias default "0.12" >/dev/null
+  nvm alias default "5.4" >/dev/null
 
   echo "Installing node.js programs"
   # Install the commands
-  nvm use "0.12" >/dev/null
-  npm install --global grunt-cli gulp less bower yo express csslint cordova ionic >/dev/null
+  nvm use "5.4" >/dev/null
+  npm install --global npm_lazy grunt-cli gulp less bower yo express csslint cordova ionic >/dev/null
 }
 install_nvm
 

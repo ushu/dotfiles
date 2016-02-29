@@ -46,6 +46,7 @@ augroup SyntaxEx
   autocmd! BufNewFile,BufRead *.json setlocal filetype=json
   autocmd! BufNewFile,BufRead *.es6 setlocal filetype=javascript
   autocmd! BufNewFile,BufRead *.ts setlocal filetype=typescript
+  autocmd! BufNewFile,BufRead *.jsx setlocal filetype=jsx
   " Ruby (.rb detected by default)
   autocmd! BufNewFile,BufRead *.erb setlocal filetype=eruby
   autocmd! BufNewFile,BufRead *.feature setlocal filetype=cucumber
@@ -173,7 +174,7 @@ Plug 'bling/vim-airline'
 Plug 'editorconfig/editorconfig-vim'
 
 " Check for errors on save
-Plug 'scrooloose/syntastic', { 'for' : [ 'ruby', 'javascript', 'go', 'css' ] }
+Plug 'scrooloose/syntastic'
 
 " HTML support
 Plug 'othree/html5.vim', { 'for': [ 'html' ] }
@@ -208,6 +209,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 
 " Javascript support
 Plug 'othree/yajs.vim'
+Plug 'mxw/vim-jsx'
 Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
 Plug 'marijnh/tern_for_vim', { 'for': 'javascript', 'do': 'npm install' }
 
@@ -267,7 +269,7 @@ nnoremap dl :diffput //3<CR>:diffupdate<CR>
 au FilterWritePre * if &diff | exe 'nnoremap <buffer> <C-p> [c' | exe 'nnoremap <buffer> <C-n> ]c' | endif
 
 " Configuration sor Syntactic
-let g:syntastic_javascript_checkers = [ 'gjslint', 'jslint' ]
+let g:syntastic_javascript_checkers = [ 'eslint' ]
 
 " Avoid conflict between fugitive and editorconfig
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
@@ -318,3 +320,6 @@ if has("nvim")
   nnoremap <leader><S-t> :terminal zsh<CR>
   nnoremap <BS> <c-w>h
 end
+
+" Enable jsx in js files
+let g:jsx_ext_required = 0

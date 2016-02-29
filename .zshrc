@@ -20,6 +20,7 @@ export PATH="$HOME/go_appengine:$PATH"
 
 # load chruby functions
 source /usr/local/share/chruby/chruby.sh
+chruby 2.2
 source /usr/local/share/chruby/auto.sh
 
 # enable nvm
@@ -69,5 +70,6 @@ alias de='eval $(docker-machine env default)'
 alias dr='docker run -ti -v "$PWD":/app --rm ruby:latest'
 alias dp='docker run -ti -v "$PWD":/app --rm python:latest'
 alias dn='docker run -ti -v "$PWD":/app --rm node:latest'
+alias npl='npm --registry http://localhost:8080/ '
 
 source /usr/local/opt/nvm/nvm.sh

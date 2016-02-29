@@ -25,7 +25,7 @@
   abort = rebase --abort
   ricm = "!f() { git filter-branch -f --msg-filter "echo '$2' && cat" HEAD~"$1"; }; f"
 [user]
-	name = Aurélien Noce
+	name = Aurélien Noce
 	email = aurelien.noce@imagine-app.fr
 [core]
 	editor = /usr/bin/env vim
