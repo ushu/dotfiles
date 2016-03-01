@@ -25,7 +25,7 @@ source /usr/local/share/chruby/auto.sh
 
 # enable nvm
 source $(brew --prefix nvm)/nvm.sh
-export NVM_DIR=~/.nvm
+export NVM_DIR="$HOME/.nvm"
 
 # don't enable cowsay in ansible
 export ANSIBLE_NOCOWS=1
@@ -73,3 +73,5 @@ alias dn='docker run -ti -v "$PWD":/app --rm node:latest'
 alias npl='npm --registry http://localhost:8080/ '
 
 source /usr/local/opt/nvm/nvm.sh
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh

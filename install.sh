@@ -124,6 +124,7 @@ patch_paths
 # Install node with nvm
 ######################################################################
 
+mkdir ~/.nvm
 run_and_config "source $(brew --prefix nvm)/nvm.sh"
 
 function install_nvm() {
@@ -176,9 +177,10 @@ function add_gems() {
 
 function install_ruby() {
   add_ruby "2.2.3"
+  add_ruby "2.3.0"
 
   # Loading ruby 2.2.3
-  chruby "2.2.3"
+  chruby "2.3.0"
 
   echo "Installing gems"
   # Tools
