@@ -1,6 +1,5 @@
 #!/usr/bin/env sh
 
-
 if uname -a | grep -Fqs "Darwin"
 then
   echo "Found OSX"
@@ -11,7 +10,6 @@ fi
 
 # output all on stdin
 exec 2>&1
-
 set -a
 
 ######################################################################
@@ -28,6 +26,7 @@ if [[ "$SHELL" != "/bin/zsh" ]]; then
   echo "Setting SHELL to zsh"
   chsh -s /bin/zsh
 fi
+
 
 ######################################################################
 # Copy config files
@@ -128,18 +127,26 @@ mkdir ~/.nvm
 run_and_config "source $(brew --prefix nvm)/nvm.sh"
 
 function install_nvm() {
+  echo "Installing/Updating nvm"
+  #install NVM
+  curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh |
+bash >/dev/null
+
   echo "Installing node.js"
-  # Install node 0.10 and 0.12
+  # Install node 0.10, 0.12, 5.3
   nvm install -s "0.10" >/dev/null
   nvm install -s "0.12" >/dev/null
   nvm install -s "5.3" >/dev/null
-  nvm install -s "5.4" >/dev/null
-  # Set 0.12 as the default
-  nvm alias default "5.4" >/dev/null
+  # Installing the latest stable
+  nvm install -s stable >/dev/null
+
+  echo "Activate latest stable Node.js"
+  # Set the latest stable as default
+  nvm alias default stable >/dev/null
+  nvm use stable >/dev/null
 
   echo "Installing node.js programs"
   # Install the commands
-  nvm use "5.4" >/dev/null
   npm install --global npm_lazy grunt-cli gulp less bower yo express csslint cordova ionic >/dev/null
 }
 install_nvm
@@ -184,11 +191,12 @@ function install_ruby() {
 
   echo "Installing gems"
   # Tools
-  add_gems bundler pry sass rails vagrant cocoapods
-  # Libs
-  add_gems pry compass
+  add_gems bundler rails vagrant cocoapods
+  # CSS libs
+  add_gems sass compass autoprefixer
 }
 install_ruby
+
 
 ######################################################################
 # Configure vim
@@ -197,7 +205,7 @@ install_ruby
 function install_vim() {
   if [[ ! -f "$HOME/.vim/autoload/plug.vim" ]]; then
     echo "Installing vimplug"
-    curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim>/dev/null
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim >/dev/null
   fi
 
   # Install vim plugins

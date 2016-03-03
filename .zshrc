@@ -19,13 +19,14 @@ export PATH="$HOME/go_appengine:$PATH"
 ################################################################################
 
 # load chruby functions
-source /usr/local/share/chruby/chruby.sh
-chruby 2.2
-source /usr/local/share/chruby/auto.sh
+source $(brew --prefix chruby)/share/chruby/chruby.sh
+chruby 2.3.0
+source $(brew --prefix chruby)/share/chruby/auto.sh
 
 # enable nvm
-source $(brew --prefix nvm)/nvm.sh
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR=~/.nvm
+source "$NVM_DIR/nvm.sh"
+#source $(brew --prefix nvm)/nvm.sh
 
 # don't enable cowsay in ansible
 export ANSIBLE_NOCOWS=1
@@ -72,6 +73,3 @@ alias dp='docker run -ti -v "$PWD":/app --rm python:latest'
 alias dn='docker run -ti -v "$PWD":/app --rm node:latest'
 alias npl='npm --registry http://localhost:8080/ '
 
-source /usr/local/opt/nvm/nvm.sh
-export NVM_DIR=~/.nvm
-source $(brew --prefix nvm)/nvm.sh

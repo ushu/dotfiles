@@ -36,7 +36,6 @@ brew "pyenv-virtualenvwrapper"
 
 # Node
 brew "nodejs"
-brew "nvm"
 
 # Java
 #
