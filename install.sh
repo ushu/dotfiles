@@ -104,7 +104,7 @@ install_or_update_node() {
 
   echo "Installing basic node tools"
   nvm use node >/dev/null
-  npm install -g grunt-cli gulp bower yo webpack >/dev/null 2>&1
+  npm install -g grunt-cli gulp bower yo webpack eslint babel >/dev/null 2>&1
   hash -r
 }
 
