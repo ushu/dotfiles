@@ -25,7 +25,7 @@ main() {
   fi
 
   # Add some default message on failure
-  trap "echo '☠️ ☠️  Installation failed. ☠️ ☠️ '" EXIT
+  trap "echo;echo '☠️ ☠️  Installation failed. ☠️ ☠️ '" EXIT
 
   retreive_dotfiles
   update_symlinks
