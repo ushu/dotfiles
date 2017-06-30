@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# Run this file with:
+#
+#   $ curl https://raw.githubusercontent.com/ushu/dotfiles/master/install.sh | bash
+#
+
 # General options
 set -e
 set -u
