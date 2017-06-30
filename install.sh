@@ -37,6 +37,12 @@ main() {
   trap - EXIT
 
   echo
+  echo "We're done !"
+  echo "It's time tu add your secret settings to ~/.secrets"
+  echo
+  echo "for example put your API tokens in it:"
+  echo "  export HOMEBREW_GITHUB_API_TOKEN=\"...\""
+  echo
   echo "🎉 🎉  Installation complete 🎉 🎉 "
 }
 
@@ -57,6 +63,8 @@ retreive_dotfiles() {
 # Linking files in HOME
 update_symlinks() {
   echo "Updating symlinks"
+  # secrets
+  [ -e "$HOME/.secrets" ] || touch "$HOME/.secrets"
   # vim config
   [ -e "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
   [ -e "$HOME/.vim/pack" ] || mkdir -p "$HOME/.vim/pack"
