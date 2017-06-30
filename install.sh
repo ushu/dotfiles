@@ -1,220 +1,123 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-if uname -a | grep -Fqs "Darwin"
-then
-  echo "Found OSX"
-else
-  echo "Sorry, unsupported OS"
-  exit 1
-fi
+# General options
+set -e
+set -u
 
-# output all on stdin
-exec 2>&1
-set -a
-
-######################################################################
-# Configure shell
-######################################################################
-
-PREZTOR_DIR="${ZDOTDIR:-$HOME}/.zprezto"
-if ! [[ -d "$PREZTOR_DIR" ]]; then
-  # Clone source
-  git clone --recursive https://github.com/sorin-ionescu/prezto.git "$PREZTOR_DIR"
-fi
-
-if [[ "$SHELL" != "/bin/zsh" ]]; then
-  echo "Setting SHELL to zsh"
-  chsh -s /bin/zsh
-fi
-
-
-######################################################################
-# Copy config files
-######################################################################
-
+RUN_BASH="/usr/bin/env bash"
 DOTFILES="$HOME/.dotfiles"
+LATEST_RUBY="2.4.0"
+export MANPATH="/usr/local/man"
 
-function clone_config() {
-  if [[ -d "$DOTFILES" ]]; then
-    cd "$DOTFILES"; git pull origin master
+main() {
+  echo "🚀 🚀  Starting the install process 🚀 🚀"
+  echo
+
+  # Check we are not on linux
+  UNAME=$(uname)
+  if [ "$UNAME" != "Darwin" ]; then
+      echo "oups, this script is intended to run on a mac !"
+      exit 1
+  fi
+
+  # Add some default message on failure
+  trap "echo '☠️ ☠️  Installation failed. ☠️ ☠️ '" EXIT
+
+  retreive_dotfiles
+  update_symlinks
+  install_or_update_homebrew
+  install_or_update_node
+  install_or_update_ruby
+  install_vim_plugins
+
+  trap - EXIT
+
+  echo
+  echo "🎉 🎉  Installation complete 🎉 🎉 "
+}
+
+# Clone or Update local copy of repo
+retreive_dotfiles() {
+  # Grab all files in ~/.dotfiles
+  if [ -e "$HOME/.dotfiles" ]; then
+    echo "Found previous installation, trying to update the files..."
+    cd "$HOME/.dotfiles"
+    git pull --depth=1 --force -q
   else
-    git clone --recursive https://github.com/ushu/dotfiles "$DOTFILES"
+    echo "Retreiving files from github.com/ushu/dotfiles..."
+    git clone --depth=1 --single-branch -q https://github.com/ushu/dotfiles "$DOTFILES"
   fi
 }
-clone_config
 
-function create_symlinks() {
-  # Linking files in HOME
+
+# Linking files in HOME
+update_symlinks() {
+  echo "Updating symlinks"
   # vim config
-  [ -f "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
-  [ -d "$HOME/.vim" ] || mkdir "$HOME/.vim"
-  [ -f "$HOME/.editorconfig" ] || ln -s "$DOTFILES/.editorconfig" "$HOME/.editorconfig"
+  [ -e "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
+  [ -e "$HOME/.vim/pack" ] || mkdir -p "$HOME/.vim/pack"
+  [ -e "$HOME/.vim/pack/install.sh" ] || ln -s "$DOTFILES/pack.sh" "$HOME/.vim/pack/install.sh"
+  [ -e "$HOME/.editorconfig" ] || ln -s "$DOTFILES/.editorconfig" "$HOME/.editorconfig"
   # git config
-  [ -f "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
+  [ -e "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
   # shell configs
-  [ -f "$HOME/.zshrc" ] || ln -s "$DOTFILES/.zshrc" "$HOME/.zshrc"
-  [ -f "$HOME/.zpreztorc" ] || ln -s "$DOTFILES/.zpreztorc" "$HOME/.zpreztorc"
-  [ -f "$HOME/.zshenv" ] || ln -s "$DOTFILES/.zshenv" "$HOME/.zshenv"
-  [ -f "$HOME/.zlogin" ] || ln -s "$HOME/.zprezto/runcoms/zlogin" "$HOME/.zlogin"
-  [ -f "$HOME/.zlogout" ] || ln -s "$HOME/.zprezto/runcoms/zlogout" "$HOME/.zlogout"
-  [ -f "$HOME/.zprofile" ] || ln -s "$HOME/.zprezto/runcoms/zprofile" "$HOME/.zprofile"
-  [ -f "$HOME/.bashrc" ] || ln -s "$DOTFILES/.bashrc" "$HOME/.bashrc"
-  # default options for rails new ...
-  [ -f "$HOME/.railsrc" ] || ln -s "$DOTFILES/.railsrc" "$HOME/.railsrc"
+  [ -e "$HOME/.profile" ] || ln -s "$DOTFILES/.profile" "$HOME/.profile"
+  [ -e "$HOME/.bashrc" ] || ln -s "$DOTFILES/.bashrc" "$HOME/.bashrc"
+  [ -e "$HOME/.tmux.conf" ] || ln -s "$DOTFILES/.tmux.conf" "$HOME/.tmux.conf"
+  # default options for Ruby/Rails
+  [ -e "$HOME/.railsrc" ] || ln -s "$DOTFILES/.railsrc" "$HOME/.railsrc"
+  [ -e "$HOME/.pryrc" ] || ln -s "$DOTFILES/.pryrc" "$HOME/.pryrc"
+  [ -e "$HOME/.bundle" ] || mkdir "$HOME/.bundle"
+  [ -e "$HOME/.bundle/config" ] || ln -s "$DOTFILES/.bundle.config" "$HOME/.bundle/config"
   # tmux config
-  [ -f "$HOME/.tmux.conf" ] || ln -s "$DOTFILES/.tmux.conf" "$HOME/.tmux.conf"
-}
-create_symlinks
-
-
-######################################################################
-# Update the config files
-######################################################################
-
-# Create the .bash_profile if necessary
-test -f ~/.bash_profile || echo "[[ -s ~/.bashrc ]] && source ~/.bashrc" >> .bash_profile
-
-function config() {
-  local cmd="$1"
-  if ! grep -Fqs "$cmd" ~/.bashrc >/dev/null; then echo "$cmd" >> ~/.bashrc; fi
-  if ! grep -Fqs "$cmd" ~/.zshrc >/dev/null; then echo "$cmd" >> ~/.zshrc; fi
+  [ -e "$HOME/.tmux.conf" ] || ln -s "$DOTFILES/.tmux.conf" "$HOME/.tmux.conf"
+  # useful scripts
+  [ -e "$HOME/bin" ] || mkdir "$HOME/bin"
+  [ -e "$HOME/bin/gen-cert" ] || ln -s "$DOTFILES/bin/gen-cert" "$HOME/bin/gen-cert"
+  [ -e "$HOME/bin/gen-cert-no-ca" ] || ln -s "$DOTFILES/bin/gen-cert-no-ca" "$HOME/bin/gen-cert-no-ca"
 }
 
-function run_and_config() {
-  eval "$1" >/dev/null
-  config "$1"
-}
-
-
-######################################################################
-# Homebrew
-######################################################################
-
-function install_homebrew() {
-  # Install homebrew
-  if command -v brew >/dev/null
-  then
+install_or_update_homebrew() {
+  # looking up brew command (see https://stackoverflow.com/a/677212 for details)
+  if command -v brew >/dev/null 2>&1; then
     echo "Updating Homebrew"
+    brew update >/dev/null
   else
-    echo "Homebrew not found: installing"
-    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" >/dev/null
+    # Run the installer from https://brew.sh
+    echo "Homebrew not found: launching the installer"
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    hash -r
   fi
 
-  # installing brews
-  cd "$DOTFILES"
+  # install all the packages by reading the Brewfile
+  echo "Installing Homebrew packages"
   brew tap --repair homebrew/bundle >/dev/null
-  brew bundle >/dev/null
-}
-install_homebrew
-
-function patch_paths() {
-  if ! cat /etc/paths | head -n1 | grep -Fqs "/usr/local/bin"; then
-    echo "patch /etc/paths (old version in $DOTFILES/.paths.backup)"
-    cp /etc/paths .paths.backup
-    sed '/[/]usr[/]local[/]s*bin/d' /etc/paths | sed '1 i\
-/usr/local/bin
-'   > "$DOTFILES/paths"
-  fi
-}
-patch_paths
-
-
-######################################################################
-# Install node with nvm
-######################################################################
-
-mkdir ~/.nvm
-run_and_config "source $(brew --prefix nvm)/nvm.sh"
-
-function install_nvm() {
-  echo "Installing/Updating nvm"
-  #install NVM
-  curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh |
-bash >/dev/null
-
-  echo "Installing node.js"
-  # Install node 0.10, 0.12, 5.3
-  nvm install -s "0.10" >/dev/null
-  nvm install -s "0.12" >/dev/null
-  nvm install -s "5.3" >/dev/null
-  # Installing the latest stable
-  nvm install -s stable >/dev/null
-
-  echo "Activate latest stable Node.js"
-  # Set the latest stable as default
-  nvm alias default stable >/dev/null
-  nvm use stable >/dev/null
-
-  echo "Installing node.js programs"
-  # Install the commands
-  npm install --global npm_lazy grunt-cli gulp less bower yo express csslint cordova ionic >/dev/null
-}
-install_nvm
-
-
-######################################################################
-# Install Ruby
-######################################################################
-
-# Load chruby
-run_and_config "source $(brew --prefix chruby)/share/chruby/chruby.sh"
-
-function add_ruby() {
-  local version="$1"
-  local rubies=$(chruby)
-  if ! echo "$rubies" | grep -Fqs "$version"; then
-    echo "Installing ruby v$1"
-    ruby-install ruby "$1" >/dev/null
-  fi
-
-  # reload chruby
-  source $(brew --prefix chruby)/share/chruby/chruby.sh
+  brew bundle --file="$DOTFILES/Brewfile" >/dev/null
 }
 
-function add_gems() {
-  local gems="$@"
-  local local_gems=$(gem list)
-  for gem in $gems; do
-    if ! echo "$local_gems" | grep -Fqs "$gem"; then
-      echo "Installing $gem"
-      gem install "$gem" --no-ri --no-rdoc >/dev/null
-    fi
-  done
+install_or_update_node() {
+  # Ensure nvm is loaded
+  command -v nvm >/dev/null 2>&1 || source "$(brew --prefix nvm)/nvm.sh"
+
+  echo "Installing the latest version of node"
+  nvm install node >/dev/null 2>&1
+  nvm alias default node >/dev/null
+
+  echo "Installing basic node tools"
+  nvm use node >/dev/null
+  npm install -g grunt-cli gulp bower yo webpack >/dev/null 2>&1
+  hash -r
 }
 
-function install_ruby() {
-  add_ruby "2.2.3"
-  add_ruby "2.3.0"
-
-  # Loading ruby 2.2.3
-  chruby "2.3.0"
-
-  echo "Installing gems"
-  # Tools
-  add_gems bundler rails vagrant cocoapods
-  # CSS libs
-  add_gems sass compass autoprefixer
+install_or_update_ruby() {
+  echo "Installing latest Ruby"
+  rbenv install "$LATEST_RUBY" --skip-existing
+  echo "$LATEST_RUBY" > "$HOME/.ruby-version"
 }
-install_ruby
 
-
-######################################################################
-# Configure vim
-######################################################################
-
-function install_vim() {
-  if [[ ! -f "$HOME/.vim/autoload/plug.vim" ]]; then
-    echo "Installing vimplug"
-    curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim >/dev/null
-  fi
-
-  # Install vim plugins
-  vim -E +PlugInstall +qall
+install_vim_plugins() {
+  echo "Installing/Updating vim plugins"
+  $RUN_BASH "$HOME/.vim/pack/install.sh" >/dev/null
 }
-install_vim
 
-
-# Run GUI Installers
-echo "Launching lastpass installer at /opt/homebrew-cask/Caskroom/lastpass/latest/LastPass Installer.app"
-open "/opt/homebrew-cask/Caskroom/lastpass/latest/LastPass Installer.app"
-
+main
