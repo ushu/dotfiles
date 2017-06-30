@@ -46,7 +46,8 @@ if dein#load_state(expand('~/.vim/dein'))
   call dein#add('kchmck/vim-coffee-script', {'on_ft': ['coffee']})
   call dein#add('ap/vim-css-color', {'on_ft': ['css']})
   call dein#add('pangloss/vim-javascript', {'on_ft': ['javascript']})
-  call dein#add('mxw/vim-jsx', {'on_ft': ['jsx']})
+  call dein#add('mxw/vim-jsx', {'on_ft': ['javascript', 'jsx']})
+  call dein#add('digitaltoad/vim-jade', {'on_ft': ['jade']})
 
   " Go
   call dein#add('fatih/vim-go', {'on_ft': ['go']})
@@ -58,6 +59,25 @@ if dein#load_state(expand('~/.vim/dein'))
   call dein#save_state()
 endif
 
+" Load the right plugin for the right file
+augroup SyntaxEx
+
+  " HTML & Co
+  autocmd! BufNewFile,BufRead *.jade setlocal filetype=jade
+  " CSS & Co
+  autocmd! BufNewFile,BufRead *.coffee setlocal filetype=coffee
+  " JS
+  autocmd! BufNewFile,BufRead *.es6 setlocal filetype=javascript
+  autocmd! BufNewFile,BufRead *.ts setlocal filetype=typescript
+  autocmd! BufNewFile,BufRead *.jsx setlocal filetype=jsx
+  " Ruby (.rb detected by default)
+  autocmd! BufNewFile,BufRead *.erb setlocal filetype=eruby
+  autocmd! BufNewFile,BufRead Gemfile,Procfile,Podfile,VagrantFile,Cheffile setlocal filetype=ruby
+  autocmd! BufNewFile,BufRead .pryrc setlocal filetype=ruby
+  " Go
+  autocmd! BufNewFile,BufRead *.go setlocal filetype=go
+
+augroup END
 
 " Highlighting is ON
 syntax on
