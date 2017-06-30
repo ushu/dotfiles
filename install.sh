@@ -4,7 +4,6 @@
 set -e
 set -u
 
-RUN_BASH="/usr/bin/env bash"
 DOTFILES="$HOME/.dotfiles"
 LATEST_RUBY="2.4.0"
 export MANPATH="/usr/local/man"
@@ -23,11 +22,11 @@ main() {
   # Add some default message on failure
   trap "echo '☠️ ☠️  Installation failed. ☠️ ☠️ '" EXIT
 
-  retreive_dotfiles
+  #retreive_dotfiles
   update_symlinks
-  install_or_update_homebrew
-  install_or_update_node
-  install_or_update_ruby
+  #install_or_update_homebrew
+  #install_or_update_node
+  #install_or_update_ruby
   install_vim_plugins
 
   trap - EXIT
@@ -117,7 +116,12 @@ install_or_update_ruby() {
 
 install_vim_plugins() {
   echo "Installing/Updating vim plugins"
-  $RUN_BASH "$HOME/.vim/pack/install.sh" >/dev/null
+  if [ ! -e "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" ]; then
+    [ -e "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" ] || mkdir -p "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" >/dev/null
+    git clone git@github.com:Shougo/dein.vim.git "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" >/dev/null 2>&1
+  fi
+
+  vim -E +"call dein#install()" +qall
 }
 
 main

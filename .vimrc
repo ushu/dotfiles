@@ -12,10 +12,52 @@ set hidden
 set visualbell
 
 " (from the docs) Jump to last cursor position 
-  autocmd BufReadPost *
-      \ if line("'\"") > 0 && line("'\"") <= line("$") |
-      \   exe "normal g`\"" |
-      \ endif
+autocmd BufReadPost *
+    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal g`\"" |
+    \ endif
+
+" Load plugins
+set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
+if dein#load_state(expand('~/.vim/dein'))
+  call dein#begin(expand('~/.vim/dein'))
+
+  " Auto-update dein
+  call dein#add('Shougo/dein.vim')
+
+  " Color theme
+  call dein#add('junegunn/seoul256.vim')
+
+  " Tools
+  call dein#add('tpope/vim-fugitive',
+    \{'on_cmd': ['Gstatus', 'Gadd', 'Gcommit', 'Gdiff']})
+  call dein#add('junegunn/fzf', 
+    \{'on_cmd': 'Fzf',
+    \ 'build': {
+    \   'mac': './install',
+    \ },
+    \})
+  call dein#add('editorconfig/editorconfig-vim')
+  call dein#add('rking/ag.vim', {'on_cmd': 'Ag'})
+  call dein#add('maralla/completor.vim', {'on_i': 1})
+  call dein#add('maralla/validator.vim')
+
+  " WebDev
+  call dein#add('kchmck/vim-coffee-script', {'on_ft': ['coffee']})
+  call dein#add('ap/vim-css-color', {'on_ft': ['css']})
+  call dein#add('pangloss/vim-javascript', {'on_ft': ['javascript']})
+  call dein#add('mxw/vim-jsx', {'on_ft': ['jsx']})
+
+  " Go
+  call dein#add('fatih/vim-go', {'on_ft': ['go']})
+
+  " Rust
+  call dein#add('rust-lang/rust', {'on_ft': ['rust']})
+
+  call dein#end()
+  call dein#save_state()
+endif
+
 
 " Highlighting is ON
 syntax on
@@ -31,8 +73,10 @@ set backspace=indent,eol,start
 set shell=bash
 
 " Load theme
-let g:seoul256_background=233
-color seoul256
+if filereadable(expand('~/.vim/dein/repos/github.com/junegunn/seoul256.vim/README.md'))
+    let g:seoul256_background=233
+    color seoul256
+endif
 
 " <leader>i => fuzzy finder
 nnoremap <leader>i :FZF<CR>
@@ -82,8 +126,9 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 " (recommended) config for validator
 " load clang-tidy from cellar: it installed via homebrew but not linked to
 " avoid comflcting w/ Apple build system
-let g:clang_cellar_path = system("brew --prefix llvm")
-let g:validator_clang_tidy_binary = g:clang_cellar_path . "/bin/clang-tidy"
+if filereadable("/usr/local/opt/llvm/bin/clang-tidy")
+  let g:validator_clang_tidy_binary = "/usr/local/opt/llvm/bin/clang-tidy"
+endif
 " prefer eslint for JS
 let g:validator_javascript_checkers = ['eslint']
 
