@@ -22,11 +22,11 @@ main() {
   # Add some default message on failure
   trap "echo '☠️ ☠️  Installation failed. ☠️ ☠️ '" EXIT
 
-  #retreive_dotfiles
+  retreive_dotfiles
   update_symlinks
-  #install_or_update_homebrew
-  #install_or_update_node
-  #install_or_update_ruby
+  install_or_update_homebrew
+  install_or_update_node
+  install_or_update_ruby
   install_vim_plugins
 
   trap - EXIT
