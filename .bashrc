@@ -1,16 +1,45 @@
 export EDITOR=vim
 
+# Load cached values
+if [ -e ~/.bashrc_cache ]; then
+    source ~/.bashrc_cache
+else
+    touch ~/.bashrc_cache
+fi
+
+if [ -z "$BREW_PREFIX" ]; then
+    BREW_PREFIX=$(brew --prefix)
+    echo "# Generic prefix for Homebrew installs" >> ~/.bashrc_cache
+    echo "BREW_PREFIX=\"$BREW_PREFIX\"" >> ~/.bashrc_cache
+    echo >> ~/.bashrc_code
+fi
+
 # Install in /Application on "brew cask install ..."
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
 # Java/Android HOME (needed by dev tools)
-export JAVA_HOME=$(/usr/libexec/java_home)
+if [ -z "$JAVA_HOME" ]; then
+    echo "# Current version of JAVA" >> ~/.bashrc_cache
+    JAVA_HOME=$(/usr/libexec/java_home)
+    echo "JAVA_HOME=\"$JAVA_HOME\"" >> ~/.bashrc_cache
+    echo >> ~/.bashrc_code
+fi
 export ANDROID_HOME="${HOME}/Library/Android/sdk"
 export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools"
 
 # NVM
 export NVM_DIR=~/.nvm
-source $(brew --prefix nvm)/nvm.sh
+if [ -z "$BREW_PREFIX_NVM" ]; then
+    echo "# nvm install dir" >> ~/.bashrc_cache
+    BREW_PREFIX_NVM=$(brew --prefix nvm)
+    echo "BREW_PREFIX_NVM=\"$BREW_PREFIX_NVM\"" >> ~/.bashrc_cache
+    echo >> ~/.bashrc_code
+fi
+# Lazy loading for nvm.sh
+nvm() {
+  source "$BREW_PREFIX_NVM/nvm.sh" # This loads nvm
+  nvm $@
+}
 
 # GO
 export GOPATH="$HOME"
@@ -22,7 +51,12 @@ PATH_EXTENSIONS="$HOME/go_appengine:/usr/local/bin"
 export PATH="$PATH_EXTENSIONS:$PATH"
 
 # RBENV & Ruby
-eval "$(rbenv init -)"
+if [ -z "$RBENV_SHELL" ]; then
+    echo "# Startup code for rbenv" >> ~/.bashrc_cache
+    RBENV_STARTUP_CODE=$(rbenv init -)
+    echo "$RBENV_STARTUP_CODE" >> ~/.bashrc_cache
+    echo >> ~/.bashrc_code
+fi
 alias be="bundle exec"
 # fix crazy yarn/rbenv issue
 alias yarn="/usr/local/bin/yarn"
@@ -47,10 +81,6 @@ alias ac="git aa && git ci"
 alias ci="git ci"
 alias be="bundle exec"
 
-colorize_changelog() {
-  gcc main.c 2>&1 | sed -e 's/\(clang\)/^[[1;31m\1^[[m/'
-}
-
 # Generate a random password
 randompwd() {
   openssl rand -base64 2048 | tr '\n' '+' | sed -e 's/[\n\/=+]//g' | cut -c1-${1:-50} | head -n1
@@ -58,8 +88,8 @@ randompwd() {
 
 # Custom prompt
 PS1="\W \$ "
-if [ -f "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh" ]; then
-    source "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh"
+if [ -f "$BREW_PREFIX/opt/bash-git-prompt/share/gitprompt.sh" ]; then
+    source "$BREW_PREFIX/opt/bash-git-prompt/share/gitprompt.sh"
 fi
 
 # Open Chrome Canary with CORS disables
@@ -74,8 +104,3 @@ icloud() {
   cd "$ICLOUD"
 }
 
-###-tns-completion-start-###
-if [ -f /Users/ushu/.tnsrc ]; then 
-    source /Users/ushu/.tnsrc 
-fi
-###-tns-completion-end-###
