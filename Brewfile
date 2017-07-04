@@ -80,7 +80,7 @@ cask "firefox"
 cask "opera"
 
 # Java
-cask "java" unless system "/usr/libexec/java_home --failfast >/dev/null"
+cask "java" unless system "/usr/libexec/java_home --failfast >/dev/null 2>&1"
 
 # Dev Tools
 cask "atom"
@@ -90,4 +90,13 @@ cask "gitbook-editor"
 cask "gpgtools"
 cask "dropbox"
 cask "slack"
+
+# JetBrains IDEs
+cask "webstorm"
+cask "rubymine"
+cask "appcode"
+cask "gogland"
+cask "pycharm"
+cask "clion"
+cask "datagrip"
 

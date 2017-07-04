@@ -114,6 +114,7 @@ install_or_update_node() {
   echo "Installing the latest version of node"
   nvm install node >/dev/null 2>&1
   nvm alias default node >/dev/null
+  hash -r
 
   echo "Installing basic node tools"
   nvm use node >/dev/null
@@ -123,7 +124,7 @@ install_or_update_node() {
 
 install_or_update_ruby() {
   echo "Installing latest Ruby"
-  rbenv install "$LATEST_RUBY" --skip-existing
+  rbenv install "$LATEST_RUBY" --skip-existing >/dev/null 2>&1
   echo "$LATEST_RUBY" > "$HOME/.ruby-version"
 }
 
