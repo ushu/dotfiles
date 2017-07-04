@@ -30,7 +30,7 @@ if dein#load_state(expand('~/.vim/dein'))
 
   " Tools
   call dein#add('tpope/vim-fugitive',
-    \{'on_cmd': ['Gstatus', 'Gadd', 'Gcommit', 'Gdiff']})
+    \{'on_cmd': ['Git', 'Gstatus', 'Gwrite', 'Gcommit', 'Gdiff']})
   call dein#add('junegunn/fzf', 
     \{'on_cmd': 'Fzf',
     \ 'build': {
@@ -79,6 +79,9 @@ augroup SyntaxEx
 
 augroup END
 
+" Custom :PlugInstall command to (re)install plugins
+:command PlugInstall :call dein#install()
+
 " Highlighting is ON
 syntax on
 filetype plugin indent on
@@ -117,7 +120,7 @@ nnoremap <leader>l :lnext<CR>
 
 " Git
 nnoremap gs :Gstatus<CR>
-nnoremap ga :Gadd<CR>
+nnoremap ga :Gwrite<CR>
 nnoremap gc :Gcommit<CR>
 nnoremap gd :Gdiff<CR>
 
