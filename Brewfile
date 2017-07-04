@@ -69,7 +69,10 @@ brew "go"
 # installs clang-tidy into "$(brew --prefix llvm)/bin/clang-tidy":
 brew "llvm", args: ["with-clang", "with-clang-extra-tools"]
 
-# Cask
+###################################
+# Install GUI apps with Brew Cask #
+###################################
+
 cask_args appdir: "/Applications"
 tap "caskroom/cask"
 cask "launchrocket"
@@ -85,11 +88,12 @@ cask "java" unless system "/usr/libexec/java_home --failfast >/dev/null 2>&1"
 # Dev Tools
 cask "atom"
 cask "gitbook-editor"
+cask "reveal"
 
-# Misc Tools
-cask "gpgtools"
+# Misc
+#cask "gpgtools" # currently using beta for sierra compatibilty
 cask "dropbox"
-cask "slack"
+cask "steam"
 
 # JetBrains IDEs
 cask "webstorm"
@@ -100,3 +104,30 @@ cask "pycharm"
 cask "clion"
 cask "datagrip"
 
+###################################
+# Install App Store apps with mas #
+###################################
+
+brew "mas"
+
+# Coding apps
+mas "XCode", id: 497799835
+mas "Quiver", id: 866773894
+
+# Graphics and design
+mas "Affinity Photo", id: 824183456
+mas "Affinity Designer", id: 824171161
+
+# Office
+mas "Keynote", id: 409183694
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+mas "Deckset", id: 847496013
+
+# Social
+mas "Twitter", id: 409789998
+mas "Slack", id: 803453959
+
+# Other tools
+mas "Harvest", id: 506189836
+mas "Skitch", id: 425955336

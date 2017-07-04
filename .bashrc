@@ -43,7 +43,7 @@ alias l="git lg"
 alias cl="git changelog master..HEAD"
 alias d="git dc"
 alias s="git status"
-alias ac="git ac"
+alias ac="git aa && git ci"
 alias ci="git ci"
 alias be="bundle exec"
 
