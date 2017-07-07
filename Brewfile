@@ -9,14 +9,14 @@ brew "gnu-sed"
 
 # Development tools
 brew "pkg-config"
-#brew "vim", args: [ "with-python", "with-lua", "with-luajit" ]
-brew "vim"
+brew "vim", args: [ "with-python", "with-lua", "with-python3" ]
 brew "emacs", args: ["with-cocoa", "with-gnutls"]
 brew "phantomjs"
 brew "imagemagick"
 brew "flow"
 brew "editorconfig"
 brew "heroku"
+brew "antlr"
 
 # DB & Cache servers
 brew "postgresql"

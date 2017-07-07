@@ -51,12 +51,11 @@ PATH_EXTENSIONS="$HOME/go_appengine:/usr/local/bin"
 export PATH="$PATH_EXTENSIONS:$PATH"
 
 # RBENV & Ruby
-if [ -z "$RBENV_SHELL" ]; then
-    echo "# Startup code for rbenv" >> ~/.bashrc_cache
-    RBENV_STARTUP_CODE=$(rbenv init -)
-    echo "$RBENV_STARTUP_CODE" >> ~/.bashrc_cache
-    echo >> ~/.bashrc_code
-fi
+# (lazy load rbenv)
+rbenv() {
+  eval "$($BREW_PREFIX/bin/rbenv init -)"
+  rbenv $@
+}
 alias be="bundle exec"
 # fix crazy yarn/rbenv issue
 alias yarn="/usr/local/bin/yarn"
