@@ -102,6 +102,39 @@ EOF
     livereactload react-proxy babel-plugin-react-transform || return
   yarn add react react-dom
 
+
+  cat >index.html <<-EOF
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <title>React Project</title>
+  <meta charset="utf-8">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Additional Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:600,700" rel="stylesheet">
+</head>
+<body>
+  <!-- Some ROOT element -->
+  <div id="root" class="container"></div>
+
+  <script src="index.js"></script>
+</body>
+</html>
+EOF
+
+  cat >style.css <<-EOF
+:root {
+    font: 600 16px "Open Sans", sans-serif;
+}
+
+.HelloWorld-label {
+  font-size: 1.2rem;
+}
+EOF
+
   cat >index.js <<-EOF
 // CODE GOES HERE 😇
 
@@ -120,10 +153,12 @@ class HelloWorld extends Component {
   }
 
   render() {
-    return <div>
-      <h1>Hello {this.state.who}</h1>
-      <input type="text" onChange={ev => this.updateWho(ev)} value={this.state.who}/>
-    </div>
+    return (
+      <div>
+        <h3 className="HelloWorld-label">Hello {this.state.who}</h3>
+        <input className="HelloWorld-input" type="text" onChange={ev => this.updateWho(ev)} value={this.state.who}/>
+      </div>
+    );
   }
 }
 
@@ -148,9 +183,7 @@ const store = configureStore( INITIAL STATE );
 
 *******************************************************************************/
 
-const rootNode = document.createElement("div");
-document.body.appendChild(rootNode);
-
+const rootNode = document.querySelector("#root");
 renderDOM(<HelloWorld />, rootNode);
 EOF
 
