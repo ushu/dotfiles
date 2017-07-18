@@ -68,7 +68,7 @@ budo-create-react() {
   "author": "Aurélien Noce <aurelien.noce@imagine-app.fr> (http://imagine-app.fr/)",
   "license": "@2017 Aurélien Noce & imagine-app",
   "scripts": {
-    "start": "NODE_ENV='development' budo ./index.js --live='*.{html,css}' -- -t babelify -p livereactload"
+    "start": "NODE_ENV='development' budo ./index.js --live='*.{html,css}' --open -- -t babelify -p livereactload"
   }
 }
 EOF
@@ -90,11 +90,32 @@ EOF
   }
 }
 EOF
-  yarn add --dev budo babelify browserify babel-preset-es2015 babel-preset-react babel-preset-stage-0 || return
-  yarn add --dev livereactload react-proxy babel-plugin-react-transform
+  yarn add --dev budo babelify browserify babel-preset-es2015 babel-preset-react babel-preset-stage-0 livereactload react-proxy babel-plugin-react-transform || return
 
   cat >index.js <<-EOF
 // CODE GOES HERE 😇
+
+import React, {Component} from "react";
+import {render as renderDOM} from "react-dom";
+
+class HelloWorld extends Component {
+  state = {
+    who: "World",
+  };
+
+  updateWho(event) {
+    const who = event.target.value;
+    this.setState({ who });
+    event.preventDefault();
+  }
+
+  render() {
+    return <div>
+      <h1>Hello {this.state.who}</h1>
+      <input type="text" onChange={ev => this.updateWho(ev)} value={this.state.who}/>
+    </div>
+  }
+}
 
 /******************************************************************************
  *if using Redux, uncomment the following snippet to handle LiveReload
@@ -116,6 +137,11 @@ function configureStore(initialState) {
 const store = configureStore( INITIAL STATE );
 
 *******************************************************************************/
+
+const rootNode = document.createElement("div");
+document.body.appendChild(rootNode);
+
+renderDOM(<HelloWorld />, rootNode);
 EOF
 
   webstorm . index.js
