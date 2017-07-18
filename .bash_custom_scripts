@@ -98,7 +98,9 @@ EOF
   }
 }
 EOF
-  yarn add --dev budo babelify browserify babel-preset-es2015 babel-preset-react babel-preset-stage-0 livereactload react-proxy babel-plugin-react-transform || return
+  yarn add --dev budo babelify browserify babel-preset-es2015 babel-preset-react babel-preset-stage-0 \
+    livereactload react-proxy babel-plugin-react-transform || return
+  yarn add react react-dom
 
   cat >index.js <<-EOF
 // CODE GOES HERE 😇
