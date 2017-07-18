@@ -6,6 +6,7 @@ brew "wget"
 brew "curl"
 brew "gawk"
 brew "gnu-sed"
+brew "ffmpeg"
 
 # Development tools
 brew "pkg-config"
@@ -75,7 +76,6 @@ brew "llvm", args: ["with-clang", "with-clang-extra-tools"]
 
 cask_args appdir: "/Applications"
 tap "caskroom/cask"
-cask "launchrocket"
 
 # Browsers
 cask "google-chrome"
@@ -94,6 +94,8 @@ cask "reveal"
 #cask "gpgtools" # currently using beta for sierra compatibilty
 cask "dropbox"
 cask "steam"
+cask "launchrocket"
+cask "vlc"
 
 # JetBrains IDEs
 cask "webstorm"
@@ -131,3 +133,4 @@ mas "Slack", id: 803453959
 # Other tools
 mas "Harvest", id: 506189836
 mas "Skitch", id: 425955336
+

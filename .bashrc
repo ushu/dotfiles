@@ -50,6 +50,10 @@ export PATH="$PATH:$GOPATH/bin"
 PATH_EXTENSIONS="$HOME/go_appengine:/usr/local/bin"
 export PATH="$PATH_EXTENSIONS:$PATH"
 
+if [ -e "/Library/TeX/texbin" ];then
+  export PATH="$PATH:/Library/TeX/texbin"
+fi
+
 # RBENV & Ruby
 # (lazy load rbenv)
 rbenv() {
@@ -80,26 +84,12 @@ alias ac="git aa && git ci"
 alias ci="git ci"
 alias be="bundle exec"
 
-# Generate a random password
-randompwd() {
-  openssl rand -base64 2048 | tr '\n' '+' | sed -e 's/[\n\/=+]//g' | cut -c1-${1:-50} | head -n1
-}
-
 # Custom prompt
 PS1="\W \$ "
 if [ -f "$BREW_PREFIX/opt/bash-git-prompt/share/gitprompt.sh" ]; then
     source "$BREW_PREFIX/opt/bash-git-prompt/share/gitprompt.sh"
 fi
 
-# Open Chrome Canary with CORS disables
-nocors() {
-  if [ ! -d "$HOME/.Chrome" ]; then mkdir "$HOME/.Chrome"; fi
-  open -a Google\ Chrome --args --disable-web-security --user-data-dir="$HOME/.Chrome"
-}
-
-# Open the iCloud Drive folder
-ICLOUD="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
-icloud() {
-  cd "$ICLOUD"
-}
-
+if [ -e "$HOME/.bash_custom_scripts" ]; then
+  source "$HOME/.bash_custom_scripts"
+fi

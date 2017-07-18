@@ -68,6 +68,7 @@ augroup SyntaxEx
   autocmd! BufNewFile,BufRead *.coffee setlocal filetype=coffee
   " JS
   autocmd! BufNewFile,BufRead *.es6 setlocal filetype=javascript
+  autocmd! BufNewFile,BufRead .babelrc,.eslintrc setlocal filetype=json
   autocmd! BufNewFile,BufRead *.ts setlocal filetype=typescript
   autocmd! BufNewFile,BufRead *.jsx setlocal filetype=jsx
   " Ruby (.rb detected by default)

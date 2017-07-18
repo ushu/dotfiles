@@ -75,6 +75,7 @@ update_symlinks() {
   # shell configs
   [ -e "$HOME/.profile" ] || ln -s "$DOTFILES/.profile" "$HOME/.profile"
   [ -e "$HOME/.bashrc" ] || ln -s "$DOTFILES/.bashrc" "$HOME/.bashrc"
+  [ -e "$HOME/.bash_custom_scripts" ] || ln -s "$DOTFILES/.bash_custom_scripts" "$HOME/.bash_custom_scripts"
   [ -e "$HOME/.tmux.conf" ] || ln -s "$DOTFILES/.tmux.conf" "$HOME/.tmux.conf"
   # default options for Ruby/Rails
   [ -e "$HOME/.railsrc" ] || ln -s "$DOTFILES/.railsrc" "$HOME/.railsrc"

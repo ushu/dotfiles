@@ -1,0 +1,124 @@
+# Generate a random password
+randompwd() {
+  openssl rand -base64 2048 | tr '\n' '+' | sed -e 's/[\n\/=+]//g' | cut -c1-${1:-50} | head -n1
+}
+
+# Open Chrome Canary with CORS disables
+nocors() {
+  if [ ! -d "$HOME/.Chrome" ]; then mkdir "$HOME/.Chrome"; fi
+  open -a Google\ Chrome --args --disable-web-security --user-data-dir="$HOME/.Chrome"
+}
+
+# Open the iCloud Drive folder
+ICLOUD="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
+icloud() {
+  cd "$ICLOUD"
+}
+
+# Budo scripts
+budo-create() {
+  local project_name="$1"
+  if [ -z "$project_name" ]; then
+    echo "Usage: new-budo PROJECT_NAME"
+    return
+  fi
+
+  # Create Project
+  mkdir "$project_name" && cd $_ || return
+  cat >package.json <<-EOF
+{
+  "name": "$package_name",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Aurélien Noce <aurelien.noce@imagine-app.fr> (http://imagine-app.fr/)",
+  "license": "@2017 Aurélien Noce & imagine-app",
+  "scripts": {
+    "start": "budo index.js --live --open -- -t babelify"
+  }
+}
+EOF
+  cat >.babelrc <<-EOF
+{
+  "presets": [ "es2015", "react", "stage-0" ],
+  "ignore" : ["/node_modules/*"]
+}
+EOF
+  yarn add --dev budo babelify browserify babel-preset-es2015 babel-preset-react babel-preset-stage-0 || return
+  cat >index.js <<-EOF
+// CODE GOES HERE 😇
+EOF
+
+  webstorm . index.js
+  yarn start
+}
+budo-create-react() {
+  local project_name="$1"
+  if [ -z "$project_name" ]; then
+    echo "Usage: new-budo PROJECT_NAME"
+    return
+  fi
+
+  # Create Project
+  mkdir "$project_name" && cd $_ || return
+  cat >package.json <<-EOF
+{
+  "name": "$package_name",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Aurélien Noce <aurelien.noce@imagine-app.fr> (http://imagine-app.fr/)",
+  "license": "@2017 Aurélien Noce & imagine-app",
+  "scripts": {
+    "start": "NODE_ENV='development' budo ./index.js --live='*.{html,css}' -- -t babelify -p livereactload"
+  }
+}
+EOF
+  cat >.babelrc <<-EOF
+{
+  "presets": [ "es2015", "react", "stage-0" ],
+  "ignore" : ["/node_modules/*"],
+    "env": {
+    "development": {
+      "plugins": [
+        ["react-transform", {
+          "transforms": [{
+            "transform": "livereactload/babel-transform",
+            "imports": ["react"]
+          }]
+        }]
+      ]
+    }
+  }
+}
+EOF
+  yarn add --dev budo babelify browserify babel-preset-es2015 babel-preset-react babel-preset-stage-0 || return
+  yarn add --dev livereactload react-proxy babel-plugin-react-transform
+
+  cat >index.js <<-EOF
+// CODE GOES HERE 😇
+
+/******************************************************************************
+ *if using Redux, uncomment the following snippet to handle LiveReload
+ *  (if not you can TRASH it !)
+ ******************************************************************************
+
+function configureStore(initialState) {
+  const nextRootReducer = combineReducers({ REDUCERS }); // à compléter avec le root reducer
+
+  const store = createStore(rootReducer, initialState);
+  if (module.hot) {
+      module.hot.accept(() => {
+        const nextRootReducer = combineReducers({ REDUCERS }); // à compléter avec le root reducer
+        store.replaceReducer(nextRootReducer);
+      });
+  }
+  return store;
+}
+const store = configureStore( INITIAL STATE );
+
+*******************************************************************************/
+EOF
+
+  webstorm . index.js
+  yarn start
+}
+
