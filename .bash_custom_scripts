@@ -1,21 +1,29 @@
+#
 # Generate a random password
+#
 randompwd() {
   openssl rand -base64 2048 | tr '\n' '+' | sed -e 's/[\n\/=+]//g' | cut -c1-${1:-50} | head -n1
 }
 
+#
 # Open Chrome Canary with CORS disables
+#
 nocors() {
   if [ ! -d "$HOME/.Chrome" ]; then mkdir "$HOME/.Chrome"; fi
   open -a Google\ Chrome --args --disable-web-security --user-data-dir="$HOME/.Chrome"
 }
 
+#
 # Open the iCloud Drive folder
+#
 ICLOUD="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
 icloud() {
   cd "$ICLOUD"
 }
 
+#
 # Budo scripts
+#
 budo-create() {
   local project_name="$1"
   if [ -z "$project_name" ]; then
