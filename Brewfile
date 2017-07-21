@@ -18,6 +18,7 @@ brew "flow"
 brew "editorconfig"
 brew "heroku"
 brew "antlr"
+brew "carthage"
 
 # DB & Cache servers
 brew "postgresql"
