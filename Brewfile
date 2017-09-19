@@ -106,6 +106,7 @@ cask "gogland"
 cask "pycharm"
 cask "clion"
 cask "datagrip"
+cask "android-studio"
 
 ###################################
 # Install App Store apps with mas #
