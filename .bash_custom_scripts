@@ -191,3 +191,29 @@ EOF
   yarn start
 }
 
+# Git functions
+gitzip() {
+  if [ -z "$1" ];then
+    ref=$(git show-ref --heads --abbrev --hash)
+  else
+    ref="$1"
+  fi
+  dirname=$(basename `pwd`)
+  git archive --format zip "$ref" > "${dirname}-${ref}.zip"
+}
+
+gitpatch() {
+  if [ -z "$1" ];then
+    echo "Usage: gitpatch ref1 [ref2]"
+    return
+  fi
+  fromref="$1"
+  if [ -z "$2" ];then
+    toref=$(git show-ref --heads --abbrev --hash)
+  else
+    toref="$2"
+  fi
+  dirname=$(basename `pwd`)
+  git format-patch "${fromref}..${toref}" --stdout > "${dirname}-${fromref}..${toref}.patch"
+  zip "${dirname}-${fromref}..${toref}.patch.zip" "${dirname}-${fromref}..${toref}.patch"
+}
