@@ -93,3 +93,6 @@ fi
 if [ -e "$HOME/.bash_custom_scripts" ]; then
   source "$HOME/.bash_custom_scripts"
 fi
+if [ -e "$HOME/.bash_local_scripts" ]; then
+  source "$HOME/.bash_local_scripts"
+fi
