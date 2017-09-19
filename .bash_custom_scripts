@@ -194,7 +194,7 @@ EOF
 # Git functions
 gitzip() {
   if [ -z "$1" ];then
-    ref=$(git show-ref --heads --abbrev --hash)
+    ref=$(git rev-parse --short HEAD)
   else
     ref="$1"
   fi
@@ -209,7 +209,7 @@ gitpatch() {
   fi
   fromref="$1"
   if [ -z "$2" ];then
-    toref=$(git show-ref --heads --abbrev --hash)
+    toref=$(git rev-parse --short HEAD)
   else
     toref="$2"
   fi

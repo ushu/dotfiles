@@ -74,7 +74,7 @@ augroup SyntaxEx
   " Ruby (.rb detected by default)
   autocmd! BufNewFile,BufRead *.erb setlocal filetype=eruby
   autocmd! BufNewFile,BufRead Gemfile,Procfile,Podfile,VagrantFile,Cheffile setlocal filetype=ruby
-  autocmd! BufNewFile,BufRead .pryrc setlocal filetype=ruby
+  autocmd! BufNewFile,BufRead .pryrc,*.jbuilder setlocal filetype=ruby
   " Go
   autocmd! BufNewFile,BufRead *.go setlocal filetype=go
 
