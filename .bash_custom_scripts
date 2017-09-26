@@ -217,3 +217,8 @@ gitpatch() {
   git format-patch "${fromref}..${toref}" --stdout > "${dirname}-${fromref}..${toref}.patch"
   zip "${dirname}-${fromref}..${toref}.patch.zip" "${dirname}-${fromref}..${toref}.patch"
 }
+
+save_quiver() {
+  quiver_to_markdown "$ICLOUD/Quiver/Quiver.qvlibrary" "$HOME/WIP/quiver_library"
+  (cd "$HOME/WIP/quiver_library"; git add --all && git commit && git push origin)
+}
