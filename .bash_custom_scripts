@@ -47,18 +47,49 @@ budo-create() {
 EOF
   cat >.babelrc <<-EOF
 {
-  "presets": [ "es2015", "react", "stage-0" ],
+  "presets": [ "es2017", "stage-0" ],
   "ignore" : ["/node_modules/*"]
 }
 EOF
-  yarn add --dev budo babelify browserify babel-preset-es2015 babel-preset-react babel-preset-stage-0 || return
+  cat >.gitignore <<-EOF
+node_modules
+.DS_Store
+*.swp
+EOF
+  cat >index.html <<-EOF
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <title>Live Edit Page</title>
+  <meta charset="utf-8">
+</head>
+<body>
+  <script src="index.js"></script>
+</body>
+</html>
+EOF
   cat >index.js <<-EOF
 // CODE GOES HERE 😇
 EOF
+  git init .
+  git ci -m "Initial commit" --allow-empty
+  yarn add --dev budo babelify browserify babel-core babel-preset-es2017 babel-preset-stage-0 || return
+  git add .
+  git ci -m "Starter code"
 
-  webstorm . index.js
-  yarn start
+  #yarn start
+  #osascript -e 'tell application "Terminal" to activate' \
+  #  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
+  #  -e "tell application \"Terminal\" to do script \"yarn start\" in selected tab of the front window" 
+  ttab -q -t "Budo server" "cd '$PWD' && yarn start"
+  osascript -e 'tell application "Terminal" to activate' \
+    -e 'tell application "System Events" to tell process "Terminal" to keystroke "[" using command down' 
+
+  #webstorm . index.js
+  #e index.js &
+  "$EDITOR" index.js
 }
+
 budo-create-react() {
   local project_name="$1"
   if [ -z "$project_name" ]; then
@@ -82,7 +113,7 @@ budo-create-react() {
 EOF
   cat >.babelrc <<-EOF
 {
-  "presets": [ "es2015", "react", "stage-0" ],
+  "presets": [ "es2017", "react", "stage-0" ],
   "ignore" : ["/node_modules/*"],
     "env": {
     "development": {
@@ -98,10 +129,6 @@ EOF
   }
 }
 EOF
-  yarn add --dev budo babelify browserify babel-preset-es2015 babel-preset-react babel-preset-stage-0 \
-    livereactload react-proxy babel-plugin-react-transform || return
-  yarn add react react-dom
-
 
   cat >index.html <<-EOF
 <!DOCTYPE html>
@@ -124,7 +151,6 @@ EOF
 </body>
 </html>
 EOF
-
   cat >style.css <<-EOF
 :root {
     font: 600 16px "Open Sans", sans-serif;
@@ -134,7 +160,11 @@ EOF
   font-size: 1.2rem;
 }
 EOF
-
+  cat >.gitignore <<-EOF
+.DS_Store
+node_modules
+*.swp
+EOF
   cat >index.js <<-EOF
 // CODE GOES HERE 😇
 
@@ -186,9 +216,20 @@ const store = configureStore( INITIAL STATE );
 const rootNode = document.querySelector("#root");
 renderDOM(<HelloWorld />, rootNode);
 EOF
+  git init .
+  git ci -m "Initial commit" --allow-empty
+  yarn add --dev budo babelify browserify babel-core babel-preset-es2017 babel-preset-react babel-preset-stage-0 \
+       livereactload react-proxy babel-plugin-react-transform || return
+  yarn add react react-dom
+  git add .
+  git ci -m "Starter code"
 
-  webstorm . index.js
-  yarn start
+  # start server in a new tab
+  ttab -q -t "Budo server" "cd '$PWD' && yarn start"
+
+  #webstorm . index.js
+  #e index.js &
+  "$EDITOR" index.js &
 }
 
 # Git functions

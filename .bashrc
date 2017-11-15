@@ -84,6 +84,9 @@ alias ac="git aa && git ci"
 alias ci="git ci"
 alias be="bundle exec"
 
+# Faster start for (spac|e)emacs
+alias e="emacsclient  -a '' --no-wait -c"
+
 # Custom prompt
 PS1="\W \$ "
 if [ -f "$BREW_PREFIX/opt/bash-git-prompt/share/gitprompt.sh" ]; then
