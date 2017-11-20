@@ -88,7 +88,12 @@ update_symlinks() {
   [ -e "$HOME/bin" ] || mkdir "$HOME/bin"
   [ -e "$HOME/bin/gen-cert" ] || ln -s "$DOTFILES/bin/gen-cert" "$HOME/bin/gen-cert"
   [ -e "$HOME/bin/gen-cert-no-ca" ] || ln -s "$DOTFILES/bin/gen-cert-no-ca" "$HOME/bin/gen-cert-no-ca"
-  [ -e "$HOME/.spacemacs" ] || ln -s "$DOTFILES/.spacemacs" "$HOME/"
+  if [ ! -e "$HOME/.emacs.d/" ]; then
+      git clone https://github.com/syl20bnr/spacemacs "$HOME/.emacs.d"
+      ln -s "$DOTFILES/.spacemacs" "$HOME"
+      mv "$HOME/.emacs.d/private/snippets" "$HOME/.emacs.d/private/snippets_old"
+      ln -s "$DOTFILES/.emacs.d/private/snippets" "$HOME/.emacs.d/private"
+  fi
 }
 
 install_or_update_homebrew() {
