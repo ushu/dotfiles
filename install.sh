@@ -88,6 +88,7 @@ update_symlinks() {
   [ -e "$HOME/bin" ] || mkdir "$HOME/bin"
   [ -e "$HOME/bin/gen-cert" ] || ln -s "$DOTFILES/bin/gen-cert" "$HOME/bin/gen-cert"
   [ -e "$HOME/bin/gen-cert-no-ca" ] || ln -s "$DOTFILES/bin/gen-cert-no-ca" "$HOME/bin/gen-cert-no-ca"
+  [ -e "$HOME/.spacemacs" ] || ln -s "$DOTFILES/.spacemacs" "$HOME/"
 }
 
 install_or_update_homebrew() {
