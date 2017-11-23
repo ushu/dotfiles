@@ -47,7 +47,7 @@ budo-create() {
 EOF
   cat >.babelrc <<-EOF
 {
-  "presets": [ "es2017", "stage-0" ],
+  "presets": [ "es2015", "stage-0" ],
   "ignore" : ["/node_modules/*"]
 }
 EOF
@@ -73,21 +73,17 @@ EOF
 EOF
   git init .
   git ci -m "Initial commit" --allow-empty
-  yarn add --dev budo babelify browserify babel-core babel-preset-es2017 babel-preset-stage-0 || return
+  yarn add --dev \
+      budo babelify browserify \
+      babel-core babel-preset-es2015 babel-preset-stage-0 || return
   git add .
   git ci -m "Starter code"
 
-  #yarn start
-  #osascript -e 'tell application "Terminal" to activate' \
-  #  -e 'tell application "System Events" to tell process "Terminal" to keystroke "t" using command down' \
-  #  -e "tell application \"Terminal\" to do script \"yarn start\" in selected tab of the front window" 
   ttab -q -t "Budo server" "cd '$PWD' && yarn start"
   osascript -e 'tell application "Terminal" to activate' \
     -e 'tell application "System Events" to tell process "Terminal" to keystroke "[" using command down' 
 
-  #webstorm . index.js
-  #e index.js &
-  "$EDITOR" index.js
+  code .
 }
 
 budo-create-react() {
@@ -113,11 +109,12 @@ budo-create-react() {
 EOF
   cat >.babelrc <<-EOF
 {
-  "presets": [ "es2017", "react", "stage-0" ],
+  "presets": [ "es2015", "react" ],
   "ignore" : ["/node_modules/*"],
-    "env": {
+  "env": {
     "development": {
       "plugins": [
+        "transform-class-properties",
         ["react-transform", {
           "transforms": [{
             "transform": "livereactload/babel-transform",
@@ -136,12 +133,7 @@ EOF
 <head>
   <title>React Project</title>
   <meta charset="utf-8">
-
-  <!-- Custom Styles -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Additional Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:600,700" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
 </head>
 <body>
   <!-- Some ROOT element -->
@@ -151,13 +143,12 @@ EOF
 </body>
 </html>
 EOF
-  cat >style.css <<-EOF
+  cat >index.css <<-EOF
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:600,700");
+
 :root {
     font: 600 16px "Open Sans", sans-serif;
-}
-
-.HelloWorld-label {
-  font-size: 1.2rem;
+    font-size: 1.2rem;
 }
 EOF
   cat >.gitignore <<-EOF
@@ -168,25 +159,24 @@ EOF
   cat >index.js <<-EOF
 // CODE GOES HERE 😇
 
-import React, {Component} from "react";
+import React from "react";
 import {render as renderDOM} from "react-dom";
 
-class HelloWorld extends Component {
+class HelloWorld extends React.Component {
   state = {
     who: "World",
   };
 
-  updateWho(event) {
+  onChange = (event) => {
     const who = event.target.value;
     this.setState({ who });
-    event.preventDefault();
   }
 
   render() {
     return (
       <div>
-        <h3 className="HelloWorld-label">Hello {this.state.who}</h3>
-        <input className="HelloWorld-input" type="text" onChange={ev => this.updateWho(ev)} value={this.state.who}/>
+        <h3>Hello {this.state.who}</h3>
+        <input onChange={this.onChange} value={this.state.who}/>
       </div>
     );
   }
@@ -218,7 +208,9 @@ renderDOM(<HelloWorld />, rootNode);
 EOF
   git init .
   git ci -m "Initial commit" --allow-empty
-  yarn add --dev budo babelify browserify babel-core babel-preset-es2017 babel-preset-react babel-preset-stage-0 \
+  yarn add --dev \
+       budo babelify browserify \
+       babel-core babel-preset-es2015 babel-preset-react babel-preset-stage-0 babel-plugin-transform-class-properties \
        livereactload react-proxy babel-plugin-react-transform || return
   yarn add react react-dom
   git add .
@@ -227,9 +219,7 @@ EOF
   # start server in a new tab
   ttab -q -t "Budo server" "cd '$PWD' && yarn start"
 
-  #webstorm . index.js
-  #e index.js &
-  "$EDITOR" index.js &
+  code .
 }
 
 # Git functions
