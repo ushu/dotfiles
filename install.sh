@@ -94,6 +94,8 @@ update_symlinks() {
       mv "$HOME/.emacs.d/private/snippets" "$HOME/.emacs.d/private/snippets_old"
       ln -s "$DOTFILES/.emacs.d/private/snippets" "$HOME/.emacs.d/private"
   fi
+  [ -e "$HOME/.config/nvim" ] || mkdir -p "$HOME/.config/nvim"
+  [ -e "$HOME/.config/nvim/init.vim" ] || ln -s "$DOTFILES/init.vim" "$HOME/.config/nvim"
 }
 
 install_or_update_homebrew() {

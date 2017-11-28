@@ -70,12 +70,6 @@ export FZF_DEFAULT_COMMAND='ag -l -g ""'
 # Git: completion & custom aliases
 source /usr/local/etc/bash_completion.d/git-completion.bash
 
-# Change Terminal window title (to allow Timingapp tracking)
-if [[ "$TERM_PROGRAM" != "iTerm.app" ]]; then
-  export PROMPT_TITLE='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/~}\007"'
-  export PROMPT_COMMAND="${PROMPT_COMMAND};${PROMPT_TITLE}"
-fi
-
 alias l="git lg"
 alias cl="git changelog master..HEAD"
 alias d="git dc"
@@ -99,3 +93,4 @@ fi
 if [ -e "$HOME/.bash_local_scripts" ]; then
   source "$HOME/.bash_local_scripts"
 fi
+
