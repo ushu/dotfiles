@@ -96,6 +96,9 @@ update_symlinks() {
   fi
   [ -e "$HOME/.config/nvim" ] || mkdir -p "$HOME/.config/nvim"
   [ -e "$HOME/.config/nvim/init.vim" ] || ln -s "$DOTFILES/init.vim" "$HOME/.config/nvim"
+  [ -e "$HOME/.mutt/cache" ] || mkdir -p "$HOME/.mutt/cache"
+  [ -e "$HOME/.mutt/muttrc" ] || ln -s "$DOTFILES/muttrc" "$HOME/.mutt/muttrc"
+  [ -e "$HOME/.mutt/mutt-colors-solarized-dark-256.muttrc" ] || ln -s "$DOTFILES/mutt-colors-solarized-dark-256.muttrc" "$HOME/.mutt/mutt-colors-solarized-dark-256.muttrc"
 }
 
 install_or_update_homebrew() {

@@ -27,6 +27,9 @@ Plug 'cloudhead/neovim-fuzzy', {
 " Git support
 Plug 'tpope/vim-fugitive'
 
+" Split terminal support
+"Plug 'mklabs/split-term.vim'
+
 " Linter
 Plug 'w0rp/ale'
 
@@ -125,6 +128,15 @@ nnoremap <leader>i :FuzzyOpen<CR>
 " grep current dir (fuzzy)
 nnoremap <leader>/ :FuzzyGrep<CR>
 
+command! Term exe "term" | startinsert
+command! Sterm split | exe "term" | startinsert
+nnoremap <leader>r :Term<CR>
+" start mutt
+command! Mail exe "term mutt" | startinsert | tnoremap <buffer> <C-i> <C-\><C-n>
+command! Smail below new | exe "term mutt" | startinser | tnoremap <buffer> <C-i> <C-\><C-n>t
+nnoremap <leader>m :Mail<CR>
+
+
 " navigation
 " <leader><leader> => previous buffer
 nnoremap <leader><leader> <C-^>
@@ -145,6 +157,9 @@ nnoremap <leader>v <C-w>v
 nnoremap <leader>d <C-w>c
 nnoremap <leader>j :lprev<CR>
 nnoremap <leader>l :lnext<CR>
+
+" escape
+tnoremap <C-i> <C-\><C-n>
 
 " Git commands (starting with `g`)
 nnoremap gs :Gstatus<CR>
