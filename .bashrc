@@ -81,6 +81,9 @@ alias be="bundle exec"
 # Faster start for (spac|e)emacs
 alias e="emacsclient  -a '' --no-wait -c"
 
+# nv => neovim
+alias nv="nvim"
+
 # Custom prompt
 PS1="\W \$ "
 if [ -f "$BREW_PREFIX/opt/bash-git-prompt/share/gitprompt.sh" ]; then
