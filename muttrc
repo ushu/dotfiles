@@ -5,7 +5,7 @@ set imap_user = "aurelien.noce@imagine-app.fr"
 # Ordering
 set sort_aux = last-date-received
 set sort     = threads
-set sort_re # reverse order = latest on top
+unset sort_re
 
 # I18n
 set charset      = utf-8
@@ -13,7 +13,9 @@ set send_charset = utf-8
 
 # Edition options
 set from = "aurelien.noce@imagine-app.fr"
-set move = no
+set include = no
+set move = yes # ask to archive read messages
+set imap_keepalive = 900
 
 # Enable cache
 set header_cache = ~/.mutt/cache/headers
@@ -25,14 +27,18 @@ set smtp_url = "smtp://aurelien.noce@imagine-app.fr@smtp.gmail.com:587/"
 # (lookup passowrd in keychain)
 set imap_pass = `security find-generic-password -w -s mutt -a "aurelien.noce@imagine-app.fr"`
 set smtp_pass = `security find-generic-password -w -s mutt -a "aurelien.noce@imagine-app.fr"`
-unset record # Gmail's SMTP servers take care of this
 set smtp_authenticators = ‘gssapi:login’
 set imap_passive=yes
 
 # Remote folders
 set folder = "imaps://imap.gmail.com:993"
+set folder="imaps://imap.gmail.com"
 set spoolfile = "+INBOX"
 set postponed="+[Gmail]/Drafts"
+set mbox="+[Gmail]/All Mail"
+set trash="+[Gmail]/Trash"
+#set record="+[Gmail]/Sent Mail"
+unset record # les Gmail SMTP archive sent messages for me
 
 # Other stuff
 set editor = "nvim"
@@ -44,7 +50,7 @@ bind index k previous-entry
 bind index J next-thread
 bind index K previous-thread
 bind index / search
-bind index ? search-reverse
+#bind index ? search-reverse
 bind index n search-next
 bind index N search-opposite
 bind index gg first-entry
@@ -55,7 +61,7 @@ bind index L list-reply
 bind pager j next-line
 bind pager k previous-line
 bind pager / search
-bind pager ? search-reverse
+#bind pager ? search-reverse
 bind pager n search-next
 bind pager N search-opposite
 bind pager gg top
@@ -63,5 +69,34 @@ bind pager G bottom
 
 # "G" to fetch
 bind index f imap-fetch-mail
+bind index F sync-mailbox
+
+# Quick aliases
+alias par partners@imagine-app.fr (imagine-app Partners)
+alias rb raoul.barmat@imagine-app.fr (Raoul Barmat)
+alias ro raphael.prasquier@imagine-app.fr (Raphael Prasquier)
+
+# Custom macros
+bind editor <space> noop
+macro index,pager y "<save-message>=[Gmail]/All Mail<enter><enter>" "Archive"
+#macro index,pager d "<save-message>=[Gmail]/Trash<enter><enter>" "Trash"
+bind  index,pager d  delete-message
+bind  index,pager D  delete-thread
+bind  index,pager L  copy-message # Tag
+bind  index,pager l  save-message # Tag & Archive
+bind  generic,index t  tag-entry # gmail uses "x" but we'll use vim-like "t"
+bind  pager t  tag-message # gmail uses "x" but we'll use vim-like "t"
+bind  index T  tag-thread # gmail uses "x" but we'll use vim-like "t"
+bind  index \CT  tag-pattern # gmail uses "x" but we'll use vim-like "t"
+bind  index,pager R  group-reply               # Reply all
+macro index gi "<change-folder>=INBOX<enter>" "Go to inbox"
+macro index ga "<change-folder>=[Gmail]/All Mail<enter>" "Go to all mail"
+macro index gs "<change-folder>=[Gmail]/Starred<enter>" "Go to starred messages"
+macro index gd "<change-folder>=[Gmail]/Drafts<enter>" "Go to drafts"
+macro index gs "<change-folder>=[Gmail]/Sent Mail<enter>" "Go to sent mails"
+macro pager O <pipe-entry>'urlview'<enter> 'Follow links with urlview'
+
+my_hdr Sensitivity: Private
 
 source "/Users/ushu/.mutt/mutt-colors-solarized-dark-256.muttrc"
+

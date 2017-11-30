@@ -158,7 +158,10 @@ nnoremap <leader>d <C-w>c
 nnoremap <leader>j :lprev<CR>
 nnoremap <leader>l :lnext<CR>
 
-" escape
+" force <tab>
+inoremap <S-Tab> <C-V><Tab>
+
+" escape terminal w/ <C-i>
 tnoremap <C-i> <C-\><C-n>
 
 " Git commands (starting with `g`)
