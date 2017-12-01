@@ -95,6 +95,7 @@ update_symlinks() {
       ln -s "$DOTFILES/.emacs.d/private/snippets" "$HOME/.emacs.d/private"
   fi
   [ -e "$HOME/.config/nvim" ] || mkdir -p "$HOME/.config/nvim"
+  [ -e "$HOME/.config/nvim/plugged" ] || curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   [ -e "$HOME/.config/nvim/init.vim" ] || ln -s "$DOTFILES/init.vim" "$HOME/.config/nvim"
   [ -e "$HOME/.mutt/cache" ] || mkdir -p "$HOME/.mutt/cache"
   [ -e "$HOME/.mutt/muttrc" ] || ln -s "$DOTFILES/muttrc" "$HOME/.mutt/muttrc"
