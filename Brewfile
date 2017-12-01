@@ -1,12 +1,16 @@
 # First run $ brew tap Homebrew/bundle
 
-# Update common tools
+# Update common Unix tools
 brew "git"
 brew "wget"
 brew "curl"
 brew "gawk"
 brew "gnu-sed"
 brew "ffmpeg"
+
+# Doc
+brew "pandoc"
+brew "asciidoc"
 
 # Development tools
 brew "pkg-config"
@@ -42,6 +46,10 @@ brew "grok"
 brew "ag"
 brew "fzf"
 
+# Latest bash
+brew "bash"
+brew "shellcheck"
+
 # Ruby
 brew "ruby"
 brew "rbenv"
@@ -52,7 +60,7 @@ brew "python3"
 brew "pyenv-virtualenv"
 brew "pyenv-virtualenvwrapper"
 
-# Node
+# Node & Javascript
 brew "nvm"
 brew "nodejs"
 brew "jsonlint"
@@ -67,9 +75,15 @@ brew "rust"
 # Go
 brew "go"
 
+# Elm
+brew "elm"
+brew "elm-format"
+
 # C/C++
 # installs clang-tidy into "$(brew --prefix llvm)/bin/clang-tidy":
 brew "llvm", args: ["with-clang", "with-clang-extra-tools"]
+brew "clang-format"
+brew "cmake"
 
 ###################################
 # Install GUI apps with Brew Cask #
