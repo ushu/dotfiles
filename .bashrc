@@ -81,8 +81,9 @@ alias be="bundle exec"
 # Faster start for (spac|e)emacs
 alias e="emacsclient  -a '' --no-wait -c"
 
-# nv => neovim
+# n|nv => neovim
 alias nv="nvim"
+alias n="nvim"
 
 # Custom prompt
 PS1="\W \$ "
