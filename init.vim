@@ -6,8 +6,9 @@ set nocompatible
 let mapleader=","
 set novisualbell
 
-syntax on
 filetype plugin indent on
+"syntax on
+autocmd BufEnter syntax on
 
 " Allow multiple edition on a file
 set nobackup
@@ -46,7 +47,7 @@ if dein#load_state(expand('~/.config/nvim/plugins'))
   " Linter
   call dein#add('w0rp/ale', {
         \ 'lazy': '1',
-        \ 'on_event': 'InsertEnter'
+        \ 'on_ft': ['sh']
         \ })
 
   " Status line
@@ -67,10 +68,13 @@ if dein#load_state(expand('~/.config/nvim/plugins'))
         \ })
 
   " Ton of syntaxes
-  call dein#add('sheerun/vim-polyglot')
+  call dein#add('sheerun/vim-polyglot', {
+        \ 'lazy': '1',
+        \ 'on_event': 'BufEnter'
+        \})
   call dein#add('rhysd/vim-gfm-syntax', { 
         \ 'lazy': '1',
-        \ 'on_ft': 'markdown.gfm' 
+        \ 'on_ft': 'markdown.gfm'
         \ })
 
   " Rust
@@ -81,7 +85,7 @@ if dein#load_state(expand('~/.config/nvim/plugins'))
   call dein#add('racer-rust/vim-racer', { 
         \ 'lazy': '1',
         \ 'on_ft': 'rust',
-        \ 'depends': 'rust-lang/rust.vim'
+        \ 'depends': 'rust.vim'
         \ })
 
   " Javascript
@@ -92,7 +96,7 @@ if dein#load_state(expand('~/.config/nvim/plugins'))
   call dein#add('othree/es.next.syntax.vim', { 
         \ 'lazy': '1',
         \ 'on_ft': 'javascript',
-        \ 'depends': ['othree/yajs.vim']
+        \ 'depends': 'yajs.vim'
         \ })
 
   " Typescript
@@ -101,51 +105,58 @@ if dein#load_state(expand('~/.config/nvim/plugins'))
         \ 'on_ft': 'typescript' 
         \ })
 
-  " Completion plugin
-  call dein#add('roxma/nvim-completion-manager', {
-        \ 'lazy': '1',
-        \ 'build': 'pip3 install --user neovim jedi psutil setproctitle'
-        \ })
-  call dein#add('Shougo/neco-syntax', {
+  " Dark-powered completion plugin (lazily-loaded)
+  call dein#add('Shougo/deoplete.nvim', {
         \ 'lazy': '1',
         \ 'on_event': 'InsertEnter',
-        \ 'depends': ['roxma/nvim-completion-manager']
-        \ })
-  call dein#add('othree/csscomplete.vim', { 
+        \ 'build': 'pip3 install --user neovim jedi psutil setproctitle',
+        \ 'hook_post_update': ':UpdateRemotePlugins'
+        \})
+  call dein#add('zchee/deoplete-go', {
         \ 'lazy': '1',
-        \ 'on_ft': ['css'],
-        \ 'depends': ['roxma/nvim-completion-manager']
-        \ })
-  call dein#add('roxma/ncm-clang', { 
+        \ 'build': 'make',
+        \ 'on_ft': 'go',
+        \ 'depends': 'deoplete.nvim'
+        \})
+  call dein#add('wokalski/autocomplete-flow', { 
         \ 'lazy': '1',
-        \ 'on_ft': [ 'c', 'cpp' ],
-        \ 'depends': ['roxma/nvim-completion-manager']
-        \ })
-  call dein#add('calebeby/ncm-css', { 
-        \ 'lazy': '1',
-        \ 'on_ft': ['css', 'scss'],
-        \ 'depends': ['roxma/nvim-completion-manager']
+        \ 'on_ft': 'javascript',
+        \ 'depends': 'deoplete.nvim'
         \ })
   call dein#add('mhartington/nvim-typescript', { 
         \ 'lazy': '1',
         \ 'on_ft': 'typescript',
-        \ 'depends': ['HerringtonDarkholme/yats.vim']
+        \ 'depends': 'deoplete.nvim'
         \ })
-  call dein#add('roxma/nvim-cm-racer', { 
+  call dein#add('zchee/deoplete-jedi', { 
+        \ 'lazy': '1',
+        \ 'on_ft': 'python',
+        \ 'depends': 'deoplete.nvim'
+        \ })
+  call dein#add('Shougo/neco-vim', { 
+        \ 'lazy': '1',
+        \ 'on_ft': 'vim',
+        \ 'depends': 'deoplete.nvim'
+        \ })
+  call dein#add('sebastianmarkow/deoplete-rust', { 
         \ 'lazy': '1',
         \ 'on_ft': 'rust',
-        \ 'depends': ['racer-rust/vim-racer'],
-        \ 'build': 'cargo install --force racer'
+        \ 'build': 'cargo install --force racer',
+        \ 'depends': 'deoplete.nvim'
         \ })
-  call dein#add('roxma/ncm-flow', { 
+  call dein#add('zchee/deoplete-clang', { 
         \ 'lazy': '1',
-        \ 'on_ft': 'javascript',
-        \ 'depends': ['roxma/nvim-completion-manager']
+        \ 'on_ft': [ 'c', 'cpp' ],
+        \ 'build': {
+        \   'mac': 'brew install llvm --with-clang'
+        \ },
+        \ 'depends': 'deoplete.nvim'
         \ })
-  call dein#add('roxma/ncm-elm-oracle', { 
+  call dein#add('pbogut/deoplete-elm', { 
         \ 'lazy': '1',
         \ 'on_ft': 'elm',
-        \ 'build': 'yarn global add elm-oracle'
+        \ 'build': 'yarn global add elm-oracle',
+        \ 'depends': 'deoplete.nvim'
         \ })
 
   call dein#end()
@@ -177,10 +188,11 @@ let g:ale_sign_warning = '🐛'
 let g:ale_change_sign_column_color=1
 
 " select completions with <tab>
+let g:deoplete#enable_at_startup = 1
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-" overload omnicomplete for CSS
+" overload omnicomplete for HTML/CSS
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS noci
 autocmd FileType html setlocal omnifunc=emmet#completeTag
 

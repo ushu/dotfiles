@@ -149,6 +149,10 @@ install_vim_plugins() {
     [ -e "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" ] || mkdir -p "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" >/dev/null
     git clone git@github.com:Shougo/dein.vim.git "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" >/dev/null 2>&1
   fi
+  if [ ! -e "$HOME/.config/nvim/plugins/github.com/Shougo/dein.vim" ]; then
+    [ -e "$HOME/.config/nvim/plugins/github.com/Shougo/dein.vim" ] || mkdir -p "$HOME/.config/nvim/plugins/github.com/Shougo/dein.vim" >/dev/null
+    git clone git@github.com:Shougo/dein.vim.git "$HOME/.config/nvim/plugins/github.com/Shougo/dein.vim" >/dev/null 2>&1
+  fi
 
   vim -E +"call dein#install()" +qall
 }
