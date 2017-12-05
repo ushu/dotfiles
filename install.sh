@@ -101,6 +101,7 @@ update_symlinks() {
   [ -e "$HOME/.mutt/muttrc" ] || ln -s "$DOTFILES/muttrc" "$HOME/.mutt/muttrc"
   [ -e "$HOME/.mutt/mutt-colors-solarized-dark-256.muttrc" ] || ln -s "$DOTFILES/mutt-colors-solarized-dark-256.muttrc" "$HOME/.mutt/mutt-colors-solarized-dark-256.muttrc"
   [ -e "$HOME/.signature" ] || ln -s "$DOTFILES/signature" "$HOME/.signature"
+  [ -e "$HOME/.mailcap" ] || ln -s "$DOTFILES/mailcap" "$HOME/.mailcap"
 }
 
 install_or_update_homebrew() {

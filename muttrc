@@ -16,6 +16,7 @@ set from = "aurelien.noce@imagine-app.fr"
 set include = no
 set move = yes # ask to archive read messages
 set imap_keepalive = 900
+set text_flowed=yes # better handling of white space
 
 # Enable cache
 set header_cache = ~/.mutt/cache/headers
@@ -36,7 +37,7 @@ set folder="imaps://imap.gmail.com"
 set spoolfile = "+INBOX"
 set postponed="+[Gmail]/Drafts"
 set mbox="+[Gmail]/All Mail"
-set trash="+[Gmail]/Trash"
+#set trash="+[Gmail]/Trash"
 #set record="+[Gmail]/Sent Mail"
 unset record # les Gmail SMTP archive sent messages for me
 
@@ -74,7 +75,7 @@ bind index F sync-mailbox
 # Quick aliases
 alias par partners@imagine-app.fr (imagine-app Partners)
 alias rb raoul.barmat@imagine-app.fr (Raoul Barmat)
-alias ro raphael.prasquier@imagine-app.fr (Raphael Prasquier)
+alias rp raphael.prasquier@imagine-app.fr (Raphael Prasquier)
 
 # Custom macros
 bind editor <space> noop
