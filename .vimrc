@@ -29,6 +29,8 @@ if dein#load_state(expand('~/.vim/dein'))
   call dein#add('junegunn/seoul256.vim')
 
   " Tools
+  call dein#add('w0rp/ale.git')
+  call dein#add('metakirby5/codi.vim')
   call dein#add('tpope/vim-fugitive',
     \{'on_cmd': ['Git', 'Gstatus', 'Gwrite', 'Gcommit', 'Gdiff']})
   call dein#add('junegunn/fzf', 
@@ -38,15 +40,16 @@ if dein#load_state(expand('~/.vim/dein'))
     \ },
     \})
   call dein#add('editorconfig/editorconfig-vim')
-  call dein#add('rking/ag.vim', {'on_cmd': 'Ag'})
-  call dein#add('maralla/completor.vim', {'on_i': 1})
-  call dein#add('maralla/validator.vim')
+  call dein#add('mhinz/vim-grepper', {'on_cmd': 'Grepper'})
+  "call dein#add('rking/ag.vim', {'on_cmd': 'Ag'})
 
   " WebDev
   call dein#add('kchmck/vim-coffee-script', {'on_ft': ['coffee']})
   call dein#add('ap/vim-css-color', {'on_ft': ['css']})
+  " JS + JSX
   call dein#add('pangloss/vim-javascript', {'on_ft': ['javascript']})
   call dein#add('mxw/vim-jsx', {'on_ft': ['javascript', 'jsx']})
+  " Jade
   call dein#add('digitaltoad/vim-jade', {'on_ft': ['jade']})
 
   " Go
@@ -105,7 +108,8 @@ endif
 " <leader>i => fuzzy finder
 nnoremap <leader>i :FZF<CR>
 " <leader>/ => Better grep using silver searcher
-nnoremap <leader>/ :Ag<space>-i<space>
+"nnoremap <leader>/ :Ag<space>-i<space>
+nnoremap <leader>/ :Grepper<CR>
 
 " <C-hjkl> => move among windows
 nnoremap <C-h> <C-w>h
@@ -148,12 +152,11 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
 " Fix editorconfig + elixir
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 
-" (recommended) config for validator
-" load clang-tidy from cellar: it installed via homebrew but not linked to
-" avoid comflcting w/ Apple build system
-if filereadable("/usr/local/opt/llvm/bin/clang-tidy")
-  let g:validator_clang_tidy_binary = "/usr/local/opt/llvm/bin/clang-tidy"
-endif
-" prefer eslint for JS
-let g:validator_javascript_checkers = ['eslint']
+
+let g:ale_fixers = {
+\   'javascript': ['eslint'],
+\}
+let g:ale_fix_on_save = 1
+let g:ale_completion_enabled = 1
+
 

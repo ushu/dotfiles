@@ -1,88 +1,170 @@
 " vim:set ts=2 sts=2 sw=2 expandtab:
 
 " sensible defaults
-syntax on
 set encoding=utf-8
 set nocompatible
 let mapleader=","
 set novisualbell
+
+syntax on
+filetype plugin indent on
 
 " Allow multiple edition on a file
 set nobackup
 set noswapfile
 set hidden
 
-" Color
-colorscheme desert
+"
+" Plugins
+"
 
-" Load Plugins
-call plug#begin('~/.config/nvim/plugged')
+set runtimepath+=~/.config/nvim/plugins/github.com/Shougo/dein.vim
+command PlugInstall :call dein#install()
+command PlugUpdate :call dein#update()
 
-" Uses fzy+Ag to provider "fuzzy" opening and grepping
-Plug 'cloudhead/neovim-fuzzy', { 
-			\ 'on':  [ 'FuzzyOpen' , 'FuzzyGrep' ],
-			\ 'do': 'brew install fzy the_silver_searcher',
-			\ }
+if dein#load_state(expand('~/.config/nvim/plugins'))
+  call dein#begin(expand('~/.config/nvim/plugins'))
 
-" Git support
-Plug 'tpope/vim-fugitive'
+  " Auto-update dein
+  call dein#add('Shougo/dein.vim')
 
-" Split terminal support
-"Plug 'mklabs/split-term.vim'
+  " Color theme
+  call dein#add('junegunn/seoul256.vim')
 
-" Linter
-Plug 'w0rp/ale'
+  " Git support
+  call dein#add('tpope/vim-fugitive')
 
-" Bottom line
-Plug 'itchyny/lightline.vim'
-Plug 'maximbaz/lightline-ale'
+  " Uses fzy+Ag to provider "fuzzy" opening and grepping
+  call dein#add('cloudhead/neovim-fuzzy', { 
+        \ 'lazy': '1',
+        \ 'on_cmd':  ['FuzzyOpen', 'FuzzyGrep'],
+        \ 'build': {
+        \   'mac': 'brew install fzy the_silver_searcher'
+        \   }
+        \ })
 
-" Go support + tools
-Plug 'fatih/vim-go', { 
-      \ 'for': 'go',
-      \ 'do': ':GoInstallBinaries' 
-      \ }
+  " Linter
+  call dein#add('w0rp/ale', {
+        \ 'lazy': '1',
+        \ 'on_event': 'InsertEnter'
+        \ })
 
-" Snippets support
-Plug 'mattn/emmet-vim'
-"Plug 'SirVer/ultisnips'
-"Plug 'jceb/emmet.snippets'
+  " Status line
+  call dein#add('itchyny/lightline.vim')
+  call dein#add('maximbaz/lightline-ale')
 
-" Completion plugin
-Plug 'roxma/nvim-completion-manager', {
-      \ 'do': 'pip3 install --user neovim jedi psutil setproctitle'
-      \ }
-Plug 'Shougo/neco-syntax'
-Plug 'othree/csscomplete.vim', { 'for': 'css' }
-Plug 'roxma/ncm-clang', { 'for': [ 'c', 'cpp' ] }
-Plug 'calebeby/ncm-css', { 'for': [ 'css', 'scss' ] }
-Plug 'mhartington/nvim-typescript', { 'for': 'typescript' }
-Plug 'roxma/nvim-cm-racer', { 
-      \ 'for': 'rust',
-      \ 'do': 'cargo install racer',
-      \ }
-Plug 'roxma/ncm-flow', { 'for': 'javascript' }
-Plug 'roxma/ncm-elm-oracle', { 
-      \ 'for': 'elm',
-      \ 'do': 'yarn global add elm-oracle',
-      \ }
+  " Go support + tools
+  call dein#add('fatih/vim-go', { 
+        \ 'lazy': '1',
+        \ 'on_ft': ['go'],
+        \ 'hook_post_update': ':GoInstallBinaries' 
+        \ })
 
-" Ton of syntaxes
-Plug 'sheerun/vim-polyglot'
-Plug 'rhysd/vim-gfm-syntax', { 'for': 'markdown' }
+  " Emmet for html editing
+  call dein#add('mattn/emmet-vim', {
+        \ 'lazy': '1',
+        \ 'on_ft': ['html'],
+        \ })
 
-" Rust
-Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-Plug 'racer-rust/vim-racer', { 'for': 'rust' }
+  " Ton of syntaxes
+  call dein#add('sheerun/vim-polyglot')
+  call dein#add('rhysd/vim-gfm-syntax', { 
+        \ 'lazy': '1',
+        \ 'on_ft': 'markdown.gfm' 
+        \ })
 
-" Javascript
-Plug 'othree/yajs.vim', { 'for': 'javascript' }
-Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' }
+  " Rust
+  call dein#add('rust-lang/rust.vim', { 
+        \ 'lazy': '1',
+        \ 'on_ft': 'rust'
+        \ })
+  call dein#add('racer-rust/vim-racer', { 
+        \ 'lazy': '1',
+        \ 'on_ft': 'rust',
+        \ 'depends': 'rust-lang/rust.vim'
+        \ })
 
-" Typescript
-Plug 'HerringtonDarkholme/yats.vim', { 'for': 'typescript' }
+  " Javascript
+  call dein#add('othree/yajs.vim', { 
+        \ 'lazy': '1',
+        \ 'on_ft': 'javascript' 
+        \ })
+  call dein#add('othree/es.next.syntax.vim', { 
+        \ 'lazy': '1',
+        \ 'on_ft': 'javascript',
+        \ 'depends': ['othree/yajs.vim']
+        \ })
 
-call plug#end()
+  " Typescript
+  call dein#add('HerringtonDarkholme/yats.vim', { 
+        \ 'lazy': '1',
+        \ 'on_ft': 'typescript' 
+        \ })
+
+  " Completion plugin
+  call dein#add('roxma/nvim-completion-manager', {
+        \ 'lazy': '1',
+        \ 'build': 'pip3 install --user neovim jedi psutil setproctitle'
+        \ })
+  call dein#add('Shougo/neco-syntax', {
+        \ 'lazy': '1',
+        \ 'on_event': 'InsertEnter',
+        \ 'depends': ['roxma/nvim-completion-manager']
+        \ })
+  call dein#add('othree/csscomplete.vim', { 
+        \ 'lazy': '1',
+        \ 'on_ft': ['css'],
+        \ 'depends': ['roxma/nvim-completion-manager']
+        \ })
+  call dein#add('roxma/ncm-clang', { 
+        \ 'lazy': '1',
+        \ 'on_ft': [ 'c', 'cpp' ],
+        \ 'depends': ['roxma/nvim-completion-manager']
+        \ })
+  call dein#add('calebeby/ncm-css', { 
+        \ 'lazy': '1',
+        \ 'on_ft': ['css', 'scss'],
+        \ 'depends': ['roxma/nvim-completion-manager']
+        \ })
+  call dein#add('mhartington/nvim-typescript', { 
+        \ 'lazy': '1',
+        \ 'on_ft': 'typescript',
+        \ 'depends': ['HerringtonDarkholme/yats.vim']
+        \ })
+  call dein#add('roxma/nvim-cm-racer', { 
+        \ 'lazy': '1',
+        \ 'on_ft': 'rust',
+        \ 'depends': ['racer-rust/vim-racer'],
+        \ 'build': 'cargo install --force racer'
+        \ })
+  call dein#add('roxma/ncm-flow', { 
+        \ 'lazy': '1',
+        \ 'on_ft': 'javascript',
+        \ 'depends': ['roxma/nvim-completion-manager']
+        \ })
+  call dein#add('roxma/ncm-elm-oracle', { 
+        \ 'lazy': '1',
+        \ 'on_ft': 'elm',
+        \ 'build': 'yarn global add elm-oracle'
+        \ })
+
+  call dein#end()
+  call dein#save_state()
+endif
+
+"
+" Color Theme
+" 
+try
+  let g:seoul256_background=233
+  colorscheme seoul256
+
+  " colorscheme for the bottom line
+  let g:lightline = { 'colorscheme': 'seoul256' }
+catch //
+  " want some default color if seoul256 not installed
+  colorscheme desert
+endtry
 
 "
 " Plugin-specific config
@@ -102,12 +184,11 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS noci
 autocmd FileType html setlocal omnifunc=emmet#completeTag
 
+" White space handling for emails in mutt
+autocmd FileType mail setlocal fo+=aw
+
 let g:user_emmet_expandabbr_key='<Tab>'
 autocmd FileType html imap <buffer> <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
-
-
-" colorscheme for the bottom line
-let g:lightline = { 'colorscheme': 'landscape' }
 
 " load individual plugins
 let g:polyglot_disabled = ['rust', 'javascript', 'typescript', 'go', 'markdown']
@@ -115,9 +196,15 @@ let g:polyglot_disabled = ['rust', 'javascript', 'typescript', 'go', 'markdown']
 "
 " More syntaxes
 "
+"
+augroup SyntaxEx
 
-autocmd BufRead Brewfile,Gemfile setlocal ft=ruby
-autocmd BufRead *.md setlocal ft=markdown
+  autocmd BufRead Brewfile,Gemfile,Podfile,VagrantFile,Cheffile setlocal ft=ruby
+  autocmd! BufNewFile,BufRead .pryrc,*.jbuilder setlocal filetype=ruby
+  autocmd! BufNewFile,BufRead *.ts setlocal filetype=typescript
+  autocmd BufRead *.md setlocal ft=markdown.gfm
+
+augroup END
 
 "
 " Custom mappings
@@ -128,14 +215,15 @@ nnoremap <leader>i :FuzzyOpen<CR>
 " grep current dir (fuzzy)
 nnoremap <leader>/ :FuzzyGrep<CR>
 
-command! Term exe "term" | startinsert
-command! Sterm split | exe "term" | startinsert
-nnoremap <leader>r :Term<CR>
-" start mutt
-command! Mail exe "term mutt" | startinsert | tnoremap <buffer> <C-i> <C-\><C-n>
-command! Smail below new | exe "term mutt" | startinser | tnoremap <buffer> <C-i> <C-\><C-n>t
-nnoremap <leader>m :Mail<CR>
-
+if has("nvim")
+  command! Term exe "term" | startinsert
+  command! Sterm split | exe "term" | startinsert
+  nnoremap <leader>r :Term<CR>
+  " start mutt
+  command! Mail exe "term mutt" | startinsert | tnoremap <buffer> <C-i> <C-\><C-n>
+  command! Smail below new | exe "term mutt" | startinser | tnoremap <buffer> <C-i> <C-\><C-n>t
+  nnoremap <leader>m :Mail<CR>
+endif
 
 " navigation
 " <leader><leader> => previous buffer
@@ -161,8 +249,10 @@ nnoremap <leader>l :lnext<CR>
 " force <tab>
 inoremap <S-Tab> <C-V><Tab>
 
-" escape terminal w/ <C-i>
-tnoremap <C-i> <C-\><C-n>
+if has("nvim")
+  " escape terminal w/ <C-i>
+  tnoremap <C-i> <C-\><C-n>
+endif
 
 " Git commands (starting with `g`)
 nnoremap gs :Gstatus<CR>
