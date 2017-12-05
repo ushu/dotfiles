@@ -14,9 +14,8 @@ set send_charset = utf-8
 # Edition options
 set from = "aurelien.noce@imagine-app.fr"
 set include = no
-set move = yes # ask to archive read messages
+#set move = yes # ask to archive read messages
 set imap_keepalive = 900
-set text_flowed=yes # better handling of white space
 
 # Enable cache
 set header_cache = ~/.mutt/cache/headers
@@ -32,13 +31,14 @@ set smtp_authenticators = ‘gssapi:login’
 set imap_passive=yes
 
 # Remote folders
-set folder = "imaps://imap.gmail.com:993"
-set folder="imaps://imap.gmail.com"
+set folder="imaps://imap.gmail.com:993"
 set spoolfile = "+INBOX"
 set postponed="+[Gmail]/Drafts"
-set mbox="+[Gmail]/All Mail"
+#set mbox="+[Gmail]/All Mail"
+set mbox="+[Gmail]/Tous les messages"
 #set trash="+[Gmail]/Trash"
-#set record="+[Gmail]/Sent Mail"
+set trash="+[Gmail]/Corbeille"
+#set record="+[Gmail]/Messages envoyés"
 unset record # les Gmail SMTP archive sent messages for me
 
 # Other stuff
@@ -76,6 +76,8 @@ bind index F sync-mailbox
 alias par partners@imagine-app.fr (imagine-app Partners)
 alias rb raoul.barmat@imagine-app.fr (Raoul Barmat)
 alias rp raphael.prasquier@imagine-app.fr (Raphael Prasquier)
+alias xb xavier.boutanquoy@imagine-app.fr (Xavier Boutanquoy)
+alias fm flavian.mary@imagine-app.fr (Flavian Mary)
 
 # Custom macros
 bind editor <space> noop
@@ -91,10 +93,9 @@ bind  index T  tag-thread # gmail uses "x" but we'll use vim-like "t"
 bind  index \CT  tag-pattern # gmail uses "x" but we'll use vim-like "t"
 bind  index,pager R  group-reply               # Reply all
 macro index gi "<change-folder>=INBOX<enter>" "Go to inbox"
-macro index ga "<change-folder>=[Gmail]/All Mail<enter>" "Go to all mail"
-macro index gs "<change-folder>=[Gmail]/Starred<enter>" "Go to starred messages"
+macro index ga "<change-folder>=[Gmail]/Tous les messages<enter>" "Go to all mail"
 macro index gd "<change-folder>=[Gmail]/Drafts<enter>" "Go to drafts"
-macro index gs "<change-folder>=[Gmail]/Sent Mail<enter>" "Go to sent mails"
+macro index gs "<change-folder>=[Gmail]/Messages envoyés<enter>" "Go to sent mails"
 macro pager O <pipe-entry>'urlview'<enter> 'Follow links with urlview'
 
 my_hdr Sensitivity: Private
