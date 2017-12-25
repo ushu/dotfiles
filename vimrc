@@ -40,35 +40,41 @@ if dein#load_state(expand('~/.vim/dein'))
   call dein#add('tpope/vim-fugitive')
 
   " Uses fzy+Ag to provider "fuzzy" opening and grepping
-  call dein#add('cloudhead/neovim-fuzzy', { 
-        \ 'lazy': '1',
-        \ 'on_cmd':  ['FuzzyOpen', 'FuzzyGrep'],
-        \ 'build': {
-        \   'mac': 'brew install fzy the_silver_searcher'
-        \   }
-        \ })
-  if !has('nvim')
-    call dein#add('roxma/nvim-yarp')
-    call dein#add('roxma/vim-hug-neovim-rpc')
+  if has('nvim')
+    call dein#add('cloudhead/neovim-fuzzy', { 
+          \ 'lazy': 1,
+          \ 'on_cmd':  ['FuzzyOpen', 'FuzzyGrep'],
+          \ 'build': {
+          \   'mac': 'brew install fzy the_silver_searcher'
+          \   }
+          \ })
+  else
+    " On standard vim, use fallbacks
+    call dein#add('rking/ag.vim', {
+          \ 'lazy': 1,
+          \ 'on_cmd': ['Ag']
+          \})
+    call dein#add('junegunn/fzf', { 
+          \ 'lazy': 1,
+          \ 'build': './install --all', 
+          \ 'merged': 0 
+          \ })
+    call dein#add('junegunn/fzf.vim', { 
+          \ 'lazy': 1,
+          \ 'on_cmd': ['FZF'],
+          \ 'depends': 'fzf'
+          \ })
   endif
-
-  "call dein#add('rking/ag.vim', {'on_cmd': 'Ag'})
-  "call dein#add('junegunn/fzf', 
-  "  \{'on_cmd': 'Fzf',
-  "  \ 'build': {
-  "  \   'mac': './install',
-  "  \ },
-  "  \})
   
   " Load .editorconfig, if present
   call dein#add('editorconfig/editorconfig-vim', {
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_event': 'InsertEnter'
         \ })
 
   " Linter
   call dein#add('w0rp/ale', {
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_ft': ['sh']
         \ })
 
@@ -78,97 +84,103 @@ if dein#load_state(expand('~/.vim/dein'))
 
   " Go support + tools
   call dein#add('fatih/vim-go', { 
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_ft': ['go'],
         \ 'hook_post_update': ':GoInstallBinaries' 
         \ })
 
   " Emmet for html editing
   call dein#add('mattn/emmet-vim', {
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_ft': ['html'],
         \ })
 
   " Ton of syntaxes
   call dein#add('sheerun/vim-polyglot', {
         \ 'rev': 'v3.1.0',
-        \ 'lazy': '1',
+        \ 'frozen': '1',
+        \ 'lazy': 1,
         \ 'on_event': 'BufEnter'
         \})
   call dein#add('rhysd/vim-gfm-syntax', { 
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_ft': 'markdown.gfm'
         \ })
 
   " Rust
   call dein#add('rust-lang/rust.vim', { 
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_ft': 'rust'
         \ })
   call dein#add('racer-rust/vim-racer', { 
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_ft': 'rust',
         \ 'depends': 'rust.vim'
         \ })
 
   " Javascript
   call dein#add('othree/yajs.vim', { 
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_ft': 'javascript' 
         \ })
   call dein#add('othree/es.next.syntax.vim', { 
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_ft': 'javascript',
         \ 'depends': 'yajs.vim'
         \ })
 
   " Typescript
   call dein#add('HerringtonDarkholme/yats.vim', { 
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_ft': 'typescript' 
         \ })
 
   " Dark-powered completion plugin (lazily-loaded)
   call dein#add('Shougo/deoplete.nvim', {
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_event': 'InsertEnter',
         \ 'build': 'pip3 install --user neovim jedi psutil setproctitle',
         \ 'hook_post_update': ':UpdateRemotePlugins'
         \})
+  if !has('nvim')
+    " patch standard vim for additional RPC support
+    call dein#add('roxma/nvim-yarp')
+    call dein#add('roxma/vim-hug-neovim-rpc')
+  endif
   call dein#add('zchee/deoplete-go', {
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'build': 'make',
         \ 'on_ft': 'go',
         \ 'depends': 'deoplete.nvim'
         \})
   call dein#add('wokalski/autocomplete-flow', { 
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_ft': 'javascript',
         \ 'depends': 'deoplete.nvim'
         \ })
   call dein#add('mhartington/nvim-typescript', { 
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_ft': 'typescript',
         \ 'depends': 'deoplete.nvim'
         \ })
   call dein#add('zchee/deoplete-jedi', { 
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_ft': 'python',
         \ 'depends': 'deoplete.nvim'
         \ })
   call dein#add('Shougo/neco-vim', { 
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_ft': 'vim',
         \ 'depends': 'deoplete.nvim'
         \ })
   call dein#add('sebastianmarkow/deoplete-rust', { 
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_ft': 'rust',
         \ 'build': 'cargo install --force racer',
         \ 'depends': 'deoplete.nvim'
         \ })
   call dein#add('zchee/deoplete-clang', { 
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_ft': [ 'c', 'cpp' ],
         \ 'build': {
         \   'mac': 'brew install llvm --with-clang'
@@ -176,7 +188,7 @@ if dein#load_state(expand('~/.vim/dein'))
         \ 'depends': 'deoplete.nvim'
         \ })
   call dein#add('pbogut/deoplete-elm', { 
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_ft': 'elm',
         \ 'build': 'yarn global add elm-oracle',
         \ 'depends': 'deoplete.nvim'
@@ -184,7 +196,7 @@ if dein#load_state(expand('~/.vim/dein'))
 
   " Other tools
   call dein#add('metakirby5/codi.vim', {
-        \ 'lazy': '1',
+        \ 'lazy': 1,
         \ 'on_cmd': ['Cody', 'Cody!'],
         \ })
 
@@ -263,10 +275,17 @@ augroup END
 " Custom mappings
 "
 
-" open file (fuzzy)
-nnoremap <leader>i :FuzzyOpen<CR>
-" grep current dir (fuzzy)
-nnoremap <leader>/ :FuzzyGrep<CR>
+if has("nvim")
+  " open file (fuzzy)
+  nnoremap <leader>i :FuzzyOpen<CR>
+  " grep current dir (fuzzy)
+  nnoremap <leader>/ :FuzzyGrep<CR>
+else
+  " open file (fuzzy)
+  nnoremap <leader>i :FZF<CR>
+  " grep current dir (fuzzy)
+  nnoremap <leader>/ :Ag -i<space>
+endif
 
 if has("nvim")
   command! Term exe "term" | startinsert

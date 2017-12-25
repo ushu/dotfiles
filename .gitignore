@@ -7,3 +7,4 @@
 .vim/bundle/.neobundle
 .vim/.netrwhist
 .vim/colors
+*.log

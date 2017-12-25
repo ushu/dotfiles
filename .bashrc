@@ -98,7 +98,8 @@ if [ -e "$HOME/.bash_local_scripts" ]; then
   source "$HOME/.bash_local_scripts"
 fi
 
-
+# Sources completions & co
 source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc'
 source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc'
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 

@@ -13,6 +13,7 @@ set -u
 DOTFILES="$HOME/.dotfiles"
 LATEST_RUBY="2.4.1"
 export MANPATH="/usr/local/man"
+LOGFILE="$DOTFILES/install.log"
 
 # List of components to install
 PYTHON_PIPS=(httpie scipy matplotlib jupyter)
@@ -20,18 +21,21 @@ RUBY_GEMS=(rails sass jekyll)
 NODE_MODULES=(grunt-cli gulp bower yo webpack eslint babel ttab)
 
 main() {
-  echo "🚀 🚀  Starting the install process 🚀 🚀"
-  echo
+  # Reset logfile
+  echo "BOOTING INSTALL SCRIPT @ $(date)" >"$LOGFILE"
+
+  i_log "🚀 🚀  Starting the install process 🚀 🚀"
+  i_log
 
   # Check we are not on linux
   UNAME=$(uname)
   if [ "$UNAME" != "Darwin" ]; then
-      echo "oups, this script is intended to run on a mac !"
+      i_log "oups, this script is intended to run on a mac !"
       exit 1
   fi
 
   # Add some default message on failure
-  trap "echo;echo '☠️ ☠️  Installation failed. ☠️ ☠️ '" EXIT
+  trap "i_log;i_log '☠️ ☠️  Installation failed. ☠️ ☠️ '" EXIT
 
   retreive_dotfiles
   update_symlinks
@@ -43,32 +47,32 @@ main() {
 
   trap - EXIT
 
-  echo
-  echo "We're done !"
-  echo "It's time tu add your secret settings to ~/.secrets"
-  echo
-  echo "for example put your API tokens in it:"
-  echo "  export HOMEBREW_GITHUB_API_TOKEN=\"...\""
-  echo
-  echo "🎉 🎉  Installation complete 🎉 🎉 "
+  i_log
+  i_log "We're done !"
+  i_log "It's time tu add your secret settings to ~/.secrets"
+  i_log
+  i_log "for example put your API tokens in it:"
+  i_log "  export HOMEBREW_GITHUB_API_TOKEN=\"...\""
+  i_log
+  i_log "🎉 🎉  Installation complete 🎉 🎉 "
 }
 
 # Clone or Update local copy of repo
 retreive_dotfiles() {
   # Grab all files in ~/.dotfiles
   if [ -e "$HOME/.dotfiles" ]; then
-    echo "Found previous installation, trying to update the files..."
+    i_log "Found previous installation, trying to update the files..."
     cd "$HOME/.dotfiles"
-    git pull --depth=1 --force -q >/dev/null 2>&1
+    git pull --depth=1 --force -q >>"$LOGFILE" 2>&1
   else
-    echo "Retreiving files from github.com/ushu/dotfiles..."
-    git clone --depth=1 --single-branch -q https://github.com/ushu/dotfiles "$DOTFILES" >/dev/null 2>&1
+    i_log "Retreiving files from github.com/ushu/dotfiles..."
+    git clone --depth=1 --single-branch -q https://github.com/ushu/dotfiles "$DOTFILES" >>"$LOGFILE" 2>&1
   fi
 }
 
 # Linking files in HOME
 update_symlinks() {
-  echo "Updating symlinks"
+  i_log "Updating symlinks"
   # secrets
   [ -e "$HOME/.secrets" ] || touch "$HOME/.secrets"
   # vim config
@@ -111,63 +115,69 @@ update_symlinks() {
 install_or_update_homebrew() {
   # looking up brew command (see https://stackoverflow.com/a/677212 for details)
   if command -v brew >/dev/null 2>&1; then
-    echo "Updating Homebrew"
-    brew update >/dev/null
+    i_log "Updating Homebrew"
+    brew update >>"$LOGFILE"
   else
     # Run the installer from https://brew.sh
-    echo "Homebrew not found: launching the installer"
+    i_log "Homebrew not found: launching the installer"
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     hash -r
   fi
 
   # install all the packages by reading the Brewfile
-  echo "Installing Homebrew packages"
-  brew tap --repair homebrew/bundle >/dev/null
-  brew bundle --file="$DOTFILES/Brewfile" --no-update >/dev/null 2>&1
+  i_log "Installing Homebrew packages"
+  brew tap --repair homebrew/bundle >>"$LOGFILE"
+  brew bundle --file="$DOTFILES/Brewfile" --no-update >>"$LOGFILE" 2>&1
 }
 
 install_or_update_node() {
   # Ensure nvm is loaded
   command -v nvm >/dev/null 2>&1 || source "$(brew --prefix nvm)/nvm.sh"
 
-  echo "Installing the latest version of node"
-  nvm install node >/dev/null 2>&1
-  nvm alias default node >/dev/null 2>&1
+  i_log "Installing the latest version of node"
+  nvm install node >>"$LOGFILE" 2>&1
+  nvm alias default node >>"$LOGFILE" 2>&1
   hash -r
 
-  echo "Installing basic node tools"
-  nvm use node >/dev/null 2>&1
-  yarn global add "${NODE_MODULES[@]}" >/dev/null 2>&1
+  i_log "Installing basic node tools"
+  nvm use node >>"$LOGFILE" 2>&1
+  yarn global add "${NODE_MODULES[@]}" >>"$LOGFILE" 2>&1
   hash -r
 }
 
 install_or_update_python() {
-  echo "Intalling pip"
-  easy_install-2.7 pip >/dev/null 2>&1
-  easy_install-3.6 pip >/dev/null 2>&1
+  i_log "Intalling pip"
+  easy_install-2.7 pip >>"$LOGFILE" 2>&1
+  easy_install-3.6 pip >>"$LOGFILE" 2>&1
 
-  echo "Installing/updating defaults libs and tools"
-  pip2 install -U "${PYTHON_PIPS[@]}" >/dev/null 2>&1
-  pip3 install -U "${PYTHON_PIPS[@]}" >/dev/null 2>&1
+  i_log "Installing/updating defaults libs and tools"
+  pip2 install -U "${PYTHON_PIPS[@]}" >>"$LOGFILE" 2>&1
+  pip3 install -U "${PYTHON_PIPS[@]}" >>"$LOGFILE" 2>&1
 }
 
 install_or_update_ruby() {
-  echo "Installing latest Ruby"
-  rbenv install "$LATEST_RUBY" --skip-existing #>/dev/null 2>&1
+  i_log "Installing latest Ruby"
+  rbenv install "$LATEST_RUBY" --skip-existing #>>"$LOGFILE" 2>&1
   echo "$LATEST_RUBY" > "$HOME/.ruby-version"
 
-  echo "Installing/updating defaults libs and tools"
-  gem install "${RUBY_GEMS[@]}" --no-ri --no-rdoc >/dev/null 2>&1
+  i_log "Installing/updating defaults libs and tools"
+  gem install "${RUBY_GEMS[@]}" --no-ri --no-rdoc >>"$LOGFILE" 2>&1
 }
 
 install_vim_plugins() {
-  echo "Installing/Updating vim plugins"
+  i_log "Installing/Updating vim plugins"
   if [ ! -e "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" ]; then
-    [ -e "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" ] || mkdir -p "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" >/dev/null
-    git clone git@github.com:Shougo/dein.vim.git "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" >/dev/null 2>&1
+    [ -e "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" ] || mkdir -p "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" >>"$LOGFILE"
+    git clone git@github.com:Shougo/dein.vim.git "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" >>"$LOGFILE" 2>&1
   fi
 
   vim -E +"call dein#install()" +qall
+}
+
+# Log to both stdout and output file (w/ prefix)
+i_log() {
+  echo "$@"
+  echo ">>>>" "$@" >>"$LOGFILE"
 }
 
 main
