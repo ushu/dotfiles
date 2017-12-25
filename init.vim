@@ -5,23 +5,27 @@ set encoding=utf-8
 set nocompatible
 let mapleader=","
 set novisualbell
-
-filetype plugin indent on
-"syntax on
-autocmd BufEnter syntax on
+set backspace=indent,eol,start
+set shell=bash
 
 " Allow multiple edition on a file
 set nobackup
 set noswapfile
 set hidden
 
+" (from the docs) Jump to last cursor position 
+autocmd BufReadPost *
+    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal g`\"" |
+    \ endif
+
 "
 " Plugins
 "
 
 set runtimepath+=~/.config/nvim/plugins/repos/github.com/Shougo/dein.vim
-command PlugInstall :call dein#install()
-command PlugUpdate :call dein#update()
+command! PlugInstall :call dein#install()
+command! PlugUpdate :call dein#update()
 
 if dein#load_state(expand('~/.config/nvim/plugins'))
   call dein#begin(expand('~/.config/nvim/plugins'))
@@ -42,6 +46,19 @@ if dein#load_state(expand('~/.config/nvim/plugins'))
         \ 'build': {
         \   'mac': 'brew install fzy the_silver_searcher'
         \   }
+        \ })
+  "call dein#add('rking/ag.vim', {'on_cmd': 'Ag'})
+  "call dein#add('junegunn/fzf', 
+  "  \{'on_cmd': 'Fzf',
+  "  \ 'build': {
+  "  \   'mac': './install',
+  "  \ },
+  "  \})
+  
+  " Load .editorconfig, if present
+  call dein#add('editorconfig/editorconfig-vim', {
+        \ 'lazy': '1',
+        \ 'on_event': 'InsertEnter'
         \ })
 
   " Linter
@@ -69,6 +86,7 @@ if dein#load_state(expand('~/.config/nvim/plugins'))
 
   " Ton of syntaxes
   call dein#add('sheerun/vim-polyglot', {
+        \ 'rev': 'v3.1.0',
         \ 'lazy': '1',
         \ 'on_event': 'BufEnter'
         \})
@@ -159,13 +177,21 @@ if dein#load_state(expand('~/.config/nvim/plugins'))
         \ 'depends': 'deoplete.nvim'
         \ })
 
+  " Other tools
+  call dein#add('metakirby5/codi.vim', {
+        \ 'lazy': '1',
+        \ 'on_cmd': ['Cody', 'Cody!'],
+        \ })
+
   call dein#end()
   call dein#save_state()
 endif
 
 "
-" Color Theme
+" Colors
 " 
+syntax on
+
 try
   let g:seoul256_background=233
   colorscheme seoul256
@@ -178,6 +204,15 @@ catch //
 endtry
 
 "
+" Generic indent stuff
+"
+filetype plugin indent on
+" defaults => 2-spaces wide
+set autoindent
+set tabstop=2 softtabstop=0 expandtab shiftwidth=4 smarttab
+set expandtab
+
+"
 " Plugin-specific config
 "
 
@@ -185,6 +220,8 @@ endtry
 let g:ale_sign_error = '☠'
 let g:ale_sign_warning = '🐛'
 let g:ale_change_sign_column_color=1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_enter = 0
 
 " select completions with <tab>
 let g:deoplete#enable_at_startup = 1

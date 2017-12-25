@@ -59,10 +59,10 @@ retreive_dotfiles() {
   if [ -e "$HOME/.dotfiles" ]; then
     echo "Found previous installation, trying to update the files..."
     cd "$HOME/.dotfiles"
-    git pull --depth=1 --force -q
+    git pull --depth=1 --force -q >/dev/null 2>&1
   else
     echo "Retreiving files from github.com/ushu/dotfiles..."
-    git clone --depth=1 --single-branch -q https://github.com/ushu/dotfiles "$DOTFILES"
+    git clone --depth=1 --single-branch -q https://github.com/ushu/dotfiles "$DOTFILES" >/dev/null 2>&1
   fi
 }
 
