@@ -7,6 +7,9 @@ let mapleader=","
 set novisualbell
 set backspace=indent,eol,start
 set shell=bash
+" speed settings -> avoids that vim eats all your RAM...
+set lazyredraw
+set synmaxcol=256
 
 " Allow multiple edition on a file
 set nobackup
@@ -238,7 +241,7 @@ set expandtab
 
 " Live lint settings
 let g:ale_sign_error = '☠'
-let g:ale_sign_warning = '🐛'
+let g:ale_sign_warning = '🕷'
 let g:ale_change_sign_column_color=1
 "let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_enter = 0
