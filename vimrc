@@ -14,10 +14,13 @@ set noswapfile
 set hidden
 
 " (from the docs) Jump to last cursor position 
-autocmd BufReadPost *
-    \ if line("'\"") > 0 && line("'\"") <= line("$") |
-    \   exe "normal g`\"" |
-    \ endif
+" -> does not work on nvim !!!
+if !has("nvim")
+  autocmd BufReadPost *
+      \ if line("'\"") > 0 && line("'\"") <= line("$") |
+      \   exe "normal g`\"" |
+      \ endif
+endif
 
 "
 " Plugins
@@ -237,7 +240,7 @@ set expandtab
 let g:ale_sign_error = '☠'
 let g:ale_sign_warning = '🐛'
 let g:ale_change_sign_column_color=1
-let g:ale_lint_on_text_changed = 'never'
+"let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_enter = 0
 
 " select completions with <tab>
