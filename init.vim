@@ -19,7 +19,7 @@ set hidden
 " Plugins
 "
 
-set runtimepath+=~/.config/nvim/plugins/github.com/Shougo/dein.vim
+set runtimepath+=~/.config/nvim/plugins/repos/github.com/Shougo/dein.vim
 command PlugInstall :call dein#install()
 command PlugUpdate :call dein#update()
 
@@ -184,7 +184,6 @@ endtry
 " Live lint settings
 let g:ale_sign_error = '☠'
 let g:ale_sign_warning = '🐛'
-"let g:ale_sign_column_always = 1
 let g:ale_change_sign_column_color=1
 
 " select completions with <tab>

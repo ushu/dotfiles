@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck source=/dev/null
 
 # Run this file with:
 #
@@ -10,8 +11,13 @@ set -e
 set -u
 
 DOTFILES="$HOME/.dotfiles"
-LATEST_RUBY="2.4.0"
+LATEST_RUBY="2.4.1"
 export MANPATH="/usr/local/man"
+
+# List of components to install
+PYTHON_PIPS=(httpie scipy matplotlib jupyter)
+RUBY_GEMS=(rails sass jekyll)
+NODE_MODULES=(grunt-cli gulp bower yo webpack eslint babel ttab)
 
 main() {
   echo "🚀 🚀  Starting the install process 🚀 🚀"
@@ -31,6 +37,7 @@ main() {
   update_symlinks
   install_or_update_homebrew
   install_or_update_node
+  install_or_update_python
   install_or_update_ruby
   install_vim_plugins
 
@@ -58,7 +65,6 @@ retreive_dotfiles() {
     git clone --depth=1 --single-branch -q https://github.com/ushu/dotfiles "$DOTFILES"
   fi
 }
-
 
 # Linking files in HOME
 update_symlinks() {
@@ -119,7 +125,7 @@ install_or_update_homebrew() {
   # install all the packages by reading the Brewfile
   echo "Installing Homebrew packages"
   brew tap --repair homebrew/bundle >/dev/null
-  brew bundle --file="$DOTFILES/Brewfile" >/dev/null
+  brew bundle --file="$DOTFILES/Brewfile" --update >/dev/null 2>&1
 }
 
 install_or_update_node() {
@@ -128,19 +134,32 @@ install_or_update_node() {
 
   echo "Installing the latest version of node"
   nvm install node >/dev/null 2>&1
-  nvm alias default node >/dev/null
+  nvm alias default node >/dev/null 2>&1
   hash -r
 
   echo "Installing basic node tools"
-  nvm use node >/dev/null
-  npm install -g grunt-cli gulp bower yo webpack eslint babel ttab >/dev/null 2>&1
+  nvm use node >/dev/null 2>&1
+  yarn global add "${NODE_MODULES[@]}" >/dev/null 2>&1
   hash -r
+}
+
+install_or_update_python() {
+  echo "Intalling pip"
+  easy_install-2.7 pip >/dev/null 2>&1
+  easy_install-3.6 pip >/dev/null 2>&1
+
+  echo "Installing/updating defaults libs and tools"
+  pip2 install -U "${PYTHON_PIPS[@]}" >/dev/null 2>&1
+  pip3 install -U "${PYTHON_PIPS[@]}" >/dev/null 2>&1
 }
 
 install_or_update_ruby() {
   echo "Installing latest Ruby"
-  rbenv install "$LATEST_RUBY" --skip-existing >/dev/null 2>&1
+  rbenv install "$LATEST_RUBY" --skip-existing #>/dev/null 2>&1
   echo "$LATEST_RUBY" > "$HOME/.ruby-version"
+
+  echo "Installing/updating defaults libs and tools"
+  gem install "${RUBY_GEMS[@]}" --no-ri --no-rdoc >/dev/null 2>&1
 }
 
 install_vim_plugins() {
@@ -151,7 +170,7 @@ install_vim_plugins() {
   fi
   if [ ! -e "$HOME/.config/nvim/plugins/github.com/Shougo/dein.vim" ]; then
     [ -e "$HOME/.config/nvim/plugins/github.com/Shougo/dein.vim" ] || mkdir -p "$HOME/.config/nvim/plugins/github.com/Shougo/dein.vim" >/dev/null
-    git clone git@github.com:Shougo/dein.vim.git "$HOME/.config/nvim/plugins/github.com/Shougo/dein.vim" >/dev/null 2>&1
+    git clone git@github.com:Shougo/dein.vim.git "$HOME/.config/nvim/plugins/repos/github.com/Shougo/dein.vim" >/dev/null 2>&1
   fi
 
   vim -E +"call dein#install()" +qall

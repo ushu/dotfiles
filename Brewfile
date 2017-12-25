@@ -7,14 +7,17 @@ brew "curl"
 brew "gawk"
 brew "gnu-sed"
 brew "ffmpeg"
+brew "mutt"
 
-# Doc
+# Documentation
 brew "pandoc"
 brew "asciidoc"
+brew "asciidoctor"
 
 # Development tools
 brew "pkg-config"
-brew "vim", args: [ "with-python", "with-lua", "with-python3" ]
+brew "vim", args: ["with-python", "with-lua", "with-python3"]
+brew "neovim", args: ["HEAD"]
 brew "emacs", args: ["with-cocoa", "with-gnutls"]
 brew "phantomjs"
 brew "imagemagick"
@@ -34,11 +37,13 @@ brew "sqlite"
 
 # Common libraries
 brew "libyaml"
-brew "libxml2"
+brew "libxml2", args:[ ":with-python" ]
 brew "libxslt"
 brew "libksba"
 brew "openssl"
 brew "imagemagick"
+brew "lapack"
+brew "scalapack"
 
 # Better tooling
 brew "bash-git-prompt"
@@ -83,7 +88,8 @@ brew "elm-format"
 # installs clang-tidy into "$(brew --prefix llvm)/bin/clang-tidy":
 brew "llvm", args: ["with-clang", "with-clang-extra-tools"]
 brew "clang-format"
-brew "cmake"
+brew "cmake", args: ["with-completion"]
+brew "gcc", args: ["with-git", "with-nls"]
 
 ###################################
 # Install GUI apps with Brew Cask #
@@ -103,7 +109,6 @@ cask "java" unless system "/usr/libexec/java_home --failfast >/dev/null 2>&1"
 # Dev Tools
 cask "atom"
 cask "gitbook-editor"
-cask "reveal"
 
 # Misc
 #cask "gpgtools" # currently using beta for sierra compatibilty
@@ -111,15 +116,10 @@ cask "dropbox"
 cask "steam"
 cask "launchrocket"
 cask "vlc"
+#cask "MacTex"
 
 # JetBrains IDEs
-cask "webstorm"
-cask "rubymine"
-cask "appcode"
-cask "gogland"
-cask "pycharm"
-cask "clion"
-cask "datagrip"
+cask "jetbrains-toolbox"
 cask "android-studio"
 
 ###################################
@@ -128,13 +128,14 @@ cask "android-studio"
 
 brew "mas"
 
-# Coding apps
+# Coding stuff
 mas "XCode", id: 497799835
 mas "Quiver", id: 866773894
 
 # Graphics and design
 mas "Affinity Photo", id: 824183456
 mas "Affinity Designer", id: 824171161
+mas "Intensify", id: 716854513
 
 # Office
 mas "Keynote", id: 409183694
