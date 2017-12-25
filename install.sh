@@ -172,6 +172,7 @@ install_vim_plugins() {
   fi
 
   vim -E +"call dein#install()" +qall
+  nvim -E +"call dein#install()" +qall
 }
 
 # Log to both stdout and output file (w/ prefix)

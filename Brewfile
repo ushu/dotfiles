@@ -50,6 +50,7 @@ brew "bash-git-prompt"
 brew "grok"
 brew "ag"
 brew "fzf"
+brew "fzy"
 
 # Latest bash
 brew "bash"
