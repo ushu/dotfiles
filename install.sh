@@ -72,9 +72,8 @@ update_symlinks() {
   # secrets
   [ -e "$HOME/.secrets" ] || touch "$HOME/.secrets"
   # vim config
-  [ -e "$HOME/.vimrc" ] || ln -s "$DOTFILES/.vimrc" "$HOME/.vimrc"
-  [ -e "$HOME/.vim/pack" ] || mkdir -p "$HOME/.vim/pack"
-  [ -e "$HOME/.vim/pack/install.sh" ] || ln -s "$DOTFILES/pack.sh" "$HOME/.vim/pack/install.sh"
+  [ -e "$HOME/.vimrc" ] || ln -s "$DOTFILES/vimrc" "$HOME/.vimrc"
+  [ -e "$HOME/.vim" ] || mkdir "$HOME/.vim"
   [ -e "$HOME/.editorconfig" ] || ln -s "$DOTFILES/.editorconfig" "$HOME/.editorconfig"
   # git config
   [ -e "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
@@ -101,8 +100,7 @@ update_symlinks() {
       ln -s "$DOTFILES/.emacs.d/private/snippets" "$HOME/.emacs.d/private"
   fi
   [ -e "$HOME/.config/nvim" ] || mkdir -p "$HOME/.config/nvim"
-  [ -e "$HOME/.config/nvim/plugged" ] || curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  [ -e "$HOME/.config/nvim/init.vim" ] || ln -s "$DOTFILES/init.vim" "$HOME/.config/nvim"
+  [ -e "$HOME/.config/nvim/init.vim" ] || ln -s "$DOTFILES/vimrc" "$HOME/.config/nvim/init.vim"
   [ -e "$HOME/.mutt/cache" ] || mkdir -p "$HOME/.mutt/cache"
   [ -e "$HOME/.mutt/muttrc" ] || ln -s "$DOTFILES/muttrc" "$HOME/.mutt/muttrc"
   [ -e "$HOME/.mutt/mutt-colors-solarized-dark-256.muttrc" ] || ln -s "$DOTFILES/mutt-colors-solarized-dark-256.muttrc" "$HOME/.mutt/mutt-colors-solarized-dark-256.muttrc"
@@ -125,7 +123,7 @@ install_or_update_homebrew() {
   # install all the packages by reading the Brewfile
   echo "Installing Homebrew packages"
   brew tap --repair homebrew/bundle >/dev/null
-  brew bundle --file="$DOTFILES/Brewfile" --update >/dev/null 2>&1
+  brew bundle --file="$DOTFILES/Brewfile" --no-update >/dev/null 2>&1
 }
 
 install_or_update_node() {
@@ -167,10 +165,6 @@ install_vim_plugins() {
   if [ ! -e "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" ]; then
     [ -e "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" ] || mkdir -p "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" >/dev/null
     git clone git@github.com:Shougo/dein.vim.git "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" >/dev/null 2>&1
-  fi
-  if [ ! -e "$HOME/.config/nvim/plugins/github.com/Shougo/dein.vim" ]; then
-    [ -e "$HOME/.config/nvim/plugins/github.com/Shougo/dein.vim" ] || mkdir -p "$HOME/.config/nvim/plugins/github.com/Shougo/dein.vim" >/dev/null
-    git clone git@github.com:Shougo/dein.vim.git "$HOME/.config/nvim/plugins/repos/github.com/Shougo/dein.vim" >/dev/null 2>&1
   fi
 
   vim -E +"call dein#install()" +qall

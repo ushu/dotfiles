@@ -108,15 +108,16 @@ cask "java" unless system "/usr/libexec/java_home --failfast >/dev/null 2>&1"
 
 # Dev Tools
 cask "atom"
+cask "visual-studio-code"
 cask "gitbook-editor"
 
 # Misc
-#cask "gpgtools" # currently using beta for sierra compatibilty
+cask "gpgtools" # currently using beta for sierra compatibilty
 cask "dropbox"
 cask "steam"
 cask "launchrocket"
 cask "vlc"
-#cask "MacTex"
+#cask "MacTex" # tooooo big...
 
 # JetBrains IDEs
 cask "jetbrains-toolbox"

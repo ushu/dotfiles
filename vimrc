@@ -23,12 +23,12 @@ autocmd BufReadPost *
 " Plugins
 "
 
-set runtimepath+=~/.config/nvim/plugins/repos/github.com/Shougo/dein.vim
+set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
 command! PlugInstall :call dein#install()
 command! PlugUpdate :call dein#update()
 
-if dein#load_state(expand('~/.config/nvim/plugins'))
-  call dein#begin(expand('~/.config/nvim/plugins'))
+if dein#load_state(expand('~/.vim/dein'))
+  call dein#begin(expand('~/.vim/dein'))
 
   " Auto-update dein
   call dein#add('Shougo/dein.vim')
@@ -47,6 +47,11 @@ if dein#load_state(expand('~/.config/nvim/plugins'))
         \   'mac': 'brew install fzy the_silver_searcher'
         \   }
         \ })
+  if !has('nvim')
+    call dein#add('roxma/nvim-yarp')
+    call dein#add('roxma/vim-hug-neovim-rpc')
+  endif
+
   "call dein#add('rking/ag.vim', {'on_cmd': 'Ag'})
   "call dein#add('junegunn/fzf', 
   "  \{'on_cmd': 'Fzf',
