@@ -203,7 +203,7 @@ if dein#load_state(expand('~/.vim/dein'))
   " Other tools
   call dein#add('metakirby5/codi.vim', {
         \ 'lazy': 1,
-        \ 'on_cmd': ['Cody', 'Cody!'],
+        \ 'on_cmd': ['Codi', 'Codi!'],
         \ })
 
   call dein#end()
