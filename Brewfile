@@ -8,6 +8,7 @@ brew "gawk"
 brew "gnu-sed"
 brew "ffmpeg"
 brew "mutt"
+brew "graphviz"
 
 # Documentation
 brew "pandoc"
