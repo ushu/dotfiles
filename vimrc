@@ -307,6 +307,9 @@ if has("nvim")
   nnoremap <leader>m :Mail<CR>
 endif
 
+" run goimports on go save
+autocmd BufWrite *.go :GoImports
+
 " navigation
 " <leader><leader> => previous buffer
 nnoremap <leader><leader> <C-^>

@@ -54,6 +54,10 @@ main() {
   i_log "for example put your API tokens in it:"
   i_log "  export HOMEBREW_GITHUB_API_TOKEN=\"...\""
   i_log
+  i_log "Side note: MacTex was not installed since it's soooo big,"
+  i_log "do it when needed with:"
+  i_log "  brew cask install MacTex"
+  i_log
   i_log "🎉 🎉  Installation complete 🎉 🎉 "
 }
 
@@ -157,7 +161,8 @@ install_or_update_python() {
 
 install_or_update_ruby() {
   i_log "Installing latest Ruby"
-  rbenv install "$LATEST_RUBY" --skip-existing #>>"$LOGFILE" 2>&1
+  rbenv install "$LATEST_RUBY" --skip-existing >>"$LOGFILE" 2>&1
+  rbenv local "$LATEST_RUBY" >>"$LOGFILE" 2>&1
   echo "$LATEST_RUBY" > "$HOME/.ruby-version"
 
   i_log "Installing/updating defaults libs and tools"

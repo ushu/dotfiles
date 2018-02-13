@@ -250,7 +250,7 @@ gitpatch() {
 }
 
 save_quiver() {
-  #quiver_to_markdown "$HOME/Dropbox (Personnelle)/Quiver.qvlibrary" "$HOME/WIP/quiver_library"
+  (cd "$HOME/WIP/quiver_library"; git checkout master; git pull origin master)
   quiver_to_markdown "$HOME/Dropbox/Quiver.qvlibrary" "$HOME/WIP/quiver_library"
   (cd "$HOME/WIP/quiver_library"; git add --all && git commit && git push origin)
 }

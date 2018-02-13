@@ -114,7 +114,7 @@ cask "visual-studio-code"
 cask "gitbook-editor"
 
 # Misc
-cask "gpgtools" # currently using beta for sierra compatibilty
+cask "gpg-suite"
 cask "dropbox"
 cask "steam"
 cask "launchrocket"
