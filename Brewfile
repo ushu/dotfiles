@@ -27,6 +27,7 @@ brew "editorconfig"
 brew "heroku"
 brew "antlr"
 brew "carthage"
+brew "watchman"
 
 # DB & Cache servers
 brew "postgresql"
