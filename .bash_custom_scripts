@@ -47,8 +47,18 @@ budo-create() {
 EOF
   cat >.babelrc <<-EOF
 {
-  "presets": [ "es2015", "stage-0" ],
-  "ignore" : ["/node_modules/*"]
+  "presets": [ 
+    ["env", {
+      "targets": {
+        "browsers": ["last 2 versions", "safari >= 7"]
+      }
+    }]
+  ],
+  "ignore" : ["/node_modules/*"],
+  "plugins": [
+    "transform-class-properties",
+    "transform-object-rest-spread"
+  ]
 }
 EOF
   cat >.gitignore <<-EOF
@@ -75,15 +85,12 @@ EOF
   git ci -m "Initial commit" --allow-empty
   yarn add --dev \
       budo babelify browserify \
-      babel-core babel-preset-es2015 babel-preset-stage-0 || return
+      babel-core babel-preset-env \
+      babel-plugin-transform-class-properties babel-plugin-transform-object-rest-spread || return
   git add .
-  git ci -m "Starter code"
+  git ci -m "Add starter code"
 
-  ttab -q -t "Budo server" "cd '$PWD' && yarn start"
-  osascript -e 'tell application "Terminal" to activate' \
-    -e 'tell application "System Events" to tell process "Terminal" to keystroke "[" using command down' 
-
-  code .
+  code . & yarn start
 }
 
 budo-create-react() {
@@ -109,12 +116,20 @@ budo-create-react() {
 EOF
   cat >.babelrc <<-EOF
 {
-  "presets": [ "es2015", "react" ],
+  "presets": [ 
+    ["env", {
+      "targets": {
+        "browsers": ["last 2 versions", "safari >= 7"]
+      }
+    }],
+    "react" 
+  ],
   "ignore" : ["/node_modules/*"],
   "env": {
     "development": {
       "plugins": [
         "transform-class-properties",
+        "transform-object-rest-spread",
         ["react-transform", {
           "transforms": [{
             "transform": "livereactload/babel-transform",
@@ -183,23 +198,29 @@ class HelloWorld extends React.Component {
 }
 
 /******************************************************************************
- *if using Redux, uncomment the following snippet to handle LiveReload
- *  (if not you can TRASH it !)
+ * Pour brancher Redux (au besoin...)
+ * -> permet d'avoir le HMR qui fonctionne, sinon on peut débrancher
  ******************************************************************************
 
-function configureStore(initialState) {
-  const nextRootReducer = combineReducers({ REDUCERS }); // à compléter avec le root reducer
+import * as REDUCERS from "./reducers"; // -> si les reducers sont dans ./reducers
 
-  const store = createStore(rootReducer, initialState);
-  if (module.hot) {
+let store = null;
+function configureStore(initialState={}) {
+  if (!store) {
+    const rootReducer = combineReducers({ REDUCERS }); 
+    const store = createStore(rootReducer, initialState);
+  } else if (module.hot) {
       module.hot.accept(() => {
-        const nextRootReducer = combineReducers({ REDUCERS }); // à compléter avec le root reducer
+        // le module ./reducers a pu changer => on recharge (mais on garde le store !)
+        const nextRootReducer = combineReducers({ REDUCERS });
         store.replaceReducer(nextRootReducer);
       });
   }
   return store;
 }
-const store = configureStore( INITIAL STATE );
+
+// Chargement initial
+configureStore();
 
 *******************************************************************************/
 
@@ -207,19 +228,17 @@ const rootNode = document.querySelector("#root");
 renderDOM(<HelloWorld />, rootNode);
 EOF
   git init .
-  git ci -m "Initial commit" --allow-empty
+  git commit -m "Initial commit" --allow-empty
   yarn add --dev \
        budo babelify browserify \
-       babel-core babel-preset-es2015 babel-preset-react babel-preset-stage-0 babel-plugin-transform-class-properties \
+       babel-core babel-preset-env babel-preset-react \
+       babel-plugin-transform-class-properties babel-plugin-transform-object-rest-spread \
        livereactload react-proxy babel-plugin-react-transform || return
   yarn add react react-dom
   git add .
-  git ci -m "Starter code"
+  git ci -m "Add starter code"
 
-  # start server in a new tab
-  ttab -q -t "Budo server" "cd '$PWD' && yarn start"
-
-  code .
+  code . & yarn start
 }
 
 # Git functions
