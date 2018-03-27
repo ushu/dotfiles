@@ -315,6 +315,59 @@ EOF
   code . & yarn start
 }
 
+create-dart() {
+  local project_name="$1"
+  if [ -z "$project_name" ]; then
+    echo "Usage: create-dart PROJECT_NAME"
+    return
+  fi
+
+  # Create Project
+  mkdir "$project_name" && cd $_ || return
+  cat >pubspec.yaml <<-EOF
+name: $project_name
+description: A simple Dart Web project
+transformers:
+- \$dart2js: {}
+
+EOF
+  # Load dependencier
+  pub get
+
+  # Add simple template
+  mkdir web
+  cat >web/index.html <<-EOF
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dart Project</title>
+</head>
+<body>
+    <div id="main"></div>
+    <script src="./script.dart.js"></script>
+</body>
+</html>
+EOF
+  cat >web/script.dart<<-EOF
+import "dart:html";
+
+void main() {
+  print("Hello from Dart");
+}
+EOF
+
+  git init .
+  git commit -m "Initial commit" --allow-empty
+  git add .
+  git commit -m "Add starter code"
+
+  # Start the dev server
+  pub serve
+}
+
 # Git functions
 gitzip() {
   if [ -z "$1" ];then
