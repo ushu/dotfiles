@@ -37,9 +37,10 @@ budo-create() {
 {
   "name": "$package_name",
   "version": "0.0.1",
+  "private": true,
+  "author": "Aurélien Noce <aurelien@noce.fr>",
+  "license": "mit",
   "main": "index.js",
-  "author": "Aurélien Noce <aurelien.noce@imagine-app.fr> (http://imagine-app.fr/)",
-  "license": "@2017 Aurélien Noce & imagine-app",
   "scripts": {
     "start": "budo index.js --live --open -- -t babelify"
   }
@@ -96,9 +97,19 @@ EOF
 budo-create-react() {
   local project_name="$1"
   if [ -z "$project_name" ]; then
-    echo "Usage: new-budo PROJECT_NAME"
+    echo "Usage: budo-create-react PROJECT_NAME [--redux]"
     return
   fi
+
+  # Lookup flags
+  local useredux;
+  for i in "$@"; do
+    case $i in
+      --redux)
+        useredux=YES
+        ;;
+    esac
+  done
 
   # Create Project
   mkdir "$project_name" && cd $_ || return
@@ -106,9 +117,10 @@ budo-create-react() {
 {
   "name": "$package_name",
   "version": "0.0.1",
+  "private": true,
+  "author": "Aurélien Noce <aurelien@noce.fr>",
+  "license": "mit",
   "main": "index.js",
-  "author": "Aurélien Noce <aurelien.noce@imagine-app.fr> (http://imagine-app.fr/)",
-  "license": "@2017 Aurélien Noce & imagine-app",
   "scripts": {
     "start": "NODE_ENV='development' budo ./index.js --live='*.{html,css}' --open -- -t babelify -p livereactload"
   }
@@ -171,7 +183,91 @@ EOF
 node_modules
 *.swp
 EOF
-  cat >index.js <<-EOF
+  if [ "$useredux" = YES ]; then
+    cat >index.js <<-EOF
+// CODE GOES HERE 😇
+
+import React, {PureComponent} from "react";
+import {render as renderDOM} from "react-dom";
+import {combineReducers, createStore, bindActionCreators} from "redux";
+import {Provider, connect} from "react-redux";
+
+class HelloWorld extends PureComponent {
+  onChange = (event) => {
+    const {updateWho} = this.props;
+    updateWho(event.target.value);
+  }
+
+  render() {
+    const {who} = this.props;
+    return (
+      <div>
+        <h3>Hello {who}</h3>
+        <input onChange={this.onChange} value={who}/>
+      </div>
+    );
+  }
+}
+
+const HelloWorldContainer = connect(
+  // mapStateToProps
+  state => ({ who: state.who }),
+  // mapDispachToProps
+  dispatch => bindActionCreators({ updateWho }, dispatch),
+)(HelloWorld);
+
+/******************************************************************************
+ * REDUX Actions, Reducers and Store
+ ******************************************************************************/
+
+const who = (state="World", action) => {
+  switch(action.type) {
+  case "UPDATE_WHO":
+    return action.payload.text;
+  }
+  return state;
+};
+
+// Action creator pour UPDATE_WHO
+function updateWho(text) { 
+  return {
+    type: "UPDATE_WHO",
+    payload: { text },
+  };
+}
+
+// Liste de tous les reducers "racine"
+const REDUCERS = { who }
+
+function configureStore(global, initialState={}) {
+  if (!global.store) {
+    const rootReducer = combineReducers(REDUCERS); 
+    global.store = createStore(
+      rootReducer, 
+      initialState,
+      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    );
+  } else if (module.hot) {
+      module.hot.accept(() => {
+        // le module ./reducers a pu changer => on recharge (mais on garde le store !)
+        const nextRootReducer = combineReducers(REDUCERS);
+        global.store.replaceReducer(nextRootReducer);
+      });
+  }
+  return window.store;
+}
+
+// Chargement initial
+const store = configureStore(window);
+const rootNode = document.querySelector("#root");
+renderDOM(
+  <Provider store={store}>
+    <HelloWorldContainer />
+  </Provider>,
+  rootNode);
+EOF
+  else
+    cat >index.js <<-EOF
 // CODE GOES HERE 😇
 
 import React from "react";
@@ -197,36 +293,10 @@ class HelloWorld extends React.Component {
   }
 }
 
-/******************************************************************************
- * Pour brancher Redux (au besoin...)
- * -> permet d'avoir le HMR qui fonctionne, sinon on peut débrancher
- ******************************************************************************
-
-import * as REDUCERS from "./reducers"; // -> si les reducers sont dans ./reducers
-
-let store = null;
-function configureStore(initialState={}) {
-  if (!store) {
-    const rootReducer = combineReducers({ REDUCERS }); 
-    const store = createStore(rootReducer, initialState);
-  } else if (module.hot) {
-      module.hot.accept(() => {
-        // le module ./reducers a pu changer => on recharge (mais on garde le store !)
-        const nextRootReducer = combineReducers({ REDUCERS });
-        store.replaceReducer(nextRootReducer);
-      });
-  }
-  return store;
-}
-
-// Chargement initial
-configureStore();
-
-*******************************************************************************/
-
 const rootNode = document.querySelector("#root");
 renderDOM(<HelloWorld />, rootNode);
 EOF
+  fi
   git init .
   git commit -m "Initial commit" --allow-empty
   yarn add --dev \
@@ -234,11 +304,68 @@ EOF
        babel-core babel-preset-env babel-preset-react \
        babel-plugin-transform-class-properties babel-plugin-transform-object-rest-spread \
        livereactload react-proxy babel-plugin-react-transform || return
-  yarn add react react-dom
+  if [ "$useredux" = YES ]; then
+    yarn add react react-dom redux react-redux
+  else
+    yarn add react react-dom
+  fi
   git add .
   git ci -m "Add starter code"
 
   code . & yarn start
+}
+
+create-dart() {
+  local project_name="$1"
+  if [ -z "$project_name" ]; then
+    echo "Usage: create-dart PROJECT_NAME"
+    return
+  fi
+
+  # Create Project
+  mkdir "$project_name" && cd $_ || return
+  cat >pubspec.yaml <<-EOF
+name: $project_name
+description: A simple Dart Web project
+transformers:
+- \$dart2js: {}
+
+EOF
+  # Load dependencier
+  pub get
+
+  # Add simple template
+  mkdir web
+  cat >web/index.html <<-EOF
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dart Project</title>
+</head>
+<body>
+    <div id="main"></div>
+    <script src="./script.dart.js"></script>
+</body>
+</html>
+EOF
+  cat >web/script.dart<<-EOF
+import "dart:html";
+
+void main() {
+  print("Hello from Dart");
+}
+EOF
+
+  git init .
+  git commit -m "Initial commit" --allow-empty
+  git add .
+  git commit -m "Add starter code"
+
+  # Start the dev server
+  pub serve
 }
 
 # Git functions
