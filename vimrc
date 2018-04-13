@@ -3,13 +3,14 @@
 " sensible defaults
 set encoding=utf-8
 set nocompatible
-let mapleader=","
 set novisualbell
 set backspace=indent,eol,start
 set shell=bash
 " speed settings -> avoids that vim eats all your RAM...
 set lazyredraw
 set synmaxcol=256
+" leader == ","
+let mapleader=","
 
 " Allow multiple edition on a file
 set nobackup
@@ -118,11 +119,6 @@ if dein#load_state(expand('~/.vim/dein'))
         \ 'lazy': 1,
         \ 'on_ft': 'rust'
         \ })
-  call dein#add('racer-rust/vim-racer', { 
-        \ 'lazy': 1,
-        \ 'on_ft': 'rust',
-        \ 'depends': 'rust.vim'
-        \ })
 
   " Javascript
   call dein#add('othree/yajs.vim', { 
@@ -200,12 +196,6 @@ if dein#load_state(expand('~/.vim/dein'))
         \ 'depends': 'deoplete.nvim'
         \ })
 
-  " Other tools
-  call dein#add('metakirby5/codi.vim', {
-        \ 'lazy': 1,
-        \ 'on_cmd': ['Codi', 'Codi!'],
-        \ })
-
   call dein#end()
   call dein#save_state()
 endif
@@ -274,10 +264,10 @@ let g:polyglot_disabled = ['rust', 'javascript', 'typescript', 'go', 'markdown']
 "
 augroup SyntaxEx
 
-  autocmd BufRead Brewfile,Gemfile,Podfile,VagrantFile,Cheffile setlocal ft=ruby
+  autocmd! BufRead Brewfile,Gemfile,Podfile,VagrantFile,Cheffile setlocal ft=ruby
   autocmd! BufNewFile,BufRead .pryrc,*.jbuilder setlocal filetype=ruby
   autocmd! BufNewFile,BufRead *.ts setlocal filetype=typescript
-  autocmd BufRead *.md setlocal ft=markdown.gfm
+  autocmd! BufRead *.md setlocal ft=markdown.gfm
 
 augroup END
 
