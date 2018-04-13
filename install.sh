@@ -16,7 +16,7 @@ export MANPATH="/usr/local/man"
 LOGFILE="$DOTFILES/install.log"
 
 # List of components to install
-PYTHON_PIPS=(httpie scipy matplotlib jupyter)
+PYTHON_PIPS=(httpie scipy matplotlib jupyter virtualenv virtualenvwrapper)
 RUBY_GEMS=(rails sass jekyll)
 NODE_MODULES=(grunt-cli gulp bower yo webpack eslint babel ttab)
 
