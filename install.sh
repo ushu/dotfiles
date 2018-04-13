@@ -171,10 +171,9 @@ install_or_update_ruby() {
 
 install_vim_plugins() {
   i_log "Installing/Updating vim plugins"
-  if [ ! -e "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" ]; then
-    [ -e "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" ] || mkdir -p "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" >>"$LOGFILE"
-    git clone git@github.com:Shougo/dein.vim.git "$HOME/.vim/dein/repos/github.com/Shougo/dein.vim" >>"$LOGFILE" 2>&1
-  fi
+  if [ ! -e "$HOME/.vim/autoload/plug.vim" ]; then
+    curl -fLo "$HOME/.vim/autoload/plug.vim" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  fi 
 
   vim -E +"call dein#install()" +qall
   nvim -E +"call dein#install()" +qall
