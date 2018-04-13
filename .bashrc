@@ -107,3 +107,6 @@ source "/usr/local/bin/virtualenvwrapper.sh"
 source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc'
 source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc'
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# Add flutter
+export PATH="$HOME/flutter/bin:$PATH"
