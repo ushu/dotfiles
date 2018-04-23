@@ -48,15 +48,12 @@ brew "lapack"
 brew "scalapack"
 
 # Better tooling
+brew "bash"
 brew "bash-git-prompt"
 brew "grok"
 brew "ag"
 brew "fzf"
 brew "fzy"
-
-# Latest bash
-brew "bash"
-brew "shellcheck"
 
 # Ruby
 brew "ruby"
