@@ -17,7 +17,7 @@ LOGFILE="$DOTFILES/install.log"
 
 # List of components to install
 PYTHON_PIPS=(httpie scipy matplotlib jupyter virtualenv virtualenvwrapper)
-RUBY_GEMS=(rails sass jekyll)
+RUBY_GEMS=(rails sass jekyll solargraph)
 NODE_MODULES=(grunt-cli gulp bower yo webpack eslint babel ttab)
 
 main() {
@@ -43,6 +43,7 @@ main() {
   install_or_update_node
   install_or_update_python
   install_or_update_ruby
+  install_or_update_rust
   install_vim_plugins
 
   trap - EXIT
@@ -167,6 +168,13 @@ install_or_update_ruby() {
 
   i_log "Installing/updating defaults libs and tools"
   gem install "${RUBY_GEMS[@]}" --no-ri --no-rdoc >>"$LOGFILE" 2>&1
+}
+
+install_or_update_rust() {
+  i_log "Installing rust"
+  rustup update stable >>"$LOGFILE" 2>&1
+  rustup component add rls-preview rust-analysis rust-src rustfmt-preview
+  cargo install --force rustsym
 }
 
 install_vim_plugins() {

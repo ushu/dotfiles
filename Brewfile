@@ -75,7 +75,7 @@ brew "yarn"
 brew "elixir"
 
 # Rust
-brew "rust"
+brew "rustup"
 
 # Go
 brew "go"

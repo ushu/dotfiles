@@ -46,16 +46,18 @@ function! LoadPlugins()
   Plug 'fatih/vim-go', { 'for': 'go', 'on': 'GoImports' }
   Plug 'rust-lang/rust.vim', { 'for': 'rust' }
   Plug 'vim-syntastic/syntastic'
+  Plug 'elixir-editors/vim-elixir', { 'for': 'elixir' }
   call plug#end()
   autocmd BufWrite *.go :GoImports
 endfunction
-command! LoadPlugins :call LoadPlugins()
+call LoadPlugins()
 
 " Activate syntaxes on specific files
 augroup SyntaxEx
   autocmd! BufRead Brewfile,Gemfile,Podfile,VagrantFile,Cheffile setlocal ft=ruby
   autocmd! BufNewFile,BufRead .pryrc,*.jbuilder setlocal filetype=ruby
   autocmd! BufNewFile,BufRead *.ts setlocal filetype=typescript
+  autocmd! BufNewFile,BufRead *.ex,*.exs,*.eex setlocal filetype=elixir
 augroup END
 
 " Custom mappings
@@ -95,5 +97,4 @@ nnoremap gs :Gstatus<CR>
 nnoremap ga :Gwrite<CR>
 nnoremap gc :Gcommit<CR>
 nnoremap gd :Gdiff<CR>
-
 
