@@ -47,6 +47,9 @@ function! LoadPlugins()
   Plug 'rust-lang/rust.vim', { 'for': 'rust' }
   Plug 'vim-syntastic/syntastic'
   Plug 'elixir-editors/vim-elixir', { 'for': 'elixir' }
+  Plug '/usr/local/opt/fzf', { 'on': 'FZF' }
+  Plug 'junegunn/fzf.vim', { 'on': 'FZF' }
+  Plug 'brookhong/ag.vim', { 'on': 'Ag' }
   call plug#end()
   autocmd BufWrite *.go :GoImports
 endfunction
@@ -97,4 +100,7 @@ nnoremap gs :Gstatus<CR>
 nnoremap ga :Gwrite<CR>
 nnoremap gc :Gcommit<CR>
 nnoremap gd :Gdiff<CR>
+
+nnoremap <leader>i :FZF<CR>
+nnoremap <leader>/ :Ag<CR>
 
