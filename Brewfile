@@ -152,3 +152,8 @@ mas "Slack", id: 803453959
 mas "Harvest", id: 506189836
 mas "Skitch", id: 425955336
 
+# Fonts
+tap "caskroom/fonts"
+cask "font-inconsolata"
+cask "font-fira-code"
+
