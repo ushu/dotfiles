@@ -46,16 +46,21 @@ function! LoadPlugins()
   Plug 'fatih/vim-go', { 'for': 'go', 'on': 'GoImports' }
   Plug 'rust-lang/rust.vim', { 'for': 'rust' }
   Plug 'vim-syntastic/syntastic'
+  Plug '/usr/local/opt/fzf', { 'on': 'FZF' }
+  Plug 'junegunn/fzf.vim', { 'on': 'FZF' }
+  Plug 'rking/ag.vim', { 'on': 'Ag' }
+  Plug 'elixir-editors/vim-elixir', { 'for': 'elixir' }
   call plug#end()
   autocmd BufWrite *.go :GoImports
 endfunction
-command! LoadPlugins :call LoadPlugins()
+call LoadPlugins()
 
 " Activate syntaxes on specific files
 augroup SyntaxEx
   autocmd! BufRead Brewfile,Gemfile,Podfile,VagrantFile,Cheffile setlocal ft=ruby
   autocmd! BufNewFile,BufRead .pryrc,*.jbuilder setlocal filetype=ruby
   autocmd! BufNewFile,BufRead *.ts setlocal filetype=typescript
+  autocmd! BufNewFile,BufRead *.ex,*.exs setlocal filetype=elixir
 augroup END
 
 " Custom mappings
@@ -77,6 +82,10 @@ nnoremap <leader>v <C-w>v
 nnoremap <leader>d <C-w>c
 nnoremap <leader>j :lprev<CR>
 nnoremap <leader>l :lnext<CR>
+" open FZF for completion
+nnoremap <leader>i :FZF<CR>
+" open Ag for grepping
+nnoremap <leader>/ :Ag<space>
 " <tab> hacks
 " 1. tab-based completion (from Gary Bernhardt's vimrc)
 function! InsertTabWrapper()
