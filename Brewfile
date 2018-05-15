@@ -75,7 +75,7 @@ brew "yarn"
 brew "elixir"
 
 # Rust
-brew "rust"
+brew "rustup"
 
 # Go
 brew "go"
@@ -151,4 +151,9 @@ mas "Slack", id: 803453959
 # Other tools
 mas "Harvest", id: 506189836
 mas "Skitch", id: 425955336
+
+# Fonts
+tap "caskroom/fonts"
+cask "font-inconsolata"
+cask "font-fira-code"
 

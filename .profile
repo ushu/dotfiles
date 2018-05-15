@@ -11,3 +11,8 @@ fi
 
 export DOCKER_OPTS="--insecure-registry 192.168.0.26:5000"
 
+
+# Flutter
+export PATH="$HOME/flutter/bin:$PATH"
+# Rust
+export PATH="$HOME/.cargo/bin:$PATH"
