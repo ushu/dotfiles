@@ -182,9 +182,7 @@ install_vim_plugins() {
   if [ ! -e "$HOME/.vim/autoload/plug.vim" ]; then
     curl -fLo "$HOME/.vim/autoload/plug.vim" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   fi 
-
-  vim -E +"call dein#install()" +qall
-  nvim -E +"call dein#install()" +qall
+  vim -E +"PlugInstall" +qall
 }
 
 # Log to both stdout and output file (w/ prefix)
