@@ -102,5 +102,5 @@ nnoremap gc :Gcommit<CR>
 nnoremap gd :Gdiff<CR>
 
 nnoremap <leader>i :FZF<CR>
-nnoremap <leader>/ :Ag<CR>
+nnoremap <leader>/ :Ag<space>
 
