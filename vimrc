@@ -83,12 +83,13 @@ nnoremap <leader>j :lprev<CR>
 nnoremap <leader>l :lnext<CR>
 " open FZF for completion
 nnoremap <leader>i :FZF<CR>
+let g:fzf_history_dir = '~/.local/share/fzf-history'
 " open Ag for grepping
 nnoremap <leader>/ :Ag<CR>
 " other FZF mappings
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>c :BCommits<CR>
-nnoremap <leader>v :Commits<CR>
+nnoremap <leader><S-c> :Commits<CR>
 " <tab> hacks
 " 1. tab-based completion (from Gary Bernhardt's vimrc)
 function! InsertTabWrapper()
@@ -107,7 +108,4 @@ nnoremap gs :Gstatus<CR>
 nnoremap ga :Gwrite<CR>
 nnoremap gc :Gcommit<CR>
 nnoremap gd :Gdiff<CR>
-
-nnoremap <leader>i :FZF<CR>
-nnoremap <leader>/ :Ag<CR>
 

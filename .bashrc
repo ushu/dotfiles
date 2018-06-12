@@ -11,7 +11,7 @@ if [ -z "$BREW_PREFIX" ]; then
     BREW_PREFIX=$(brew --prefix)
     echo "# Generic prefix for Homebrew installs" >> ~/.bashrc_cache
     echo "BREW_PREFIX=\"$BREW_PREFIX\"" >> ~/.bashrc_cache
-    echo >> ~/.bashrc_code
+    echo >> ~/.bashrc_cache
 fi
 
 # Install in /Application on "brew cask install ..."
@@ -22,7 +22,7 @@ if [ -z "$JAVA_HOME" ]; then
     echo "# Current version of JAVA" >> ~/.bashrc_cache
     JAVA_HOME=$(/usr/libexec/java_home)
     echo "JAVA_HOME=\"$JAVA_HOME\"" >> ~/.bashrc_cache
-    echo >> ~/.bashrc_code
+    echo >> ~/.bashrc_cache
 fi
 export ANDROID_HOME="${HOME}/Library/Android/sdk"
 export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools"
@@ -33,7 +33,7 @@ if [ -z "$BREW_PREFIX_NVM" ]; then
     echo "# nvm install dir" >> ~/.bashrc_cache
     BREW_PREFIX_NVM=$(brew --prefix nvm)
     echo "BREW_PREFIX_NVM=\"$BREW_PREFIX_NVM\"" >> ~/.bashrc_cache
-    echo >> ~/.bashrc_code
+    echo >> ~/.bashrc_cache
 fi
 # Lazy loading for nvm.sh
 nvm() {
