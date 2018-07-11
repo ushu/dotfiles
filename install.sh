@@ -84,6 +84,10 @@ update_symlinks() {
   [ -e "$HOME/.vimrc" ] || ln -s "$DOTFILES/vimrc" "$HOME/.vimrc"
   [ -e "$HOME/.vim" ] || mkdir "$HOME/.vim"
   [ -e "$HOME/.editorconfig" ] || ln -s "$DOTFILES/.editorconfig" "$HOME/.editorconfig"
+  # VSCode config
+  [ -e "$HOME/Library/Application Support/Code/User/settings.json" ] || ln -s "$DOTFILES/vscode-settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
+  [ -e "$HOME/Library/Application Support/Code/User/keybindings.json" ] || ln -s "$DOTFILES/vscode-keybindings.json" "$HOME/Library/Application Support/Code/User/keybindings.json"
+  [ -e "$HOME/Library/Application Support/Code/User/locale.json" ] || ln -s "$DOTFILES/vscode-locale.json" "$HOME/Library/Application Support/Code/User/locale.json"
   # git config
   [ -e "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
   # shell configs

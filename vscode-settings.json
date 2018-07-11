@@ -1,0 +1,45 @@
+{
+    // démarrage
+    //"workbench.startupEditor": "none",
+    "workbench.startupEditor": "newUntitledFile",
+    "window.restoreWindows": "none",
+    "window.restoreFullscreen": false,
+    // police
+    "editor.fontFamily": "Fira Code",
+    "editor.fontSize": 14,
+    "editor.fontLigatures": true,
+    // curseur
+    "editor.cursorStyle": "block",
+
+    // formattage de code
+    "editor.formatOnSave": false,
+
+    // Enable emmet in JS
+    "emmet.includeLanguages": {
+        "javascript": "javascriptreact"
+    },
+    "emmet.showSuggestionsAsSnippets": true,
+    "emmet.triggerExpansionOnTab": true,
+
+    // VIM mode
+    //"vim.enableNeovim": true,
+    "vim.leader": ",",
+    "vim.easymotion": true,
+    "vim.incsearch": true,
+    "vim.useCtrlKeys": true,
+    "vim.useSystemClipboard": true,
+    "vim.hlsearch": true,
+    "vim.otherModesKeyBindings": [
+        {
+            "before": [ "<leader>", "s" ],
+            "after": [],
+            "commands": [
+                {
+                    "command": "workbench.action.splitEditor",
+                    "args": []
+                }
+            ]
+        }
+    ],
+    "window.zoomLevel": 0
+}
