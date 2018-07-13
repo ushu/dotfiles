@@ -157,3 +157,7 @@ tap "caskroom/fonts"
 cask "font-inconsolata"
 cask "font-fira-code"
 
+# Git-redate
+tap "PotatoLabs/homebrew-git-redate"
+brew "git-redate"
+
