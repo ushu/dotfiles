@@ -88,7 +88,7 @@ nnoremap <leader>/ :Ag<CR>
 " other FZF mappings
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>c :BCommits<CR>
-nnoremap <leader>v :Commits<CR>
+nnoremap <leader><S-c> :Commits<CR>
 " <tab> hacks
 " 1. tab-based completion (from Gary Bernhardt's vimrc)
 function! InsertTabWrapper()
