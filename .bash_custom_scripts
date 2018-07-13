@@ -91,7 +91,8 @@ EOF
   git add .
   git ci -m "Add starter code"
 
-  code . & yarn start
+  #code . & yarn start
+  yarn start
 }
 
 budo-create-react() {
@@ -312,7 +313,8 @@ EOF
   git add .
   git ci -m "Add starter code"
 
-  code . & yarn start
+  #code . & 
+  yarn start
 }
 
 create-dart() {

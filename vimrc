@@ -83,6 +83,7 @@ nnoremap <leader>j :lprev<CR>
 nnoremap <leader>l :lnext<CR>
 " open FZF for completion
 nnoremap <leader>i :FZF<CR>
+let g:fzf_history_dir = '~/.local/share/fzf-history'
 " open Ag for grepping
 nnoremap <leader>/ :Ag<CR>
 " other FZF mappings
@@ -107,7 +108,4 @@ nnoremap gs :Gstatus<CR>
 nnoremap ga :Gwrite<CR>
 nnoremap gc :Gcommit<CR>
 nnoremap gd :Gdiff<CR>
-
-nnoremap <leader>i :FZF<CR>
-nnoremap <leader>/ :Ag<space>
 

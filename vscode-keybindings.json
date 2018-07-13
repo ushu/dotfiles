@@ -1,0 +1,11 @@
+// Place your key bindings in this file to overwrite the defaults
+[
+    {
+        "key": "alt+cmd+/",
+        "command": "workbench.action.editor.changeLanguageMode"
+    },
+    {
+        "key": "cmd+k m",
+        "command": "-workbench.action.editor.changeLanguageMode"
+    }
+]
