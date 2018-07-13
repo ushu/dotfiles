@@ -76,6 +76,7 @@ alias d="git dc"
 alias s="git status"
 alias ac="git aa && git ci"
 alias ci="git ci"
+alias ginit="git init && git commit --allow-empty -m'Initial commit'"
 alias be="bundle exec"
 
 # Faster start for (spac|e)emacs
