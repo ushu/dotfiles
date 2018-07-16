@@ -40,15 +40,28 @@ set expandtab smarttab
 function! LoadPlugins()
   call plug#begin('~/.vim/plugged')
   Plug 'tpope/vim-fugitive'
-  Plug 'othree/yajs.vim', { 'for': 'javascript' }
-  Plug 'othree/es.next.syntax.vim', { 'for': 'javascript' }
+  Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
+  Plug 'mxw/vim-jsx', { 'for': 'javascript' }
+  Plug 'mattn/emmet-vim', { 'for': [ 'html', 'javascript' ] }
   Plug 'HerringtonDarkholme/yats.vim', { 'for': 'typescript' }
   Plug 'fatih/vim-go', { 'for': 'go', 'on': 'GoImports' }
   Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-  Plug 'vim-syntastic/syntastic'
+  Plug 'w0rp/ale'
   Plug '/usr/local/opt/fzf', { 'on': [ 'FZF', 'Ag', 'Buffers', 'BCommits', 'Commits' ] }
   Plug 'junegunn/fzf.vim', { 'on': [ 'FZF', 'Ag', 'Buffers', 'BCommits', 'Commits' ] }
   Plug 'elixir-editors/vim-elixir', { 'for': 'elixir' }
+  Plug 'skywind3000/asyncrun.vim', { 'on': 'AsyncRun' }
+  " Completion
+  if has('nvim')
+    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  else
+    Plug 'Shougo/deoplete.nvim'
+    Plug 'roxma/nvim-yarp'
+    Plug 'roxma/vim-hug-neovim-rpc'
+  endif
+  Plug 'wokalski/autocomplete-flow', { 'for': [ 'javascript', 'jsx' ] }
+  Plug 'slashmili/alchemist.vim', { 'for': 'elixir' }
+  Plug 'https://github.com/zchee/deoplete-go', { 'for': 'go' }
   call plug#end()
   autocmd BufWrite *.go :GoImports
 endfunction
@@ -106,6 +119,31 @@ inoremap <S-Tab> <C-V><Tab>
 " Git commands (starting with `g`)
 nnoremap gs :Gstatus<CR>
 nnoremap ga :Gwrite<CR>
+nnoremap gp :Gpush<space>
 nnoremap gc :Gcommit<CR>
 nnoremap gd :Gdiff<CR>
 
+" Emmet expand with <TAB>
+let g:user_emmet_leader_key='<Tab>'
+let g:user_emmet_settings = {
+  \  'javascript.jsx' : {
+  \     'extends' : 'jsx',
+  \  },
+  \}
+" lots of ALE config
+let g:ale_sign_error = '●'
+let g:ale_sign_warning = '.'
+let g:ale_lint_on_enter = 0 
+let g:ale_linters = {
+  \   'jsx': ['flow'],
+  \   'javascript': ['flow'],
+  \ }
+let b:ale_fixers = {
+  \   'jsx': ['prettier'],
+  \   'javascript': ['prettier'],
+  \}
+let g:ale_fix_on_save = 1
+" make Fugitive use AsyncRun
+command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
+" Enable Deoplete on first edit
+autocmd! InsertEnter * call deoplete#enable()
