@@ -103,19 +103,6 @@ nnoremap <leader>/ :Ag<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>c :BCommits<CR>
 nnoremap <leader><S-c> :Commits<CR>
-" <tab> hacks
-" 1. tab-based completion (from Gary Bernhardt's vimrc)
-function! InsertTabWrapper()
-    let col = col('.') - 1
-    if !col || getline('.')[col - 1] !~ '\k'
-        return "\<tab>"
-    else
-        return "\<c-p>"
-    endif
-endfunction
-inoremap <expr> <tab> InsertTabWrapper()
-" 2. <S-Tab> to "force" <TAB> char inclusion
-inoremap <S-Tab> <C-V><Tab>
 " Git commands (starting with `g`)
 nnoremap gs :Gstatus<CR>
 nnoremap ga :Gwrite<CR>
@@ -147,3 +134,8 @@ let g:ale_fix_on_save = 1
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 " Enable Deoplete on first edit
 autocmd! InsertEnter * call deoplete#enable()
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+let g:deoplete#num_processes = 8
+
+
+
