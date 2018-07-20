@@ -22,6 +22,8 @@ set hidden
 " Colors
 syntax on
 colorscheme desert
+" disable MatchParen !
+let g:loaded_matchparen = 1
 
 " (from the docs) Jump to last cursor position 
 autocmd BufReadPost *
