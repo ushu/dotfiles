@@ -11,8 +11,9 @@ set -e
 set -u
 
 NAME="Aurélien Noce"
-EMAIL="aurnoce@gmail.com"
+EMAIL="aurelien@noce.fr"
 DOTFILES="$HOME/.dotfiles"
+REPO="https://github.com/ushu/dotfiles"
 RUBY_VERSION="2.5.1"
 
 export MANPATH="/usr/local/man"
@@ -21,6 +22,7 @@ export MANPATH="/usr/local/man"
 PYTHON_PIPS=(httpie scipy matplotlib jupyter)
 RUBY_GEMS=(rails sass jekyll)
 NODE_MODULES=(express create-react-app react-native create-react-native-app)
+GO_PACKAGES=("golang.org/x/tools/cmd/goimports")
 
 main() {
   # Reset logfile
@@ -29,15 +31,21 @@ main() {
   echo "🚀 🚀  Starting the install process 🚀 🚀"
   echo
 
-  # Check we are not on linux
+  # Add some default message on failure
+  trap "echo;echo '☠️ ☠️  Installation failed. ☠️ ☠️ '" EXIT
+
+  # Check we are not on a mac
   UNAME=$(uname)
   if [ "$UNAME" != "Darwin" ]; then
       echo -e "oups, this script is intended to run on a mac !"
       exit 1
   fi
+  # I want Xcode !
+  if [ ! -e /Applications/Xcode.app/ ]; then
+      echo -e "oups, this script needs Xcode installed !"
+      exit 1
+  fi
 
-  # Add some default message on failure
-  trap "echo;echo '☠️ ☠️  Installation failed. ☠️ ☠️ '" EXIT
 
   retreive_dotfiles
   update_symlinks
@@ -68,7 +76,7 @@ main() {
 # Clone or Update local copy of repo
 retreive_dotfiles() {
   if [ -e "$HOME/.dotfiles" ] && [ ! -e "$HOME/.dotfiles/.git" ] ; then
-    echo "Found buggy previous installation, cleaning up..."
+    echo "Found broken installation, cleaning up..."
     rm -rf "$HOME/.dotfiles" 
   fi
   
@@ -79,7 +87,7 @@ retreive_dotfiles() {
     git pull --depth=1 --force -q 
   else
     echo "Retreiving files from github.com/ushu/dotfiles..."
-    git clone --depth=1 --single-branch -q https://github.com/ushu/dotfiles "$DOTFILES" 
+    git clone --depth=1 --single-branch -q "$REPO" "$DOTFILES" 
   fi
 }
 
@@ -90,43 +98,28 @@ update_symlinks() {
   [ -e "$HOME/.secrets" ] || touch "$HOME/.secrets"
   # vim config
   [ -e "$HOME/.vimrc" ] || ln -s "$DOTFILES/vimrc" "$HOME/.vimrc"
-  [ -e "$HOME/.vim" ] || mkdir "$HOME/.vim"
-  [ -e "$HOME/.editorconfig" ] || ln -s "$DOTFILES/.editorconfig" "$HOME/.editorconfig"
-  # VSCode config
-  [ -d "$HOME/Library/Application Support/Code/User" ] || mkdir -p "$HOME/Library/Application Support/Code/User"
-  [ -e "$HOME/Library/Application Support/Code/User/settings.json" ] || ln -s "$DOTFILES/vscode-settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
-  [ -e "$HOME/Library/Application Support/Code/User/keybindings.json" ] || ln -s "$DOTFILES/vscode-keybindings.json" "$HOME/Library/Application Support/Code/User/keybindings.json"
-  [ -e "$HOME/Library/Application Support/Code/User/locale.json" ] || ln -s "$DOTFILES/vscode-locale.json" "$HOME/Library/Application Support/Code/User/locale.json"
-  # git config
-  [ -e "$HOME/.gitconfig" ] || ln -s "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
+  [ -e "$HOME/.editorconfig" ] || ln -s "$DOTFILES/editorconfig" "$HOME/.editorconfig"
+  # "root" git config
+  [ -e "$HOME/.gitconfig" ] || ln -s "$DOTFILES/gitconfig" "$HOME/.gitconfig"
   # shell configs
-  [ -e "$HOME/.profile" ] || ln -s "$DOTFILES/.profile" "$HOME/.profile"
-  [ -e "$HOME/.bashrc" ] || ln -s "$DOTFILES/.bashrc" "$HOME/.bashrc"
-  [ -e "$HOME/.bash_custom_scripts" ] || ln -s "$DOTFILES/.bash_custom_scripts" "$HOME/.bash_custom_scripts"
-  [ -e "$HOME/.tmux.conf" ] || ln -s "$DOTFILES/.tmux.conf" "$HOME/.tmux.conf"
-  # default options for Ruby/Rails
-  [ -e "$HOME/.railsrc" ] || ln -s "$DOTFILES/.railsrc" "$HOME/.railsrc"
-  [ -e "$HOME/.pryrc" ] || ln -s "$DOTFILES/.pryrc" "$HOME/.pryrc"
+  [ -e "$HOME/.profile" ] || ln -s "$DOTFILES/profile" "$HOME/.profile"
+  [ -e "$HOME/.bashrc" ] || ln -s "$DOTFILES/bashrc" "$HOME/.bashrc"
+  [ -e "$HOME/.bash_custom_scripts" ] || ln -s "$DOTFILES/bash_custom_scripts" "$HOME/.bash_custom_scripts"
+  # sensible defaults for Ruby/Rails
+  [ -e "$HOME/.railsrc" ] || ln -s "$DOTFILES/railsrc" "$HOME/.railsrc"
   [ -e "$HOME/.bundle" ] || mkdir "$HOME/.bundle"
-  [ -e "$HOME/.bundle/config" ] || ln -s "$DOTFILES/.bundle.config" "$HOME/.bundle/config"
-  # tmux config
-  [ -e "$HOME/.tmux.conf" ] || ln -s "$DOTFILES/.tmux.conf" "$HOME/.tmux.conf"
-  # useful scripts
-  [ -e "$HOME/bin" ] || mkdir "$HOME/bin"
-  [ -e "$HOME/bin/gen-cert" ] || ln -s "$DOTFILES/bin/gen-cert" "$HOME/bin/gen-cert"
-  [ -e "$HOME/bin/gen-cert-no-ca" ] || ln -s "$DOTFILES/bin/gen-cert-no-ca" "$HOME/bin/gen-cert-no-ca"
-  if [ ! -e "$HOME/.emacs.d/" ]; then
-      git clone https://github.com/syl20bnr/spacemacs "$HOME/.emacs.d"
-      ln -s "$DOTFILES/.spacemacs" "$HOME"
-      mv "$HOME/.emacs.d/private/snippets" "$HOME/.emacs.d/private/snippets_old"
-      ln -s "$DOTFILES/.emacs.d/private/snippets" "$HOME/.emacs.d/private"
-  fi
-  [ -e "$HOME/.config/nvim" ] || mkdir -p "$HOME/.config/nvim"
-  [ -e "$HOME/.config/nvim/init.vim" ] || ln -s "$DOTFILES/vimrc" "$HOME/.config/nvim/init.vim"
+  [ -e "$HOME/.bundle/config" ] || ln -s "$DOTFILES/bundle.config" "$HOME/.bundle/config"
+  # mutt
   [ -e "$HOME/.mutt/cache" ] || mkdir -p "$HOME/.mutt/cache"
   [ -e "$HOME/.mutt/muttrc" ] || ln -s "$DOTFILES/muttrc" "$HOME/.mutt/muttrc"
   [ -e "$HOME/.signature" ] || ln -s "$DOTFILES/signature" "$HOME/.signature"
   [ -e "$HOME/.mailcap" ] || ln -s "$DOTFILES/mailcap" "$HOME/.mailcap"
+  # VSCode config
+  let vscode_home="$HOME/Library/Application Support/Code/User"
+  [ -d "$vscode_home" ] || mkdir -p "$vscode_home"
+  [ -e "$vscode_home/settings.json" ] || ln -s "$DOTFILES/vscode/settings.json" "$vscode_home/settings.json"
+  [ -e "$vscode_home/keybindings.json" ] || ln -s "$DOTFILES/vscode/keybindings.json" "$vscode_home/keybindings.json"
+  [ -e "$vscode_home/locale.json" ] || ln -s "$DOTFILES/vscode/locale.json" "$vscode_home/locale.json"
 }
 
 install_or_update_homebrew() {
@@ -142,7 +135,7 @@ install_or_update_homebrew() {
   fi
 
   # install all the packages by reading the Brewfile
-  echo "Installing Homebrew packages"
+  echo "Installing Homebrew packages w/ bundle"
   brew tap --repair homebrew/bundle 
   brew bundle --file="$DOTFILES/Brewfile" --no-update 
 }
@@ -190,12 +183,6 @@ install_or_update_ruby() {
 install_or_update_rust() {
   echo "Installing rust"
   rustup update stable 
-}
-
-install_vim_plugins() {
-  echo "Installing/Updating vim plugins"
-  curl -fLo "$HOME/.vim/autoload/plug.vim" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  vim -E +"PlugInstall" +qall
 }
 
 cleanup() {

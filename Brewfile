@@ -4,27 +4,18 @@
 #
 
 # Update common Unix tools
+brew "bash"
 brew "git"
 brew "git-lfs"
-brew "wget"
-brew "curl"
-brew "ffmpeg"
 brew "mutt"
-brew "graphviz"
-
-# Documentation
-brew "pandoc"
-brew "asciidoc"
 
 # Development tools
 brew "pkg-config"
 brew "vim", args: ["with-python", "with-lua", "with-python3"]
 brew "phantomjs"
 brew "imagemagick"
-brew "flow"
-brew "heroku"
-brew "carthage"
 brew "watchman"
+brew "heroku"
 
 # DB & Cache servers
 brew "postgresql"
@@ -34,44 +25,34 @@ brew "memcached"
 # Common libraries
 brew "libyaml"
 brew "libxml2", args:[ "with-python" ]
-brew "libxslt"
 
 # Better tooling
-brew "bash"
 brew "bash-git-prompt"
 brew "ag"
 brew "fzf"
 
 # Ruby
-brew "ruby"
 brew "rbenv"
 
 # Python
 brew "python"
-brew "python3"
 brew "pyenv-virtualenv"
 brew "pyenv-virtualenvwrapper"
 
 # Node & Javascript
-brew "nodejs"
 brew "nvm"
 brew "yarn"
+brew "flow"
 
-# Elixir
+# Lots of languages
 brew "elixir"
-
-# Rust
 brew "rustup"
-
-# Go
 brew "go"
-
-# Elm
 brew "elm"
-brew "elm-format"
 
-# C/C++
+# Additional dev tools
 brew "cmake", args: ["with-completion"]
+brew "carthage"
 
 ###################################
 # Install GUI apps with Brew Cask #
@@ -97,43 +78,9 @@ cask "android-sdk"
 # Misc
 cask "gpg-suite"
 cask "dropbox"
-cask "steam"
 cask "launchrocket"
 cask "vlc"
-#cask "MacTex" # tooooo big...
 
 # JetBrains IDEs
 cask "jetbrains-toolbox"
-
-###################################
-# Install App Store apps with mas #
-###################################
-
-brew "mas"
-
-# Coding stuff
-mas "XCode", id: 497799835
-mas "Quiver", id: 866773894
-
-# Graphics and design
-mas "Affinity Photo", id: 824183456
-mas "Affinity Designer", id: 824171161
-
-# Office
-mas "Keynote", id: 409183694
-mas "Numbers", id: 409203825
-mas "Pages", id: 409201541
-mas "Deckset", id: 847496013
-
-# Social
-mas "Twitter", id: 409789998
-mas "Slack", id: 803453959
-
-# Other tools
-mas "Harvest", id: 506189836
-
-# Fonts
-tap "caskroom/fonts"
-cask "font-inconsolata"
-cask "font-fira-code"
 

@@ -1,3 +1,4 @@
 application/pdf;open -a /Applications/Preview.app %s
 image/jpeg;open -a /Applications/Preview.app %s
+image/png;open -a /Applications/Preview.app %s
 
