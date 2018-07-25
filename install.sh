@@ -66,6 +66,11 @@ main() {
 
 # Clone or Update local copy of repo
 retreive_dotfiles() {
+  if [ -e "$HOME/.dotfiles" ] && [ ! -e "$HOME/.dotfiles/.git" ] ; then
+    i_log "Found buggy previous installation, cleaning up..."
+    rm -rf "$HOME/.dotfiles" >>"$LOGFILE" 2>&1
+  fi
+  
   # Grab all files in ~/.dotfiles
   if [ -e "$HOME/.dotfiles" ]; then
     i_log "Found previous installation, trying to update the files..."
