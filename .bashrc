@@ -100,12 +100,16 @@ if [ -e "$HOME/.bash_local_scripts" ]; then
 fi
 
 # Setup virtualenvwrapper
-export WORKON_HOME="$HOME/.virtualenvs"
-export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3.6
-source "/usr/local/bin/virtualenvwrapper.sh"
+if [ -e "/usr/local/bin/virtualenvwrapper.sh" ];then
+  export WORKON_HOME="$HOME/.virtualenvs"
+  export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3.6
+  source "/usr/local/bin/virtualenvwrapper.sh"
+fi
 
 # Sources completions & co
-source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc'
-source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc'
+if [ -d /usr/local/Caskroom/google-cloud-sdk ];then
+  source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc'
+  source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc'
+fi
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 

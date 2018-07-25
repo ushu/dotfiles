@@ -100,5 +100,3 @@ macro pager O <pipe-entry>'urlview'<enter> 'Follow links with urlview'
 
 my_hdr Sensitivity: Private
 
-source "/Users/ushu/.mutt/mutt-colors-solarized-dark-256.muttrc"
-

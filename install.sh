@@ -13,31 +13,31 @@ set -u
 NAME="Aurélien Noce"
 EMAIL="aurnoce@gmail.com"
 DOTFILES="$HOME/.dotfiles"
-LATEST_RUBY="2.4.1"
+RUBY_VERSION="2.5.1"
+
 export MANPATH="/usr/local/man"
-LOGFILE="$HOME/install.log"
 
 # List of components to install
-PYTHON_PIPS=(httpie scipy matplotlib jupyter virtualenv virtualenvwrapper)
-RUBY_GEMS=(rails sass jekyll solargraph)
-NODE_MODULES=(grunt-cli gulp bower yo webpack eslint babel ttab)
+PYTHON_PIPS=(httpie scipy matplotlib jupyter)
+RUBY_GEMS=(rails sass jekyll)
+NODE_MODULES=(express create-react-app react-native create-react-native-app)
 
 main() {
   # Reset logfile
   echo "BOOTING INSTALL SCRIPT @ $(date)" >"$LOGFILE"
 
-  i_log "🚀 🚀  Starting the install process 🚀 🚀"
-  i_log
+  echo "🚀 🚀  Starting the install process 🚀 🚀"
+  echo
 
   # Check we are not on linux
   UNAME=$(uname)
   if [ "$UNAME" != "Darwin" ]; then
-      i_log "oups, this script is intended to run on a mac !"
+      echo -e "oups, this script is intended to run on a mac !"
       exit 1
   fi
 
   # Add some default message on failure
-  trap "i_log;i_log '☠️ ☠️  Installation failed. ☠️ ☠️ '" EXIT
+  trap "echo;echo '☠️ ☠️  Installation failed. ☠️ ☠️ '" EXIT
 
   retreive_dotfiles
   update_symlinks
@@ -50,41 +50,41 @@ main() {
 
   trap - EXIT
 
-  i_log
-  i_log "We're done !"
-  i_log "It's time tu add your secret settings to ~/.secrets"
-  i_log
-  i_log "for example put your API tokens in it:"
-  i_log "  export HOMEBREW_GITHUB_API_TOKEN=\"...\""
-  i_log
-  i_log "Side note: MacTex was not installed since it's soooo big,"
-  i_log "do it when needed with:"
-  i_log "  brew cask install MacTex"
-  i_log
-  i_log "🎉 🎉  Installation complete 🎉 🎉 "
+  echo
+  echo "We're done !"
+  echo "It's time tu add your secret settings to ~/.secrets"
+  echo
+  echo "for example put your API tokens in it:"
+  echo "  export HOMEBREW_GITHUB_API_TOKEN=\"...\""
+  echo
+  echo "Side note: MacTex was not installed since it's soooo big,"
+  echo "do it when needed with:"
+  echo "  brew cask install MacTex"
+  echo
+  echo "🎉 🎉  Installation complete 🎉 🎉 "
 }
 
 # Clone or Update local copy of repo
 retreive_dotfiles() {
   if [ -e "$HOME/.dotfiles" ] && [ ! -e "$HOME/.dotfiles/.git" ] ; then
-    i_log "Found buggy previous installation, cleaning up..."
-    rm -rf "$HOME/.dotfiles" >>"$LOGFILE" 2>&1
+    echo "Found buggy previous installation, cleaning up..."
+    rm -rf "$HOME/.dotfiles" 
   fi
   
   # Grab all files in ~/.dotfiles
   if [ -e "$HOME/.dotfiles" ]; then
-    i_log "Found previous installation, trying to update the files..."
+    echo "Found previous installation, trying to update the files..."
     cd "$HOME/.dotfiles"
-    git pull --depth=1 --force -q >>"$LOGFILE" 2>&1
+    git pull --depth=1 --force -q 
   else
-    i_log "Retreiving files from github.com/ushu/dotfiles..."
-    git clone --depth=1 --single-branch -q https://github.com/ushu/dotfiles "$DOTFILES" >>"$LOGFILE" 2>&1
+    echo "Retreiving files from github.com/ushu/dotfiles..."
+    git clone --depth=1 --single-branch -q https://github.com/ushu/dotfiles "$DOTFILES" 
   fi
 }
 
 # Linking files in HOME
 update_symlinks() {
-  i_log "Updating symlinks"
+  echo "Updating symlinks"
   # secrets
   [ -e "$HOME/.secrets" ] || touch "$HOME/.secrets"
   # vim config
@@ -124,7 +124,6 @@ update_symlinks() {
   [ -e "$HOME/.config/nvim/init.vim" ] || ln -s "$DOTFILES/vimrc" "$HOME/.config/nvim/init.vim"
   [ -e "$HOME/.mutt/cache" ] || mkdir -p "$HOME/.mutt/cache"
   [ -e "$HOME/.mutt/muttrc" ] || ln -s "$DOTFILES/muttrc" "$HOME/.mutt/muttrc"
-  [ -e "$HOME/.mutt/mutt-colors-solarized-dark-256.muttrc" ] || ln -s "$DOTFILES/mutt-colors-solarized-dark-256.muttrc" "$HOME/.mutt/mutt-colors-solarized-dark-256.muttrc"
   [ -e "$HOME/.signature" ] || ln -s "$DOTFILES/signature" "$HOME/.signature"
   [ -e "$HOME/.mailcap" ] || ln -s "$DOTFILES/mailcap" "$HOME/.mailcap"
 }
@@ -132,82 +131,71 @@ update_symlinks() {
 install_or_update_homebrew() {
   # looking up brew command (see https://stackoverflow.com/a/677212 for details)
   if command -v brew >/dev/null 2>&1; then
-    i_log "Updating Homebrew"
-    brew update >>"$LOGFILE"
+    echo "Updating Homebrew"
+    brew update 
   else
     # Run the installer from https://brew.sh
-    i_log "Homebrew not found: launching the installer"
+    echo "Homebrew not found: launching the installer"
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     hash -r
   fi
 
   # install all the packages by reading the Brewfile
-  i_log "Installing Homebrew packages"
-  brew tap --repair homebrew/bundle >>"$LOGFILE"
-  brew bundle --file="$DOTFILES/Brewfile" --no-update >>"$LOGFILE" 2>&1
+  echo "Installing Homebrew packages"
+  brew tap --repair homebrew/bundle 
+  brew bundle --file="$DOTFILES/Brewfile" --no-update 
 }
 
 install_or_update_node() {
   # Ensure nvm is loaded
-  command -v nvm >/dev/null 2>&1 || source "$(brew --prefix nvm)/nvm.sh"
+  source "$(brew --prefix nvm)/nvm.sh"
 
-  i_log "Installing the latest version of node"
-  nvm install node >>"$LOGFILE" 2>&1
-  nvm alias default node >>"$LOGFILE" 2>&1
+  echo "Installing the latest version of node"
+  nvm install node 
+  nvm alias default node 
   hash -r
 
-  i_log "Configuring yarn"
+  echo "Configuring yarn"
   yarn config set init-author-name "$NAME"
   yarn config set init-author-email "$EMAIL"
   yarn config set init-license "MIT"
   yarn config set yarn-offline-mirror .yarn-offline-cache
   yarn config set yarn-offline-mirror-pruning true
 
-  i_log "Installing basic node tools"
-  nvm use node >>"$LOGFILE" 2>&1
-  yarn global add "${NODE_MODULES[@]}" >>"$LOGFILE" 2>&1
+  echo "Installing basic node tools"
+  nvm use node 
+  yarn global add "${NODE_MODULES[@]}" 
   hash -r
 }
 
 install_or_update_python() {
-  i_log "Intalling pip"
-  easy_install-2.7 pip >>"$LOGFILE" 2>&1
-  easy_install-3.6 pip >>"$LOGFILE" 2>&1
+  echo "Intalling pip"
+  easy_install pip 
 
-  i_log "Installing/updating defaults libs and tools"
-  pip2 install -U "${PYTHON_PIPS[@]}" >>"$LOGFILE" 2>&1
-  pip3 install -U "${PYTHON_PIPS[@]}" >>"$LOGFILE" 2>&1
+  echo "Installing/updating defaults libs and tools"
+  pip install -U "${PYTHON_PIPS[@]}" >>"$LOGFILE" 2>&1
 }
 
 install_or_update_ruby() {
-  i_log "Installing latest Ruby"
-  rbenv install "$LATEST_RUBY" --skip-existing >>"$LOGFILE" 2>&1
-  rbenv local "$LATEST_RUBY" >>"$LOGFILE" 2>&1
-  echo "$LATEST_RUBY" > "$HOME/.ruby-version"
+  echo "Installing latest Ruby"
+  rbenv install "$RUBY_VERSION" --skip-existing 
+  rbenv local "$RUBY_VERSION"
+  echo "$RUBY_VERSION" > "$HOME/.ruby-version"
 
-  i_log "Installing/updating defaults libs and tools"
-  gem install "${RUBY_GEMS[@]}" --no-ri --no-rdoc >>"$LOGFILE" 2>&1
+  echo "Installing/updating defaults libs and tools"
+  gem install "${RUBY_GEMS[@]}" --no-ri --no-rdoc 
 }
 
 install_or_update_rust() {
-  i_log "Installing rust"
-  rustup update stable >>"$LOGFILE" 2>&1
-  rustup component add rls-preview rust-analysis rust-src rustfmt-preview
-  cargo install --force rustsym
+  echo "Installing rust"
+  rustup update stable 
 }
 
 install_vim_plugins() {
-  i_log "Installing/Updating vim plugins"
-  if [ ! -e "$HOME/.vim/autoload/plug.vim" ]; then
-    curl -fLo "$HOME/.vim/autoload/plug.vim" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  fi 
+  echo "Installing/Updating vim plugins"
+  curl -fLo "$HOME/.vim/autoload/plug.vim" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   vim -E +"PlugInstall" +qall
 }
 
-# Log to both stdout and output file (w/ prefix)
-i_log() {
-  echo "$@"
-  echo ">>>>" "$@" >>"$LOGFILE"
-}
 
 main
