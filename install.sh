@@ -47,6 +47,7 @@ main() {
   install_or_update_ruby
   install_or_update_rust
   install_vim_plugins
+  cleanup
 
   trap - EXIT
 
@@ -197,5 +198,14 @@ install_vim_plugins() {
   vim -E +"PlugInstall" +qall
 }
 
+cleanup() {
+  echo 'Cleanup Homebrew Cache...'
+  brew cleanup --force -s
+  brew cask cleanup
+  rm -rfv /Library/Caches/Homebrew/*
+  brew tap --repair
+  echo 'Cleanup gems...'
+  gem cleanup &>/dev/null
+}
 
 main
