@@ -15,7 +15,7 @@ EMAIL="aurnoce@gmail.com"
 DOTFILES="$HOME/.dotfiles"
 LATEST_RUBY="2.4.1"
 export MANPATH="/usr/local/man"
-LOGFILE="$DOTFILES/install.log"
+LOGFILE="$HOME/install.log"
 
 # List of components to install
 PYTHON_PIPS=(httpie scipy matplotlib jupyter virtualenv virtualenvwrapper)
