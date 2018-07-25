@@ -10,6 +10,8 @@
 set -e
 set -u
 
+NAME="Aurélien Noce"
+EMAIL="aurnoce@gmail.com"
 DOTFILES="$HOME/.dotfiles"
 LATEST_RUBY="2.4.1"
 export MANPATH="/usr/local/man"
@@ -119,8 +121,6 @@ update_symlinks() {
   [ -e "$HOME/.mutt/mutt-colors-solarized-dark-256.muttrc" ] || ln -s "$DOTFILES/mutt-colors-solarized-dark-256.muttrc" "$HOME/.mutt/mutt-colors-solarized-dark-256.muttrc"
   [ -e "$HOME/.signature" ] || ln -s "$DOTFILES/signature" "$HOME/.signature"
   [ -e "$HOME/.mailcap" ] || ln -s "$DOTFILES/mailcap" "$HOME/.mailcap"
-  # offline yarn
-  [ -e "$HOME/.yarnrc" ] || ln -s "$DOTFILES/yarnrc" "$HOME/.yarnrc"
 }
 
 install_or_update_homebrew() {
@@ -149,6 +149,13 @@ install_or_update_node() {
   nvm install node >>"$LOGFILE" 2>&1
   nvm alias default node >>"$LOGFILE" 2>&1
   hash -r
+
+  i_log "Configuring yarn"
+  yarn config set init-author-name "$NAME"
+  yarn config set init-author-email "$EMAIL"
+  yarn config set init-license "MIT"
+  yarn config set yarn-offline-mirror .yarn-offline-cache
+  yarn config set yarn-offline-mirror-pruning true
 
   i_log "Installing basic node tools"
   nvm use node >>"$LOGFILE" 2>&1

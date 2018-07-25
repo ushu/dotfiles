@@ -1,7 +1,11 @@
-# First run $ brew tap Homebrew/bundle
+# First run 
+# 
+#   $ brew tap Homebrew/bundle
+#
 
 # Update common Unix tools
 brew "git"
+brew "git-lfs"
 brew "wget"
 brew "curl"
 brew "gawk"
@@ -25,7 +29,6 @@ brew "imagemagick"
 brew "flow"
 brew "editorconfig"
 brew "heroku"
-brew "antlr"
 brew "carthage"
 brew "watchman"
 
@@ -107,9 +110,14 @@ cask "opera"
 cask "java" unless system "/usr/libexec/java_home --failfast >/dev/null 2>&1"
 
 # Dev Tools
+brew "antlr" # <- needs java !
 cask "atom"
 cask "visual-studio-code"
 cask "gitbook-editor"
+# Android
+cask "android-studio"
+cask "android-sdk"
+cask "android-ndk"
 
 # Misc
 cask "gpg-suite"
@@ -121,7 +129,6 @@ cask "vlc"
 
 # JetBrains IDEs
 cask "jetbrains-toolbox"
-cask "android-studio"
 
 ###################################
 # Install App Store apps with mas #
@@ -156,8 +163,4 @@ mas "Skitch", id: 425955336
 tap "caskroom/fonts"
 cask "font-inconsolata"
 cask "font-fira-code"
-
-# Git-redate
-tap "PotatoLabs/homebrew-git-redate"
-brew "git-redate"
 
