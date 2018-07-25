@@ -24,7 +24,7 @@ NODE_MODULES=(express create-react-app react-native create-react-native-app)
 
 main() {
   # Reset logfile
-  echo "BOOTING INSTALL SCRIPT @ $(date)" >"$LOGFILE"
+  echo "BOOTING INSTALL SCRIPT @ $(date)"
 
   echo "🚀 🚀  Starting the install process 🚀 🚀"
   echo
@@ -173,7 +173,7 @@ install_or_update_python() {
   easy_install pip 
 
   echo "Installing/updating defaults libs and tools"
-  pip install -U "${PYTHON_PIPS[@]}" >>"$LOGFILE" 2>&1
+  pip install -U "${PYTHON_PIPS[@]}" 
 }
 
 install_or_update_ruby() {
