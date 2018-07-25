@@ -80,6 +80,7 @@ cask "gpg-suite"
 cask "dropbox"
 cask "launchrocket"
 cask "vlc"
+cask "omnidisksweeper"
 
 # JetBrains IDEs
 cask "jetbrains-toolbox"

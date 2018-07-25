@@ -115,7 +115,7 @@ update_symlinks() {
   [ -e "$HOME/.signature" ] || ln -s "$DOTFILES/signature" "$HOME/.signature"
   [ -e "$HOME/.mailcap" ] || ln -s "$DOTFILES/mailcap" "$HOME/.mailcap"
   # VSCode config
-  let vscode_home="$HOME/Library/Application Support/Code/User"
+  local vscode_home="$HOME/Library/Application Support/Code/User"
   [ -d "$vscode_home" ] || mkdir -p "$vscode_home"
   [ -e "$vscode_home/settings.json" ] || ln -s "$DOTFILES/vscode/settings.json" "$vscode_home/settings.json"
   [ -e "$vscode_home/keybindings.json" ] || ln -s "$DOTFILES/vscode/keybindings.json" "$vscode_home/keybindings.json"

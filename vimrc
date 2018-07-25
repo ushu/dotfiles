@@ -24,8 +24,16 @@ autocmd BufReadPost *
     \ endif
 
 " Enable indent & plugins
-let g:loaded_matchparen = 1
 filetype plugin indent on
+" & config default plugins
+let g:loaded_matchparen = 1
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+
+" indent size
+set tabstop=2|set shiftwidth=2|set expandtab
+autocmd FileType go set tabstop=4|set shiftwidth=4|set noexpandtab
+autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
 
 " Custom types for config files
 augroup SyntaxEx
@@ -67,4 +75,5 @@ set wildmenu
 set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png
 set wildignore+=*.pdf,*.psd
 set wildignore+=node_modules/*,bower_components/*
+
 
