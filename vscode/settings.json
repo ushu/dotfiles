@@ -5,8 +5,8 @@
     "window.restoreWindows": "none",
     "window.restoreFullscreen": false,
     // police
-    "editor.fontFamily": "Fira Code",
-    "editor.fontSize": 14,
+    "editor.fontFamily": "Fira Code, Monaco",
+    "editor.fontSize": 12,
     "editor.fontLigatures": true,
     // curseur
     "editor.cursorStyle": "block",
@@ -41,5 +41,5 @@
             ]
         }
     ],
-    "window.zoomLevel": 0
+    "window.zoomLevel": -1
 }

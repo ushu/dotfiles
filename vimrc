@@ -7,6 +7,7 @@ set novisualbell
 set backspace=indent,eol,start
 set shell=bash
 set wildmode=longest,list,full
+set visualbell
 
 " Allow multiple edition on a file
 set nobackup
@@ -37,7 +38,8 @@ autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
 
 " Custom types for config files
 augroup SyntaxEx
-  autocmd! BufRead Brewfile,Gemfile,Podfile,VagrantFile,Cheffile setlocal ft=ruby
+  autocmd! BufNewFile,BufRead Brewfile,Gemfile,Podfile,VagrantFile,Cheffile setlocal ft=ruby
+  autocmd! BufNewFile,BufRead .prettierrc setlocal ft=json
   autocmd! BufNewFile,BufRead .pryrc,*.jbuilder setlocal filetype=ruby
   autocmd! BufNewFile,BufRead *.ts setlocal filetype=typescript
   autocmd! BufNewFile,BufRead *.ex,*.exs,*.eex setlocal filetype=elixir

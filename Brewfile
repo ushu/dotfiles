@@ -14,6 +14,7 @@ brew "pkg-config"
 brew "vim", args: ["with-python", "with-lua", "with-python3"]
 brew "phantomjs"
 brew "imagemagick"
+brew "ffmpeg"
 brew "watchman"
 brew "heroku"
 
@@ -69,6 +70,7 @@ cask "java" unless system "/usr/libexec/java_home --failfast >/dev/null 2>&1"
 # Dev Tools
 brew "antlr" # <- needs java !
 cask "visual-studio-code"
+cask "google-cloud-sdk"
 # Android
 cask "android-studio"
 cask "android-sdk"
