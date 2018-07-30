@@ -19,7 +19,7 @@ RUBY_VERSION="2.5.1"
 export MANPATH="/usr/local/man"
 
 # List of components to install
-PYTHON_PIPS=(httpie scipy matplotlib jupyter)
+PYTHON_PIPS=(httpie scipy matplotlib jupyter virtualenv virtualenvwrapper)
 RUBY_GEMS=(rails sass jekyll)
 NODE_MODULES=(express create-react-app react-native create-react-native-app)
 GO_PACKAGES=("golang.org/x/tools/cmd/goimports")
@@ -97,29 +97,29 @@ update_symlinks() {
   # secrets
   [ -e "$HOME/.secrets" ] || touch "$HOME/.secrets"
   # vim config
-  [ -e "$HOME/.vimrc" ] || ln -s "$DOTFILES/vimrc" "$HOME/.vimrc"
-  [ -e "$HOME/.editorconfig" ] || ln -s "$DOTFILES/editorconfig" "$HOME/.editorconfig"
+  [ -e "$HOME/.vimrc" ] || [ -L "$HOME/.vimrc"] || ln -s "$DOTFILES/vimrc" "$HOME/.vimrc"
+  [ -e "$HOME/.editorconfig" ] || [ -L "$HOE/.editorconfig" ] || ln -s "$DOTFILES/editorconfig" "$HOME/.editorconfig"
   # "root" git config
-  [ -e "$HOME/.gitconfig" ] || ln -s "$DOTFILES/gitconfig" "$HOME/.gitconfig"
+  [ -e "$HOME/.gitconfig" ] || [ -L "$HOME/.gitconfig" ] || ln -s "$DOTFILES/gitconfig" "$HOME/.gitconfig"
   # shell configs
-  [ -e "$HOME/.profile" ] || ln -s "$DOTFILES/profile" "$HOME/.profile"
-  [ -e "$HOME/.bashrc" ] || ln -s "$DOTFILES/bashrc" "$HOME/.bashrc"
-  [ -e "$HOME/.bash_custom_scripts" ] || ln -s "$DOTFILES/bash_custom_scripts" "$HOME/.bash_custom_scripts"
+  [ -e "$HOME/.profile" ] || [ -L "$HOME/.profile" ] || ln -s "$DOTFILES/profile" "$HOME/.profile"
+  [ -e "$HOME/.bashrc" ] || [ -L "$HOME/.bashrc" ] || ln -s "$DOTFILES/bashrc" "$HOME/.bashrc"
+  [ -e "$HOME/.bash_custom_scripts" ] || [ -L "$HOME/.bash_custom_scripts" ] || ln -s "$DOTFILES/bash_custom_scripts" "$HOME/.bash_custom_scripts"
   # sensible defaults for Ruby/Rails
-  [ -e "$HOME/.railsrc" ] || ln -s "$DOTFILES/railsrc" "$HOME/.railsrc"
+  [ -e "$HOME/.railsrc" ] || [ -L "$HOME/.railsrc" ] || ln -s "$DOTFILES/railsrc" "$HOME/.railsrc"
   [ -e "$HOME/.bundle" ] || mkdir "$HOME/.bundle"
-  [ -e "$HOME/.bundle/config" ] || ln -s "$DOTFILES/bundle.config" "$HOME/.bundle/config"
+  [ -e "$HOME/.bundle/config" ] || [ -L "$HOME/.bundle/config" ] || ln -s "$DOTFILES/bundle.config" "$HOME/.bundle/config"
   # mutt
   [ -e "$HOME/.mutt/cache" ] || mkdir -p "$HOME/.mutt/cache"
-  [ -e "$HOME/.mutt/muttrc" ] || ln -s "$DOTFILES/muttrc" "$HOME/.mutt/muttrc"
-  [ -e "$HOME/.signature" ] || ln -s "$DOTFILES/signature" "$HOME/.signature"
-  [ -e "$HOME/.mailcap" ] || ln -s "$DOTFILES/mailcap" "$HOME/.mailcap"
+  [ -e "$HOME/.mutt/muttrc" ] || [ -L "$HOME/.mutt/muttrc" ] || ln -s "$DOTFILES/muttrc" "$HOME/.mutt/muttrc"
+  [ -e "$HOME/.signature" ] || [ -L "$HOME/.signature" ] || ln -s "$DOTFILES/signature" "$HOME/.signature"
+  [ -e "$HOME/.mailcap" ] || [ -L "$HOME/.mailcap" ] || ln -s "$DOTFILES/mailcap" "$HOME/.mailcap"
   # VSCode config
   local vscode_home="$HOME/Library/Application Support/Code/User"
   [ -d "$vscode_home" ] || mkdir -p "$vscode_home"
-  [ -e "$vscode_home/settings.json" ] || ln -s "$DOTFILES/vscode/settings.json" "$vscode_home/settings.json"
-  [ -e "$vscode_home/keybindings.json" ] || ln -s "$DOTFILES/vscode/keybindings.json" "$vscode_home/keybindings.json"
-  [ -e "$vscode_home/locale.json" ] || ln -s "$DOTFILES/vscode/locale.json" "$vscode_home/locale.json"
+  [ -e "$vscode_home/settings.json" ] || [ -L "$vscode_home/settings.json" ] || ln -s "$DOTFILES/vscode/settings.json" "$vscode_home/settings.json"
+  [ -e "$vscode_home/keybindings.json" ] || [ -L "$vscode_home/keybindings.json" ] || ln -s "$DOTFILES/vscode/keybindings.json" "$vscode_home/keybindings.json"
+  [ -e "$vscode_home/locale.json" ] || [ -L "$vscode_home/locale.json" ] || ln -s "$DOTFILES/vscode/locale.json" "$vscode_home/locale.json"
 }
 
 install_or_update_homebrew() {
@@ -150,11 +150,13 @@ install_or_update_node() {
   hash -r
 
   echo "Configuring yarn"
-  yarn config set init-author-name "$NAME"
-  yarn config set init-author-email "$EMAIL"
-  yarn config set init-license "MIT"
-  yarn config set yarn-offline-mirror .yarn-offline-cache
-  yarn config set yarn-offline-mirror-pruning true
+  if [ ! -e "$HOME/.yarnrc" ]; then
+    yarn config set init-author-name "$NAME"
+    yarn config set init-author-email "$EMAIL"
+    yarn config set init-license "MIT"
+    yarn config set yarn-offline-mirror .yarn-offline-cache
+    yarn config set yarn-offline-mirror-pruning true
+  fi
 
   echo "Installing basic node tools"
   nvm use node 
@@ -163,11 +165,23 @@ install_or_update_node() {
 }
 
 install_or_update_python() {
-  echo "Intalling pip"
-  easy_install pip 
+  local python2_site_path=$(python2 -m site --user-site)
+  local python2_version=$(python2 -c "import sys;print(str(sys.version_info.major) + '.' + str(sys.version_info.minor))")
+  local python3_site_path=$(python3 -m site --user-site)
+  local python3_version=$(python3 -c "import sys;print(str(sys.version_info.major) + '.' + str(sys.version_info.minor))")
+
+  # in case of re-install, we check the permissions are still valid...
+  # (fix nasty sudo pip...)
+  [ -d "$python2_site_path" ] && chown -R `whoami` "$python2_site_path"
+  [ -d "$python3_site_path" ] && chown -R `whoami` "$python3_site_path"
+
+  echo "Intalling pip (using easy_install)"
+  "easy_install-${python2_version}" pip
+  "easy_install-${python3_version}" pip
 
   echo "Installing/updating defaults libs and tools"
   pip install -U "${PYTHON_PIPS[@]}" 
+  pip3 install -U "${PYTHON_PIPS[@]}" 
 }
 
 install_or_update_ruby() {
@@ -177,12 +191,16 @@ install_or_update_ruby() {
   echo "$RUBY_VERSION" > "$HOME/.ruby-version"
 
   echo "Installing/updating defaults libs and tools"
-  gem install "${RUBY_GEMS[@]}" --no-ri --no-rdoc 
+  /Users/ushu/.rbenv/shims/gem install "${RUBY_GEMS[@]}" --no-ri --no-rdoc 
 }
 
 install_or_update_rust() {
   echo "Installing rust"
-  rustup update stable 
+  if [ command -v rustup ]; then
+    rustup update stable 
+  else
+    rustup-init -y
+  fi
 }
 
 cleanup() {

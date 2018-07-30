@@ -72,9 +72,9 @@ source /usr/local/etc/bash_completion.d/git-completion.bash
 
 alias l="git lg"
 alias cl="git changelog master..HEAD"
-alias d="git dc"
+alias d="git diff --color"
 alias s="git status"
-alias ac="git aa && git ci"
+alias ac="git add --all && git ci"
 alias ci="git ci"
 alias ginit="git init && git commit --allow-empty -m'Initial commit'"
 alias be="bundle exec"
@@ -100,9 +100,15 @@ if [ -e "$HOME/.bash_local_scripts" ]; then
 fi
 
 # Setup virtualenvwrapper
+if [ -z "$PYTHON3_VERSION" ]; then
+    PYTHON3_VERSION=$(python3 --version | cut -d' ' -f2 | cut -d'.' -f1,2)
+    echo "# Installed Python3 version" >> ~/.bashrc_cache
+    echo "PYTHON3_VERSION=\"$PYTHON3_VERSION\"" >> ~/.bashrc_cache
+    echo >> ~/.bashrc_cache
+fi
 if [ -e "/usr/local/bin/virtualenvwrapper.sh" ];then
   export WORKON_HOME="$HOME/.virtualenvs"
-  export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3.6
+  export VIRTUALENVWRAPPER_PYTHON="/usr/local/bin/python${PYTHON3_VERSION}"
   source "/usr/local/bin/virtualenvwrapper.sh"
 fi
 
@@ -111,5 +117,4 @@ if [ -d /usr/local/Caskroom/google-cloud-sdk ];then
   source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc'
   source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc'
 fi
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 

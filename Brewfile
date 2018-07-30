@@ -36,8 +36,6 @@ brew "rbenv"
 
 # Python
 brew "python"
-brew "pyenv-virtualenv"
-brew "pyenv-virtualenvwrapper"
 
 # Node & Javascript
 brew "nvm"
