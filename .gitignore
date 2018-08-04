@@ -8,3 +8,5 @@
 .vim/.netrwhist
 .vim/colors
 *.log
+
+.ruby-version

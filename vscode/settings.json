@@ -13,6 +13,9 @@
 
     // formattage de code
     "editor.formatOnSave": false,
+    "editor.quickSuggestions": false, 
+    "editor.suggestOnTriggerCharacters": false,
+    "editor.parameterHints": false,
 
     // Enable emmet in JS
     "emmet.includeLanguages": {
