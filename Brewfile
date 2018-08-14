@@ -79,7 +79,7 @@ cask "android-sdk"
 cask "gpg-suite"
 cask "dropbox"
 cask "launchrocket"
-cask "vlc"
+#cask "vlc"
 cask "omnidisksweeper"
 
 # JetBrains IDEs
