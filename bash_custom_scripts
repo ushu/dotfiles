@@ -401,6 +401,11 @@ save_quiver() {
   (cd "$HOME/WIP/quiver_library"; git checkout master; git pull origin master)
   quiver_to_markdown "$ICLOUD/Quiver/Quiver.qvlibrary" "$HOME/WIP/quiver_library"
   (cd "$HOME/WIP/quiver_library"; git add --all && git commit && git push origin)
+  # if Dropbox is installed and Quiver is sync, we also copy the contents
+  local DROPBOX_HOME="$HOME/Dropbox (Personnelle)"
+  if [ -d "$DROPBOX_HOME" ] && [ -d "$DROPBOX_HOME/Quiver.qvlibrary" ]; then
+    cp -r "$ICLOUD/Quiver/Quiver.qvlibrary" "$DROPBOX_HOME"
+  fi
 }
 
 #
