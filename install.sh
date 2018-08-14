@@ -54,7 +54,6 @@ main() {
   install_or_update_python
   install_or_update_ruby
   install_or_update_rust
-  install_vim_plugins
   cleanup
 
   trap - EXIT
@@ -205,7 +204,7 @@ install_or_update_rust() {
 
 cleanup() {
   echo 'Cleanup Homebrew Cache...'
-  brew cleanup --force -s
+  brew cleanup -s
   brew cask cleanup
   rm -rfv /Library/Caches/Homebrew/*
   brew tap --repair
