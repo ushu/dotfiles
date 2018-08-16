@@ -9,6 +9,10 @@ brew "git"
 brew "git-lfs"
 brew "mutt"
 
+# Python
+brew "python3", args: [ "build-from-source" ]
+brew "python@2", args: [ "build-from-source" ]
+
 # Development tools
 brew "pkg-config"
 brew "vim", args: ["with-python", "with-lua", "with-python3"]
@@ -25,7 +29,7 @@ brew "memcached"
 
 # Common libraries
 brew "libyaml"
-brew "libxml2", args:[ "with-python" ]
+brew "libxml2", args: [ "with-python" ]
 
 # Better tooling
 brew "bash-git-prompt"
@@ -34,9 +38,6 @@ brew "fzf"
 
 # Ruby
 brew "rbenv"
-
-# Python
-brew "python"
 
 # Node & Javascript
 brew "nvm"

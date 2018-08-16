@@ -49,6 +49,17 @@ main() {
 
   retreive_dotfiles
   update_symlinks
+
+  # For Mojave
+  if [ ! -e /usr/include/zlib.h ];then
+    if  [ -e /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg ];then
+      echo "installing CLT headers..."
+      sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
+    else
+      echo "Missing headers: install CLT first !"
+    fi
+  fi
+
   install_or_update_homebrew
   install_or_update_node
   install_or_update_python
@@ -190,7 +201,7 @@ install_or_update_ruby() {
   echo "$RUBY_VERSION" > "$HOME/.ruby-version"
 
   echo "Installing/updating defaults libs and tools"
-  /Users/ushu/.rbenv/shims/gem install "${RUBY_GEMS[@]}" --no-ri --no-rdoc 
+  "$HOME/.rbenv/shims/gem" install "${RUBY_GEMS[@]}" --no-ri --no-rdoc 
 }
 
 install_or_update_rust() {
