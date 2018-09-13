@@ -8,6 +8,8 @@ brew "bash"
 brew "git"
 brew "git-lfs"
 brew "mutt"
+brew "curl"
+brew "wget"
 
 # Python
 brew "python3", args: [ "build-from-source" ]
@@ -44,15 +46,19 @@ brew "nvm"
 brew "yarn"
 brew "flow"
 
+# Go
+brew "go"
+brew "dep"
+
 # Lots of languages
 brew "elixir"
 brew "rustup"
-brew "go"
 brew "elm"
 
 # Additional dev tools
 brew "cmake", args: ["with-completion"]
 brew "carthage"
+brew "letencrypt"
 
 ###################################
 # Install GUI apps with Brew Cask #
@@ -67,6 +73,9 @@ cask "firefox"
 
 # Java
 cask "java" unless system "/usr/libexec/java_home --failfast >/dev/null 2>&1"
+
+# Java
+cask "googleappengine"
 
 # Dev Tools
 brew "antlr" # <- needs java !

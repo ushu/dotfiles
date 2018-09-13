@@ -67,6 +67,13 @@ main() {
   install_or_update_rust
   cleanup
 
+  # Prepare bin directory
+  [ -d "$HOME/bin" ] || mkdir "$HOME/bin"
+  # And install other deps
+  pushd "$HOME/bin"
+    #...
+  popd
+
   trap - EXIT
 
   echo

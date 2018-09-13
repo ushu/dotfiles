@@ -7,6 +7,9 @@ else
     touch ~/.bashrc_cache
 fi
 
+# Add HOME/bin to PATh
+[ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
+
 if [ -z "$BREW_PREFIX" ]; then
     BREW_PREFIX=$(brew --prefix)
     echo "# Generic prefix for Homebrew installs" >> ~/.bashrc_cache
@@ -42,7 +45,14 @@ nvm() {
 }
 
 # GO
-export GOPATH="$HOME"
+
+if [ -d "/Volumes/WIP" ]; then
+  export WIPPATH="/Volumes/WIP"
+  export GOPATH="$WIPPATH/go"
+  [ -d "$GOPATH" ] || mkdir "$GOPATH"
+else
+  export GOPATH="$HOME"
+fi
 export GOMAXPROCS=1
 export PATH="$PATH:$GOPATH/bin"
 
@@ -113,8 +123,9 @@ if [ -e "/usr/local/bin/virtualenvwrapper.sh" ];then
 fi
 
 # Sources completions & co
-if [ -d /usr/local/Caskroom/google-cloud-sdk ];then
+if [ -d /usr/local/Caskroom/google-cloud-sdk/latest ];then
   source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc'
   source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc'
 fi
+
 
