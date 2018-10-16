@@ -72,10 +72,19 @@ cnoremap %% <C-R>=expand('%:h').'/'<CR>
 " <leader>e => open current directory
 map <leader>e :e %%<CR>
 " <leader>i => open w/ prefix for fuzzy search
-map <leader>i :e **/*
-set wildmenu
-set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png
-set wildignore+=*.pdf,*.psd
-set wildignore+=node_modules/*,bower_components/*
+if filereadable("/usr/local/opt/fzf/plugin/fzf.vim")
+  source /usr/local/opt/fzf/plugin/fzf.vim
+  map <leader>i :FZF<CR>
+  map <leader>/ :Ag<CR>
+  map <leader>l :Lines<CR>
+  map <leader>o :Tags<CR>
+else
+  " manual "search"
+  map <leader>i :e **/*
+  set wildmenu
+  set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png
+  set wildignore+=*.pdf,*.psd
+  set wildignore+=node_modules/*,bower_components/*
+endif
 
 
