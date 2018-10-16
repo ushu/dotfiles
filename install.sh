@@ -49,12 +49,30 @@ main() {
 
   retreive_dotfiles
   update_symlinks
+
+  # For Mojave
+  if [ ! -e /usr/include/zlib.h ];then
+    if  [ -e /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg ];then
+      echo "installing CLT headers..."
+      sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
+    else
+      echo "Missing headers: install CLT first !"
+    fi
+  fi
+
   install_or_update_homebrew
   install_or_update_node
   install_or_update_python
   install_or_update_ruby
   install_or_update_rust
   cleanup
+
+  # Prepare bin directory
+  [ -d "$HOME/bin" ] || mkdir "$HOME/bin"
+  # And install other deps
+  pushd "$HOME/bin"
+    #...
+  popd
 
   trap - EXIT
 
@@ -97,7 +115,7 @@ update_symlinks() {
   [ -e "$HOME/.secrets" ] || touch "$HOME/.secrets"
   # vim config
   [ -e "$HOME/.vimrc" ] || [ -L "$HOME/.vimrc"] || ln -s "$DOTFILES/vimrc" "$HOME/.vimrc"
-  [ -e "$HOME/.editorconfig" ] || [ -L "$HOE/.editorconfig" ] || ln -s "$DOTFILES/editorconfig" "$HOME/.editorconfig"
+  [ -e "$HOME/.editorconfig" ] || [ -L "$HOME/.editorconfig" ] || ln -s "$DOTFILES/editorconfig" "$HOME/.editorconfig"
   # "root" git config
   [ -e "$HOME/.gitconfig" ] || [ -L "$HOME/.gitconfig" ] || ln -s "$DOTFILES/gitconfig" "$HOME/.gitconfig"
   # shell configs
@@ -190,7 +208,7 @@ install_or_update_ruby() {
   echo "$RUBY_VERSION" > "$HOME/.ruby-version"
 
   echo "Installing/updating defaults libs and tools"
-  /Users/ushu/.rbenv/shims/gem install "${RUBY_GEMS[@]}" --no-ri --no-rdoc 
+  "$HOME/.rbenv/shims/gem" install "${RUBY_GEMS[@]}" --no-ri --no-rdoc 
 }
 
 install_or_update_rust() {
