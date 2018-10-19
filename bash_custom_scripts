@@ -4,6 +4,8 @@
 randompwd() {
   openssl rand -base64 2048 | tr '\n' '+' | sed -e 's/[\n\/=+]//g' | cut -c1-${1:-50} | head -n1
 }
+# exclude results from bash history (for obvious reasons...)
+export HISTIGNORE="randompwd $HISTIGNORE"
 
 #
 # Open Chrome Canary with CORS disables
@@ -452,4 +454,13 @@ term256_bgcolor() {
   echo "or"
   echo -e "     printf \033[34m\"\\e[48;5;\033[91mCOLOR_CODE\033[34mm\"\033[0m"
   echo
+}
+
+sri() {
+  local file="$1"
+  if [ -z "$file" ]; then
+    echo "Usage: sri FILE"
+    return
+  fi
+  cat "$file" | openssl dgst -sha384 -binary | openssl enc -base64 -A
 }
