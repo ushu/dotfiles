@@ -28,6 +28,7 @@ icloud() {
 #
 budo-create() {
   local project_name="$1"
+  local babel_version="7.0.0"
   if [ -z "$project_name" ]; then
     echo "Usage: new-budo PROJECT_NAME"
     return
@@ -45,13 +46,22 @@ budo-create() {
   "main": "index.js",
   "scripts": {
     "start": "budo index.js --live --open -- -t babelify"
+  },
+  "devDependencies": {
+    "@babel/core": "$babel_version",
+    "@babel/plugin-proposal-class-properties": "$babel_version",
+    "@babel/plugin-proposal-object-rest-spread": "$babel_version",
+    "@babel/preset-env": "$babel_version",
+    "babelify": "^10.0.0",
+    "browserify": "^16.2.3",
+    "budo": "^11.5.0"
   }
 }
 EOF
   cat >.babelrc <<-EOF
 {
   "presets": [ 
-    ["env", {
+    ["@babel/preset-env", {
       "targets": {
         "browsers": ["last 2 versions", "safari >= 7"]
       }
@@ -59,8 +69,8 @@ EOF
   ],
   "ignore" : ["/node_modules/*"],
   "plugins": [
-    "transform-class-properties",
-    "transform-object-rest-spread"
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/plugin-proposal-class-properties"
   ]
 }
 EOF
@@ -86,10 +96,7 @@ EOF
 EOF
   git init .
   git ci -m "Initial commit" --allow-empty
-  yarn add --dev \
-      budo babelify browserify \
-      babel-core babel-preset-env \
-      babel-plugin-transform-class-properties babel-plugin-transform-object-rest-spread || return
+  yarn 
   git add .
   git ci -m "Add starter code"
 
