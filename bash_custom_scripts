@@ -471,3 +471,12 @@ sri() {
   fi
   cat "$file" | openssl dgst -sha384 -binary | openssl enc -base64 -A
 }
+
+tarball() {
+  local file_or_dir="$1"
+  if [ -z "$file_or_dir" ]; then
+    echo "Usage: tarball FILE_OR_DIRECTORY"
+    return
+  fi
+  tar -zcf "$file_or_dir.tar.gz" "$file_or_dir"
+}
