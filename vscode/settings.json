@@ -33,17 +33,20 @@
     "vim.useCtrlKeys": true,
     "vim.useSystemClipboard": true,
     "vim.hlsearch": true,
-    "vim.otherModesKeyBindings": [
+    "vim.normalModeKeyBindings": [
         {
-            "before": [ "<leader>", "s" ],
-            "after": [],
-            "commands": [
-                {
-                    "command": "workbench.action.splitEditor",
-                    "args": []
-                }
-            ]
+            "before": [ "<leader>", "v" ],
+            "commands": [ "workbench.action.splitEditor" ]
+        },
+        {
+            "before": [ "<leader>", "d" ],
+            "commands": [ "workbench.action.closeActiveEditor" ]
         }
     ],
+    "vim.handleKeys": {
+        "<ESC>": false,
+        "<C-h>": true,
+        "<C-l>": true
+    },
     "typescript.updateImportsOnFileMove.enabled": "always"
 }
