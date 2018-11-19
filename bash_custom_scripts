@@ -4,6 +4,8 @@
 randompwd() {
   openssl rand -base64 2048 | tr '\n' '+' | sed -e 's/[\n\/=+]//g' | cut -c1-${1:-50} | head -n1
 }
+# exclude results from bash history (for obvious reasons...)
+export HISTIGNORE="randompwd $HISTIGNORE"
 
 #
 # Open Chrome Canary with CORS disables
@@ -26,6 +28,7 @@ icloud() {
 #
 budo-create() {
   local project_name="$1"
+  local babel_version="7.0.0"
   if [ -z "$project_name" ]; then
     echo "Usage: new-budo PROJECT_NAME"
     return
@@ -43,13 +46,22 @@ budo-create() {
   "main": "index.js",
   "scripts": {
     "start": "budo index.js --live --open -- -t babelify"
+  },
+  "devDependencies": {
+    "@babel/core": "$babel_version",
+    "@babel/plugin-proposal-class-properties": "$babel_version",
+    "@babel/plugin-proposal-object-rest-spread": "$babel_version",
+    "@babel/preset-env": "$babel_version",
+    "babelify": "^10.0.0",
+    "browserify": "^16.2.3",
+    "budo": "^11.5.0"
   }
 }
 EOF
   cat >.babelrc <<-EOF
 {
   "presets": [ 
-    ["env", {
+    ["@babel/preset-env", {
       "targets": {
         "browsers": ["last 2 versions", "safari >= 7"]
       }
@@ -57,8 +69,8 @@ EOF
   ],
   "ignore" : ["/node_modules/*"],
   "plugins": [
-    "transform-class-properties",
-    "transform-object-rest-spread"
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/plugin-proposal-class-properties"
   ]
 }
 EOF
@@ -84,10 +96,7 @@ EOF
 EOF
   git init .
   git ci -m "Initial commit" --allow-empty
-  yarn add --dev \
-      budo babelify browserify \
-      babel-core babel-preset-env \
-      babel-plugin-transform-class-properties babel-plugin-transform-object-rest-spread || return
+  yarn 
   git add .
   git ci -m "Add starter code"
 
@@ -452,4 +461,13 @@ term256_bgcolor() {
   echo "or"
   echo -e "     printf \033[34m\"\\e[48;5;\033[91mCOLOR_CODE\033[34mm\"\033[0m"
   echo
+}
+
+sri() {
+  local file="$1"
+  if [ -z "$file" ]; then
+    echo "Usage: sri FILE"
+    return
+  fi
+  cat "$file" | openssl dgst -sha384 -binary | openssl enc -base64 -A
 }

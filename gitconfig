@@ -9,7 +9,7 @@
 	ri = "!f() { git rebase -i HEAD~"$1"; }; f"
 [user]
 	name = Aurélien Noce
-	email = aurnoce@gmail.com
+	email = aurelien@noce.fr
 [core]
 	editor = /usr/bin/env vim
 	excludesfile = $HOME/.gitignore_global

@@ -27,7 +27,11 @@ if [ -z "$JAVA_HOME" ]; then
     echo "JAVA_HOME=\"$JAVA_HOME\"" >> ~/.bashrc_cache
     echo >> ~/.bashrc_cache
 fi
-export ANDROID_HOME="${HOME}/Library/Android/sdk"
+if [ -d "/Volumes/Storage/android-sdk" ]; then
+  export ANDROID_HOME="/Volumes/Storage/android-sdk"
+else
+  export ANDROID_HOME="${HOME}/Library/Android/sdk"
+fi
 export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools"
 
 # NVM

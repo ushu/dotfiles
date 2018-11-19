@@ -18,7 +18,6 @@ brew "python@2", args: [ "build-from-source" ]
 # Development tools
 brew "pkg-config"
 brew "vim", args: ["with-python", "with-lua", "with-python3"]
-brew "phantomjs"
 brew "imagemagick"
 brew "ffmpeg"
 brew "watchman"
@@ -58,7 +57,7 @@ brew "elm"
 # Additional dev tools
 brew "cmake", args: ["with-completion"]
 brew "carthage"
-brew "letencrypt"
+brew "letsencrypt"
 
 ###################################
 # Install GUI apps with Brew Cask #
@@ -81,6 +80,7 @@ cask "googleappengine"
 brew "antlr" # <- needs java !
 cask "visual-studio-code"
 cask "google-cloud-sdk"
+cask "phantomjs"
 # Android
 cask "android-studio"
 cask "android-sdk"
