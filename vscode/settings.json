@@ -10,13 +10,11 @@
     "editor.fontLigatures": true,
     // curseur
     "editor.cursorStyle": "block",
-
     // formattage de code
-    "editor.formatOnSave": false,
-    "editor.quickSuggestions": true, 
+    "editor.formatOnSave": true,
+    "editor.quickSuggestions": true,
     "editor.suggestOnTriggerCharacters": true,
-    "editor.parameterHints.enabled": false,
-
+    "editor.parameterHints.enabled": true,
     // Enable emmet in JS
     "emmet.includeLanguages": {
         "javascript": "javascriptreact",
@@ -24,7 +22,6 @@
     },
     "emmet.showSuggestionsAsSnippets": true,
     "emmet.triggerExpansionOnTab": true,
-
     // VIM mode
     //"vim.enableNeovim": true,
     "vim.leader": ",",
@@ -33,17 +30,30 @@
     "vim.useCtrlKeys": true,
     "vim.useSystemClipboard": true,
     "vim.hlsearch": true,
-    "vim.otherModesKeyBindings": [
+    "vim.normalModeKeyBindings": [
         {
-            "before": [ "<leader>", "s" ],
-            "after": [],
+            "before": [
+                "<leader>",
+                "v"
+            ],
             "commands": [
-                {
-                    "command": "workbench.action.splitEditor",
-                    "args": []
-                }
+                "workbench.action.splitEditor"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "d"
+            ],
+            "commands": [
+                "workbench.action.closeActiveEditor"
             ]
         }
     ],
+    "vim.handleKeys": {
+        "<ESC>": false,
+        "<C-h>": true,
+        "<C-l>": true
+    },
     "typescript.updateImportsOnFileMove.enabled": "always"
 }

@@ -24,9 +24,9 @@ brew "watchman"
 brew "heroku"
 
 # DB & Cache servers
-brew "postgresql"
-brew "redis"
-brew "memcached"
+brew "postgresql", restart_service: :changed
+brew "redis", restart_service: :changed
+brew "memcached", restart_service: :changed
 
 # Common libraries
 brew "libyaml"

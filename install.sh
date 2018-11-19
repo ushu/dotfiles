@@ -213,7 +213,7 @@ install_or_update_ruby() {
 
 install_or_update_rust() {
   echo "Installing rust"
-  if [ command -v rustup ]; then
+  if command -v rustup; then
     rustup update stable 
   else
     rustup-init -y
