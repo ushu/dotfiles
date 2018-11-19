@@ -4,3 +4,6 @@
 [submodule "vim/pack/junegunn/start/fzf"]
 	path = vim/pack/junegunn/start/fzf
 	url = https://github.com/junegunn/fzf.vim
+[submodule "vim/pack/elixir-lang/opt/vim-elixir.git"]
+	path = vim/pack/elixir-lang/opt/vim-elixir.git
+	url = https://github.com/elixir-lang/vim-elixir.git

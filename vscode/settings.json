@@ -13,8 +13,9 @@
 
     // formattage de code
     "editor.formatOnSave": false,
-    "editor.quickSuggestions": false,
-    "editor.parameterHints": false,
+    "editor.quickSuggestions": true, 
+    "editor.suggestOnTriggerCharacters": true,
+    "editor.parameterHints.enabled": false,
 
     // Enable emmet in JS
     "emmet.includeLanguages": {
@@ -44,6 +45,5 @@
             ]
         }
     ],
-    "window.zoomLevel": -1,
     "typescript.updateImportsOnFileMove.enabled": "always"
 }
