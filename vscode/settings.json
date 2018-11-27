@@ -50,10 +50,24 @@
             ]
         }
     ],
+    "vim.visualModeKeyBindingsNonRecursive": [
+        {
+            "before": [
+                "="
+            ],
+            "after": [],
+            "commands": [
+                "editor.action.reindentlines",
+                "cancelSelection"
+            ]
+        }
+    ],
     "vim.handleKeys": {
         "<ESC>": false,
         "<C-h>": true,
         "<C-l>": true
     },
-    "typescript.updateImportsOnFileMove.enabled": "always"
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "editor.tabSize": 2,
+    "C_Cpp.autoAddFileAssociations": false
 }
