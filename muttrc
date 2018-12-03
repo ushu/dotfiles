@@ -1,6 +1,7 @@
 # Who I am
 set realname = "Aurélien Noce"
-set imap_user = "aurelien.noce@imagine-app.fr"
+set imap_user = "aurelien@noce.fr"
+set imap_pass = `security find-generic-password -w -a "aurelien@noce.fr" -l "IMAP Gandi (mutt)"`
 
 # Ordering
 set sort_aux = last-date-received
@@ -12,9 +13,8 @@ set charset      = utf-8
 set send_charset = utf-8
 
 # Edition options
-set from = "aurelien.noce@imagine-app.fr"
-set include = no
-#set move = yes # ask to archive read messages
+set from = "aurelien@noce.fr"
+set include = ask-no
 set imap_keepalive = 900
 
 # Enable cache
@@ -22,27 +22,17 @@ set header_cache = ~/.mutt/cache/headers
 set message_cachedir = ~/.mutt/cache/bodies
 set certificate_file = ~/.mutt/certificates
 
-# Remote servers
-set smtp_url = "smtp://aurelien.noce@imagine-app.fr@smtp.gmail.com:587/"
-# (lookup passowrd in keychain)
-set imap_pass = `security find-generic-password -w -s mutt -a "aurelien.noce@imagine-app.fr"`
-set smtp_pass = `security find-generic-password -w -s mutt -a "aurelien.noce@imagine-app.fr"`
-set smtp_authenticators = ‘gssapi:login’
-set imap_passive=yes
+set smtp_url = "smtp://$imap_user:$imap_pass@mail.gandi.net:587/"
+set from="aurelien@noce.fr"
+set use_from = yes
+set ssl_starttls=yes
 
-# Remote folders
-set folder="imaps://imap.gmail.com:993"
-set spoolfile = "+INBOX"
-set postponed="+[Gmail]/Drafts"
-#set mbox="+[Gmail]/All Mail"
-set mbox="+[Gmail]/Tous les messages"
-#set trash="+[Gmail]/Trash"
-set trash="+[Gmail]/Corbeille"
-#set record="+[Gmail]/Messages envoyés"
-unset record # les Gmail SMTP archive sent messages for me
+set folder="imaps://mail.gandi.net:993/"
+set spoolfile=$folder
+set record="=Sent Messages"
 
 # Other stuff
-set editor = "nvim"
+set editor = "vim"
 
 # Vim-like bindings
 # (taken from https://github.com/ulfalizer/Configuration-files/blob/master/mutt)
@@ -71,32 +61,27 @@ bind pager G bottom
 # "G" to fetch
 bind index f imap-fetch-mail
 bind index F sync-mailbox
+bind index M recall-message
 
 # Quick aliases
 alias par partners@imagine-app.fr (imagine-app Partners)
-alias rb raoul.barmat@imagine-app.fr (Raoul Barmat)
-alias rp raphael.prasquier@imagine-app.fr (Raphael Prasquier)
-alias xb xavier.boutanquoy@imagine-app.fr (Xavier Boutanquoy)
-alias fm flavian.mary@imagine-app.fr (Flavian Mary)
+alias so sophie@noce.fr (Sophie Noce)
+alias bois sebastien.Boisgerault@mines-paristech.fr (Sébastien Boisgerault)
+alias cam c.pomandechangy@gmail.com (Camille Poman de Changy)
 
 # Custom macros
 bind editor <space> noop
-macro index,pager y "<save-message>=[Gmail]/All Mail<enter><enter>" "Archive"
-#macro index,pager d "<save-message>=[Gmail]/Trash<enter><enter>" "Trash"
 bind  index,pager d  delete-message
 bind  index,pager D  delete-thread
 bind  index,pager L  copy-message # Tag
-bind  index,pager l  save-message # Tag & Archive
 bind  generic,index t  tag-entry # gmail uses "x" but we'll use vim-like "t"
 bind  pager t  tag-message # gmail uses "x" but we'll use vim-like "t"
 bind  index T  tag-thread # gmail uses "x" but we'll use vim-like "t"
 bind  index \CT  tag-pattern # gmail uses "x" but we'll use vim-like "t"
 bind  index,pager R  group-reply               # Reply all
-macro index gi "<change-folder>=INBOX<enter>" "Go to inbox"
-macro index ga "<change-folder>=[Gmail]/Tous les messages<enter>" "Go to all mail"
-macro index gd "<change-folder>=[Gmail]/Drafts<enter>" "Go to drafts"
-macro index gs "<change-folder>=[Gmail]/Messages envoyés<enter>" "Go to sent mails"
 macro pager O <pipe-entry>'urlview'<enter> 'Follow links with urlview'
 
 my_hdr Sensitivity: Private
+
+source "/Users/ushu/.mutt/mutt-colors-solarized-dark-256.muttrc"
 
