@@ -10,13 +10,11 @@
     "editor.fontLigatures": true,
     // curseur
     "editor.cursorStyle": "block",
-
     // formattage de code
-    "editor.formatOnSave": false,
-    "editor.quickSuggestions": true, 
+    "editor.formatOnSave": true,
+    "editor.quickSuggestions": true,
     "editor.suggestOnTriggerCharacters": true,
-    "editor.parameterHints.enabled": false,
-
+    "editor.parameterHints.enabled": true,
     // Enable emmet in JS
     "emmet.includeLanguages": {
         "javascript": "javascriptreact",
@@ -24,7 +22,6 @@
     },
     "emmet.showSuggestionsAsSnippets": true,
     "emmet.triggerExpansionOnTab": true,
-
     // VIM mode
     //"vim.enableNeovim": true,
     "vim.leader": ",",
@@ -35,12 +32,50 @@
     "vim.hlsearch": true,
     "vim.normalModeKeyBindings": [
         {
-            "before": [ "<leader>", "v" ],
-            "commands": [ "workbench.action.splitEditor" ]
+            "before": [
+                "<leader>",
+                "v"
+            ],
+            "commands": [
+                "workbench.action.splitEditor"
+            ]
         },
         {
-            "before": [ "<leader>", "d" ],
-            "commands": [ "workbench.action.closeActiveEditor" ]
+            "before": [
+                "<leader>",
+                "d"
+            ],
+            "commands": [
+                "workbench.action.closeActiveEditor"
+            ],
+            "before": [
+                "<leader>",
+                "v"
+            ],
+            "commands": [
+                "workbench.action.splitEditor"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "d"
+            ],
+            "commands": [
+                "workbench.action.closeActiveEditor"
+            ]
+        }
+    ],
+    "vim.visualModeKeyBindingsNonRecursive": [
+        {
+            "before": [
+                "="
+            ],
+            "after": [],
+            "commands": [
+                "editor.action.reindentlines",
+                "cancelSelection"
+            ]
         }
     ],
     "vim.handleKeys": {
@@ -48,5 +83,8 @@
         "<C-h>": true,
         "<C-l>": true
     },
-    "typescript.updateImportsOnFileMove.enabled": "always"
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "editor.tabSize": 2,
+    "C_Cpp.autoAddFileAssociations": false,
+    "window.zoomLevel": -1
 }
