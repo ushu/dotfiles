@@ -1,9 +1,12 @@
-[submodule ".vim/bundle/neobundle.vim"]
-	path = .vim/bundle/neobundle.vim
-	url = https://github.com/Shougo/neobundle.vim
 [submodule "vim/pack/junegunn/start/fzf"]
 	path = vim/pack/junegunn/start/fzf
 	url = https://github.com/junegunn/fzf.vim
-[submodule "vim/pack/elixir-lang/opt/vim-elixir.git"]
-	path = vim/pack/elixir-lang/opt/vim-elixir.git
-	url = https://github.com/elixir-lang/vim-elixir.git
+[submodule "vim/pack/sheerun/start/vim-polyglot"]
+	path = vim/pack/sheerun/start/vim-polyglot
+	url = https://github.com/sheerun/vim-polyglot
+[submodule "vim/pack/mattn/opt/emmet-vim"]
+	path = vim/pack/mattn/opt/emmet-vim
+	url = https://github.com/mattn/emmet-vim
+[submodule "vim/pack/w0rp/opt/ale"]
+	path = vim/pack/w0rp/opt/ale
+	url = https://github.com/w0rp/ale.git
