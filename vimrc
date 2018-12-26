@@ -8,6 +8,7 @@ set backspace=indent,eol,start
 set shell=bash
 set wildmode=longest,list,full
 set visualbell
+set updatetime=300
 
 " Allow multiple edition on a file
 set nobackup
@@ -44,12 +45,12 @@ augroup SyntaxEx
 augroup END
 
 " Optional plugins
+" EMMET for HTML/CSS
 let g:user_emmet_install_global = 0
 autocmd FileType html,css packadd emmet-vim
 autocmd FileType html,css EmmetInstall
-let g:ale_completion_enabled = 1
-autocmd FileType javascript,go packadd ale
-autocmd FileType javascript,go packadd coc.nvim
+" ALE for live linting
+autocmd BufNewFile,BufRead *.js,*.go packadd ale
 
 " Custom mappings
 let mapleader=","
@@ -92,4 +93,6 @@ else
   set wildignore+=*.pdf,*.psd
   set wildignore+=node_modules/*,bower_components/*
 endif
+
+
 
