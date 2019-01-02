@@ -159,6 +159,7 @@ install_or_update_homebrew() {
 
 install_or_update_node() {
   # Ensure nvm is loaded
+  export NVM_DIR=~/.nvm
   source "$(brew --prefix nvm)/nvm.sh"
 
   echo "Installing the latest version of node"
