@@ -21,6 +21,7 @@ brew "vim", args: ["with-python", "with-lua", "with-python3"]
 brew "imagemagick"
 brew "ffmpeg"
 brew "watchman"
+tap "heroku/brew"
 brew "heroku/brew/heroku"
 
 # DB & Cache servers
@@ -80,7 +81,7 @@ cask "googleappengine"
 brew "antlr" # <- needs java !
 cask "visual-studio-code"
 cask "google-cloud-sdk"
-cask "phantomjs"
+#cask "phantomjs"
 # Android
 cask "android-studio"
 cask "android-sdk"

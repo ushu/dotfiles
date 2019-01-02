@@ -104,7 +104,7 @@ retreive_dotfiles() {
     git pull --depth=1 --force -q 
   else
     echo "Retreiving files from github.com/ushu/dotfiles..."
-    git clone --recursive -q "$REPO" "$DOTFILES" 
+    git clone --recursive --depth 1 -q "$REPO" "$DOTFILES" 
   fi
 }
 
