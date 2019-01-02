@@ -114,7 +114,7 @@ update_symlinks() {
   # secrets
   [ -e "$HOME/.secrets" ] || touch "$HOME/.secrets"
   # vim config
-  [ -e "$HOME/.vimrc" ] || [ -L "$HOME/.vimrc"] || ln -s "$DOTFILES/vimrc" "$HOME/.vimrc"
+  [ -e "$HOME/.vimrc" ] || [ -L "$HOME/.vimrc" ] || ln -s "$DOTFILES/vimrc" "$HOME/.vimrc"
   [ -e "$HOME/.editorconfig" ] || [ -L "$HOME/.editorconfig" ] || ln -s "$DOTFILES/editorconfig" "$HOME/.editorconfig"
   # "root" git config
   [ -e "$HOME/.gitconfig" ] || [ -L "$HOME/.gitconfig" ] || ln -s "$DOTFILES/gitconfig" "$HOME/.gitconfig"
