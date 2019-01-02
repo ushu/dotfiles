@@ -51,7 +51,7 @@ nvm() {
 # GO
 
 if [ -d "/Volumes/WIP" ]; then
-  export WIPPATH="/Volumes/WIP"
+  export WIPPATH="$HOME/WIP"
   export GOPATH="$WIPPATH/go"
   [ -d "$GOPATH" ] || mkdir "$GOPATH"
 else

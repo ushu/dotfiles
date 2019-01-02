@@ -22,7 +22,33 @@ export MANPATH="/usr/local/man"
 PYTHON_PIPS=(httpie scipy matplotlib jupyter virtualenv virtualenvwrapper)
 RUBY_GEMS=(rails jekyll)
 NODE_MODULES=(express create-react-app react-native create-react-native-app)
-GO_PACKAGES=("golang.org/x/tools/cmd/goimports")
+GO_PACKAGES=(
+  # Go tools (for IDEs etc.)
+  # First the "official" tools from Google
+  "golang.org/x/tools/cmd/goimports" 
+  "golang.org/x/tools/refactor/rename"
+  "golang.org/x/tools/cmd/guru"
+  "golang.org/x/lint/golint"
+  # and a ton of additional tools too...
+  # first the langage server
+  "github.com/sourcegraph/go-langserver"
+  # then a ton of additional tools
+  "github.com/mgechev/revive"
+  "github.com/mdempsky/gocode"
+  "github.com/zmb3/gogetdoc"
+  "github.com/lukehoban/go-outline"
+  "github.com/newhook/go-symbols"
+  "github.com/sqs/goreturns"
+  "github.com/uudashr/gopkgs/cmd/gopkgs"
+  "github.com/fatih/gomodifytags"
+  "github.com/josharian/impl"
+  "github.com/davidrjenni/reftools/cmd/fillstruct"
+  "github.com/tylerb/gotype-live"
+  "github.com/cweill/gotests"
+  # Firebase libs
+  "firebase.google.com/go"
+  "google.golang.org/api/option"
+)
 
 main() {
   # Reset logfile
@@ -46,9 +72,10 @@ main() {
       exit 1
   fi
 
-
   retreive_dotfiles
   update_symlinks
+
+  install_or_update_go
 
   # For Mojave
   if [ ! -e /usr/include/zlib.h ];then
@@ -221,6 +248,19 @@ install_or_update_rust() {
   else
     rustup-init -y
   fi
+}
+
+install_or_update_go() {
+  echo 'Updating installed Google Cloud components...'
+  gcloud components update --quiet
+  
+  echo 'Installing additional Google Cloud components for Go...'
+  gcloud components install app-engine-go --quiet
+
+  echo "Installing go packages for dev..."
+  for pkg in ${GO_PACKAGES[@]}; do
+    go get "$pkg"
+  done
 }
 
 cleanup() {
