@@ -104,8 +104,9 @@ retreive_dotfiles() {
     git pull --depth=1 --force -q 
   else
     echo "Retreiving files from github.com/ushu/dotfiles..."
-    git clone --recursive --depth 1 -q "$REPO" "$DOTFILES" 
+    git clone --depth 1 -q "$REPO" "$DOTFILES" 
   fi
+  git submodule update --init --recusrive -q
 }
 
 # Linking files in HOME
@@ -115,6 +116,7 @@ update_symlinks() {
   [ -e "$HOME/.secrets" ] || touch "$HOME/.secrets"
   # vim config
   [ -e "$HOME/.vimrc" ] || [ -L "$HOME/.vimrc" ] || ln -s "$DOTFILES/vimrc" "$HOME/.vimrc"
+  [ -d "$HOME/.vim" ] || [ -L "$HOME/.vim" ] || ln -s "$DOTFILES/vim" "$HOME/.vim"
   [ -e "$HOME/.editorconfig" ] || [ -L "$HOME/.editorconfig" ] || ln -s "$DOTFILES/editorconfig" "$HOME/.editorconfig"
   # "root" git config
   [ -e "$HOME/.gitconfig" ] || [ -L "$HOME/.gitconfig" ] || ln -s "$DOTFILES/gitconfig" "$HOME/.gitconfig"
@@ -224,7 +226,6 @@ install_or_update_rust() {
 cleanup() {
   echo 'Cleanup Homebrew Cache...'
   brew cleanup -s
-  brew cask cleanup
   rm -rfv /Library/Caches/Homebrew/*
   brew tap --repair
   echo 'Cleanup gems...'

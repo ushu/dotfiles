@@ -10,6 +10,7 @@ brew "git-lfs"
 brew "mutt"
 brew "curl"
 brew "wget"
+brew "tree"
 
 # Python
 brew "python3", args: [ "build-from-source" ]
