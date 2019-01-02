@@ -21,7 +21,7 @@ brew "vim", args: ["with-python", "with-lua", "with-python3"]
 brew "imagemagick"
 brew "ffmpeg"
 brew "watchman"
-brew "heroku"
+brew "heroku/brew/heroku"
 
 # DB & Cache servers
 brew "postgresql", restart_service: :changed
