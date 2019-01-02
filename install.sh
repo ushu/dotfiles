@@ -20,7 +20,7 @@ export MANPATH="/usr/local/man"
 
 # List of components to install
 PYTHON_PIPS=(httpie scipy matplotlib jupyter virtualenv virtualenvwrapper)
-RUBY_GEMS=(rails sass jekyll)
+RUBY_GEMS=(rails jekyll)
 NODE_MODULES=(express create-react-app react-native create-react-native-app)
 GO_PACKAGES=("golang.org/x/tools/cmd/goimports")
 
@@ -106,7 +106,7 @@ retreive_dotfiles() {
     echo "Retreiving files from github.com/ushu/dotfiles..."
     git clone --depth 1 -q "$REPO" "$DOTFILES" 
   fi
-  git submodule update --init --recusrive -q
+  git submodule update --init --recursive -q
 }
 
 # Linking files in HOME

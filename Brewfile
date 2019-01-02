@@ -24,6 +24,8 @@ brew "ffmpeg"
 brew "watchman"
 tap "heroku/brew"
 brew "heroku/brew/heroku"
+tap "sass/sass"
+brew "sass/sass/sass"
 
 # DB & Cache servers
 brew "postgresql", restart_service: :changed
