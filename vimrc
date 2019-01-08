@@ -8,6 +8,7 @@ set backspace=indent,eol,start
 set shell=bash
 set wildmode=longest,list,full
 set visualbell
+set updatetime=300
 
 " Allow multiple edition on a file
 set nobackup
@@ -29,24 +30,27 @@ filetype plugin indent on
 " & config default plugins
 let g:loaded_matchparen = 1
 let g:netrw_banner = 0
-let g:netrw_liststyle = 3
 
 " indent size
 set tabstop=2|set shiftwidth=2|set expandtab
 autocmd FileType go set tabstop=4|set shiftwidth=4|set noexpandtab
 autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
 
-" Load optional packages
-autocmd BufNewFile,BufRead *.ex,*.exs,*.eex packadd vim-elixir.git
-
 " Custom types for config files
 augroup SyntaxEx
   autocmd BufNewFile,BufRead Brewfile,Gemfile,Podfile,VagrantFile,Cheffile setlocal ft=ruby
+  autocmd BufNewFile,BufRead Procfile setlocal ft=yaml
   autocmd BufNewFile,BufRead .prettierrc setlocal ft=json
   autocmd BufNewFile,BufRead .pryrc,*.jbuilder setlocal filetype=ruby
-  autocmd BufNewFile,BufRead *.ts setlocal filetype=typescript
-  autocmd BufNewFile,BufRead *.ex,*.exs,*.eex setlocal filetype=elixir
 augroup END
+
+" Optional plugins
+" EMMET for HTML/CSS
+let g:user_emmet_install_global = 0
+autocmd FileType html,css packadd emmet-vim
+autocmd FileType html,css EmmetInstall
+" ALE for live linting
+autocmd BufNewFile,BufRead *.js,*.go packadd ale
 
 " Custom mappings
 let mapleader=","
@@ -82,11 +86,13 @@ if filereadable("/usr/local/opt/fzf/plugin/fzf.vim")
   map <leader>l :Lines<CR>
   map <leader>o :Tags<CR>
 else
-  " manual "search"
+  " manual "search" -> not so good... but kinda does the job
   map <leader>i :e **/*
   set wildmenu
   set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png
   set wildignore+=*.pdf,*.psd
   set wildignore+=node_modules/*,bower_components/*
 endif
+
+
 

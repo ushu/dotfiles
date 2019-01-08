@@ -10,6 +10,7 @@ brew "git-lfs"
 brew "mutt"
 brew "curl"
 brew "wget"
+brew "tree"
 
 # Python
 brew "python3", args: [ "build-from-source" ]
@@ -21,7 +22,10 @@ brew "vim", args: ["with-python", "with-lua", "with-python3"]
 brew "imagemagick"
 brew "ffmpeg"
 brew "watchman"
-brew "heroku"
+tap "heroku/brew"
+brew "heroku/brew/heroku"
+tap "sass/sass"
+brew "sass/sass/sass"
 
 # DB & Cache servers
 brew "postgresql", restart_service: :changed
@@ -80,7 +84,7 @@ cask "googleappengine"
 brew "antlr" # <- needs java !
 cask "visual-studio-code"
 cask "google-cloud-sdk"
-cask "phantomjs"
+#cask "phantomjs"
 # Android
 cask "android-studio"
 cask "android-sdk"

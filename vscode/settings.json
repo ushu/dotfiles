@@ -47,6 +47,22 @@
             ],
             "commands": [
                 "workbench.action.closeActiveEditor"
+            ],
+            "before": [
+                "<leader>",
+                "v"
+            ],
+            "commands": [
+                "workbench.action.splitEditor"
+            ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "d"
+            ],
+            "commands": [
+                "workbench.action.closeActiveEditor"
             ]
         }
     ],
@@ -69,5 +85,6 @@
     },
     "typescript.updateImportsOnFileMove.enabled": "always",
     "editor.tabSize": 2,
-    "C_Cpp.autoAddFileAssociations": false
+    "C_Cpp.autoAddFileAssociations": false,
+    "window.zoomLevel": -1
 }

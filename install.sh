@@ -20,9 +20,35 @@ export MANPATH="/usr/local/man"
 
 # List of components to install
 PYTHON_PIPS=(httpie scipy matplotlib jupyter virtualenv virtualenvwrapper)
-RUBY_GEMS=(rails sass jekyll)
+RUBY_GEMS=(rails jekyll)
 NODE_MODULES=(express create-react-app react-native create-react-native-app)
-GO_PACKAGES=("golang.org/x/tools/cmd/goimports")
+GO_PACKAGES=(
+  # Go tools (for IDEs etc.)
+  # First the "official" tools from Google
+  "golang.org/x/tools/cmd/goimports" 
+  "golang.org/x/tools/refactor/rename"
+  "golang.org/x/tools/cmd/guru"
+  "golang.org/x/lint/golint"
+  # and a ton of additional tools too...
+  # first the langage server
+  "github.com/sourcegraph/go-langserver"
+  # then a ton of additional tools
+  "github.com/mgechev/revive"
+  "github.com/mdempsky/gocode"
+  "github.com/zmb3/gogetdoc"
+  "github.com/lukehoban/go-outline"
+  "github.com/newhook/go-symbols"
+  "github.com/sqs/goreturns"
+  "github.com/uudashr/gopkgs/cmd/gopkgs"
+  "github.com/fatih/gomodifytags"
+  "github.com/josharian/impl"
+  "github.com/davidrjenni/reftools/cmd/fillstruct"
+  "github.com/tylerb/gotype-live"
+  "github.com/cweill/gotests"
+  # Firebase libs
+  "firebase.google.com/go"
+  "google.golang.org/api/option"
+)
 
 main() {
   # Reset logfile
@@ -46,9 +72,10 @@ main() {
       exit 1
   fi
 
-
   retreive_dotfiles
   update_symlinks
+
+  install_or_update_go
 
   # For Mojave
   if [ ! -e /usr/include/zlib.h ];then
@@ -104,8 +131,9 @@ retreive_dotfiles() {
     git pull --depth=1 --force -q 
   else
     echo "Retreiving files from github.com/ushu/dotfiles..."
-    git clone --depth=1 --single-branch -q "$REPO" "$DOTFILES" 
+    git clone --depth 1 -q "$REPO" "$DOTFILES" 
   fi
+  git submodule update --init --recursive -q
 }
 
 # Linking files in HOME
@@ -114,7 +142,8 @@ update_symlinks() {
   # secrets
   [ -e "$HOME/.secrets" ] || touch "$HOME/.secrets"
   # vim config
-  [ -e "$HOME/.vimrc" ] || [ -L "$HOME/.vimrc"] || ln -s "$DOTFILES/vimrc" "$HOME/.vimrc"
+  [ -e "$HOME/.vimrc" ] || [ -L "$HOME/.vimrc" ] || ln -s "$DOTFILES/vimrc" "$HOME/.vimrc"
+  [ -d "$HOME/.vim" ] || [ -L "$HOME/.vim" ] || ln -s "$DOTFILES/vim" "$HOME/.vim"
   [ -e "$HOME/.editorconfig" ] || [ -L "$HOME/.editorconfig" ] || ln -s "$DOTFILES/editorconfig" "$HOME/.editorconfig"
   # "root" git config
   [ -e "$HOME/.gitconfig" ] || [ -L "$HOME/.gitconfig" ] || ln -s "$DOTFILES/gitconfig" "$HOME/.gitconfig"
@@ -159,6 +188,7 @@ install_or_update_homebrew() {
 
 install_or_update_node() {
   # Ensure nvm is loaded
+  export NVM_DIR=~/.nvm
   source "$(brew --prefix nvm)/nvm.sh"
 
   echo "Installing the latest version of node"
@@ -220,10 +250,22 @@ install_or_update_rust() {
   fi
 }
 
+install_or_update_go() {
+  echo 'Updating installed Google Cloud components...'
+  gcloud components update --quiet
+  
+  echo 'Installing additional Google Cloud components for Go...'
+  gcloud components install app-engine-go --quiet
+
+  echo "Installing go packages for dev..."
+  for pkg in ${GO_PACKAGES[@]}; do
+    go get "$pkg"
+  done
+}
+
 cleanup() {
   echo 'Cleanup Homebrew Cache...'
   brew cleanup -s
-  brew cask cleanup
   rm -rfv /Library/Caches/Homebrew/*
   brew tap --repair
   echo 'Cleanup gems...'
