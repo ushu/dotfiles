@@ -52,7 +52,8 @@ nvm() {
 
 if [ -d "/Volumes/WIP" ]; then
   export WIPPATH="$HOME/WIP"
-  export GOPATH="$WIPPATH/go"
+  [ -e "$WIPPATH" ] || [ -l "$WIPPATH" ] || ls -s "/Volumes/WIP" "$WIPPATH"
+  export GOPATH="/Volumes/WIP/go"
   [ -d "$GOPATH" ] || mkdir "$GOPATH"
 else
   export GOPATH="$HOME"
@@ -69,11 +70,7 @@ if [ -e "/Library/TeX/texbin" ];then
 fi
 
 # RBENV & Ruby
-# (lazy load rbenv)
-rbenv() {
-  eval "$($BREW_PREFIX/bin/rbenv init -)"
-  rbenv $@
-}
+eval "$($BREW_PREFIX/bin/rbenv init -)"
 alias be="bundle exec"
 # fix crazy yarn/rbenv issue
 alias yarn="/usr/local/bin/yarn"

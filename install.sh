@@ -21,7 +21,7 @@ export MANPATH="/usr/local/man"
 # List of components to install
 PYTHON_PIPS=(httpie scipy matplotlib jupyter virtualenv virtualenvwrapper)
 RUBY_GEMS=(rails jekyll)
-NODE_MODULES=(express create-react-app react-native create-react-native-app)
+NODE_MODULES=(express create-react-app react-native create-react-native-app firebase-tools wml)
 GO_PACKAGES=(
   # Go tools (for IDEs etc.)
   # First the "official" tools from Google

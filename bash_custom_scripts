@@ -24,6 +24,13 @@ icloud() {
 }
 
 #
+# Open the source path for go projecst
+#
+gopath() {
+  cd "$GOPATH/src"
+}
+
+#
 # Budo scripts
 #
 budo-create() {

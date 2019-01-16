@@ -11,6 +11,7 @@ brew "mutt"
 brew "curl"
 brew "wget"
 brew "tree"
+brew "mercurial"
 
 # Python
 brew "python3", args: [ "build-from-source" ]
@@ -58,9 +59,11 @@ brew "elixir"
 brew "rustup"
 brew "elm"
 
-# Additional dev tools
-brew "cmake", args: ["with-completion"]
+# iOS
 brew "carthage"
+
+# Other dev tools
+brew "cmake", args: ["with-completion"]
 brew "letsencrypt"
 
 ###################################
@@ -77,20 +80,17 @@ cask "firefox"
 # Java
 cask "java" unless system "/usr/libexec/java_home --failfast >/dev/null 2>&1"
 
-# Java
-cask "googleappengine"
-
 # Dev Tools
-brew "antlr" # <- needs java !
+brew "antlr@4" # <- needs java !
 cask "visual-studio-code"
+# GCP stuff
+cask "googleappengine"
 cask "google-cloud-sdk"
-#cask "phantomjs"
+
 # Android
 cask "android-studio"
-cask "android-sdk"
 
 # Misc
-cask "gpg-suite"
 cask "dropbox"
 cask "launchrocket"
 #cask "vlc"
