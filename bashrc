@@ -58,7 +58,7 @@ if [ -d "/Volumes/WIP" ]; then
 else
   export GOPATH="$HOME"
 fi
-export GOMAXPROCS=1
+#export GOMAXPROCS=1
 export PATH="$PATH:$GOPATH/bin"
 
 # Update paths

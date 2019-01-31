@@ -89,6 +89,7 @@ cask "google-cloud-sdk"
 
 # Android
 cask "android-studio"
+cask "keystore-explorer"
 
 # Misc
 cask "dropbox"
