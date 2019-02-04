@@ -92,9 +92,7 @@ cask "android-studio"
 cask "keystore-explorer"
 
 # Misc
-cask "dropbox"
 cask "launchrocket"
-#cask "vlc"
 cask "omnidisksweeper"
 
 # JetBrains IDEs

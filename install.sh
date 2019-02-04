@@ -251,14 +251,14 @@ install_or_update_rust() {
 }
 
 install_or_update_go() {
-  echo 'Updating installed Google Cloud components...'
+  echo 'updating installed google cloud components...'
   gcloud components update --quiet
   
-  echo 'Installing additional Google Cloud components for Go...'
+  echo 'installing additional google cloud components for go...'
   gcloud components install app-engine-go --quiet
 
-  echo "Installing go packages for dev..."
-  for pkg in ${GO_PACKAGES[@]}; do
+  echo "installing go packages for dev..."
+  for pkg in ${go_packages[@]}; do
     go get "$pkg"
   done
 }

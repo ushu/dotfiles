@@ -70,5 +70,5 @@
     "typescript.updateImportsOnFileMove.enabled": "always",
     "editor.tabSize": 2,
     "C_Cpp.autoAddFileAssociations": false,
-    "window.zoomLevel": -1
+    "window.zoomLevel": 0
 }
