@@ -6,7 +6,7 @@
     "window.restoreFullscreen": false,
     // police
     "editor.fontFamily": "Fira Code, Monaco",
-    "editor.fontSize": 12,
+    "editor.fontSize": 14,
     "editor.fontLigatures": true,
     // curseur
     "editor.cursorStyle": "block",
@@ -32,22 +32,6 @@
     "vim.hlsearch": true,
     "vim.normalModeKeyBindings": [
         {
-            "before": [
-                "<leader>",
-                "v"
-            ],
-            "commands": [
-                "workbench.action.splitEditor"
-            ]
-        },
-        {
-            "before": [
-                "<leader>",
-                "d"
-            ],
-            "commands": [
-                "workbench.action.closeActiveEditor"
-            ],
             "before": [
                 "<leader>",
                 "v"
