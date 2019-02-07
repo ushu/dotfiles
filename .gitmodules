@@ -10,3 +10,6 @@
 [submodule "vim/pack/w0rp/opt/ale"]
 	path = vim/pack/w0rp/opt/ale
 	url = https://github.com/w0rp/ale.git
+[submodule "vim/pack/elixir-lang/opt/vim-elixir.git"]
+	path = vim/pack/elixir-lang/opt/vim-elixir.git
+	url = https://github.com/elixir-editors/vim-elixir

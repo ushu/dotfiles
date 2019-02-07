@@ -1,0 +1,56 @@
+{
+	"Test Helper for fixtures": {
+		"prefix": "loadfix",
+		"body": [
+			"// loadFixture loads the data in testdata/{fileName}",
+			"func loadFixture(t *testing.T, fileName string) []byte {",
+			"\tt.Helper()",
+			"\tpath := filepath.Join(\"testdata\", fileName)",
+			"\tdata, _ := ioutil.ReadFile(path)",
+			"\treturn data",
+			"}"
+		],
+		"description": "Generate a loadFixture helper for tests"
+	},
+	"Test Helper to create a temp file": {
+		"prefix": "tempfile",
+		"body": [
+			"// templFile creates a temporary file for testing",
+			"// Usage:",
+			"//   f, close := tempFile(t)",
+			"//   defer close()",
+			"func tempFile(t *testing.T) (string, func()) {",
+			"\tt.Helper()",
+			"\ttf, err := ioutil.TempFile(\"\", \"test\")",
+			"\tif err != nil {",
+			"\t\tt.Fatal(err)",
+			"\t}",
+			"\ttf.Close()",
+			"\treturn tf.Name(), func() { os.Remove(tf.Name()) }",
+			"}"
+		],
+		"description": "Generate a tempFile helper for tests"
+	},
+	"Regexp Match": {
+		"prefix": "regmatch",
+		"body": [
+			"var ${1} = regexp.MustCompile(`${2}`)",
+			"if ${1}.MatchString(${3}) {",
+			"\t$0",
+			"}"
+		],
+		"description": "Simple Regex match"
+	},
+	"Regexp Match with Groups": {
+		"prefix": "reggroups",
+		"body": [
+			"var ${1} = regexp.MustCompile(`${2}`)",
+			"m := ${1}.FindStringSubmatch(${3})",
+			"if m == nil {",
+			"\t$4",
+			"}",
+			"${0:g := m[1] // first match groud}",
+		],
+		"description": "Simple Regex match"
+	},
+}

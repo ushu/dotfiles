@@ -166,6 +166,7 @@ update_symlinks() {
   [ -e "$vscode_home/settings.json" ] || [ -L "$vscode_home/settings.json" ] || ln -s "$DOTFILES/vscode/settings.json" "$vscode_home/settings.json"
   [ -e "$vscode_home/keybindings.json" ] || [ -L "$vscode_home/keybindings.json" ] || ln -s "$DOTFILES/vscode/keybindings.json" "$vscode_home/keybindings.json"
   [ -e "$vscode_home/locale.json" ] || [ -L "$vscode_home/locale.json" ] || ln -s "$DOTFILES/vscode/locale.json" "$vscode_home/locale.json"
+  [ -d "$vscode_home/snippets" ] || [ -L "$vscode_home/snippets" ] || ln -s "$DOTFILES/vscode/snippets" "$vscode_home/snippets"
 }
 
 install_or_update_homebrew() {
