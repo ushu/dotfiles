@@ -12,7 +12,7 @@
 	email = aurelien@noce.fr
 [core]
 	editor = /usr/bin/env vim
-	excludesfile = $HOME/.gitignore_global
+	excludesfile = ~/.gitignore
 	filemode = false
 [color]
 	ui = auto
