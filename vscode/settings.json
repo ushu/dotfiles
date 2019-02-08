@@ -6,7 +6,6 @@
     "window.restoreFullscreen": false,
     // police
     "editor.fontFamily": "Fira Code, Monaco",
-    "editor.fontSize": 14,
     "editor.fontLigatures": true,
     // curseur
     "editor.cursorStyle": "block",
@@ -22,6 +21,10 @@
     },
     "emmet.showSuggestionsAsSnippets": true,
     "emmet.triggerExpansionOnTab": true,
+    // GO settings
+    "go.docsTool": "gogetdoc",
+    "go.useLanguageServer": true,
+    "go.inferGopath": true,
     // VIM mode
     //"vim.enableNeovim": true,
     "vim.leader": ",",
@@ -70,5 +73,6 @@
     "typescript.updateImportsOnFileMove.enabled": "always",
     "editor.tabSize": 2,
     "C_Cpp.autoAddFileAssociations": false,
-    "window.zoomLevel": 0
+    "window.zoomLevel": 0,
+    "editor.fontSize": 13
 }

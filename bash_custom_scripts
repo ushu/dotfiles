@@ -487,3 +487,12 @@ tarball() {
   fi
   tar -zcf "$file_or_dir.tar.gz" "$file_or_dir"
 }
+
+video_to_gif() {
+  local file="$1"
+  if [ -z "$file" ]; then
+    echo "Usage: tarball FILE_OR_DIRECTORY"
+    return
+  fi
+  ffmpeg -i "$file" -r 5 -vf scale=512:-1 "${file%.*}.gif"
+}
