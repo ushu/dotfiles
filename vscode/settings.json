@@ -25,6 +25,16 @@
     "go.docsTool": "gogetdoc",
     "go.useLanguageServer": true,
     "go.inferGopath": true,
+    "go.languageServerExperimentalFeatures": {
+        "autoComplete": true,
+        "goToDefinition": true,
+        "documentSymbols": true,
+        "workspaceSymbols": true,
+        "signatureHelp": true,
+        "rename": true,
+        "findReferences": true,
+        "goToTypeDefinition": true
+    },
     // VIM mode
     //"vim.enableNeovim": true,
     "vim.leader": ",",
@@ -73,6 +83,12 @@
     "typescript.updateImportsOnFileMove.enabled": "always",
     "editor.tabSize": 2,
     "C_Cpp.autoAddFileAssociations": false,
-    "window.zoomLevel": 0,
-    "editor.fontSize": 13
+    "window.zoomLevel": 1,
+    "workbench.colorTheme": "Monokai",
+    "editor.fontSize": 14,
+    "editor.suggest.localityBonus": true,
+    "editor.suggestFontSize": 12,
+    "editor.suggestLineHeight": 13,
+    "editor.quickSuggestionsDelay": 0,
+    "workbench.editor.enablePreview": false
 }

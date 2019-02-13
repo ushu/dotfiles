@@ -45,6 +45,7 @@ GO_PACKAGES=(
   "github.com/davidrjenni/reftools/cmd/fillstruct"
   "github.com/tylerb/gotype-live"
   "github.com/cweill/gotests"
+  "github.com/go-delve/delve/cmd/dlv"
   # Firebase libs
   "firebase.google.com/go"
   "google.golang.org/api/option"
@@ -75,8 +76,6 @@ main() {
   retreive_dotfiles
   update_symlinks
 
-  install_or_update_go
-
   # For Mojave
   if [ ! -e /usr/include/zlib.h ];then
     if  [ -e /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg ];then
@@ -91,6 +90,7 @@ main() {
   install_or_update_node
   install_or_update_python
   install_or_update_ruby
+  install_or_update_go
   install_or_update_rust
   cleanup
 
@@ -185,7 +185,11 @@ install_or_update_homebrew() {
   # install all the packages by reading the Brewfile
   echo "Installing Homebrew packages w/ bundle"
   brew tap --repair homebrew/bundle 
-  brew bundle --file="$DOTFILES/Brewfile" --no-update 
+  if command -v ffmpeg >/dev/null 2>&1; then
+    # for some reason ffmpeg can cause link issues
+    brew unlink ffmpeg >/dev/null
+  fi
+  brew bundle check --file="$DOTFILES/Brewfile" || brew bundle install --file="$DOTFILES/Brewfile" --no-update 
 }
 
 install_or_update_node() {
@@ -260,9 +264,12 @@ install_or_update_go() {
   gcloud components install app-engine-go --quiet
 
   echo "installing go packages for dev..."
-  for pkg in ${go_packages[@]}; do
+  for pkg in ${GO_PACKAGES[@]}; do
     go get "$pkg"
   done
+
+  echo "code-signing delve..."
+  (cd "$GOPATH/src/github.com/go-delve/delve" && make install)
 }
 
 cleanup() {
