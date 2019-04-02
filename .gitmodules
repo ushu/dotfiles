@@ -16,3 +16,6 @@
 [submodule "vim/pack/skywind3000/opt/asyncrun.vim"]
 	path = vim/pack/skywind3000/opt/asyncrun.vim
 	url = https://github.com/skywind3000/asyncrun.vim
+[submodule "vim/pack/tpope/start/vim-fugitive"]
+	path = vim/pack/tpope/start/vim-fugitive
+	url = https://github.com/tpope/vim-fugitive
