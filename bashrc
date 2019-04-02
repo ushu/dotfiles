@@ -21,7 +21,7 @@ fi
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
 # Java/Android HOME (needed by dev tools)
-if [ -z "$JAVA_HOME" ]; then
+if [ -z "$JAVA_HOME" ] || [ ! -d "$JAVA_HOME" ] ; then
     echo "# Current version of JAVA" >> ~/.bashrc_cache
     JAVA_HOME=$(/usr/libexec/java_home)
     echo "JAVA_HOME=\"$JAVA_HOME\"" >> ~/.bashrc_cache
@@ -36,7 +36,7 @@ export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools"
 
 # NVM
 export NVM_DIR=~/.nvm
-if [ -z "$BREW_PREFIX_NVM" ]; then
+if [ -z "$BREW_PREFIX_NVM" ] || [ ! -d "$BREW_PREFIX_NVM" ]; then
     echo "# nvm install dir" >> ~/.bashrc_cache
     BREW_PREFIX_NVM=$(brew --prefix nvm)
     echo "BREW_PREFIX_NVM=\"$BREW_PREFIX_NVM\"" >> ~/.bashrc_cache
@@ -111,7 +111,7 @@ if [ -e "$HOME/.bash_local_scripts" ]; then
 fi
 
 # Setup virtualenvwrapper
-if [ -z "$PYTHON3_VERSION" ]; then
+if [ -z "$PYTHON3_VERSION" ] || [ ! -z "$PYTHON_VERSION" ]; then
     PYTHON3_VERSION=$(python3 --version | cut -d' ' -f2 | cut -d'.' -f1,2)
     echo "# Installed Python3 version" >> ~/.bashrc_cache
     echo "PYTHON3_VERSION=\"$PYTHON3_VERSION\"" >> ~/.bashrc_cache
