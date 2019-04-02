@@ -51,6 +51,8 @@ autocmd FileType html,css packadd emmet-vim
 autocmd FileType html,css EmmetInstall
 " ALE for live linting
 autocmd BufNewFile,BufRead *.js,*.go packadd ale
+" Async auto-commands (-post=checktime will auto-reload file once processed !)
+" autocmd BufWritePost *.js AsyncRun -post=checktime ./node_modules/.bin/eslint --fix %
 
 " Custom mappings
 let mapleader=","

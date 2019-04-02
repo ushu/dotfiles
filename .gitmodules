@@ -13,3 +13,6 @@
 [submodule "vim/pack/elixir-lang/opt/vim-elixir.git"]
 	path = vim/pack/elixir-lang/opt/vim-elixir.git
 	url = https://github.com/elixir-editors/vim-elixir
+[submodule "vim/pack/skywind3000/opt/asyncrun.vim"]
+	path = vim/pack/skywind3000/opt/asyncrun.vim
+	url = https://github.com/skywind3000/asyncrun.vim
