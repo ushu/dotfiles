@@ -42,11 +42,7 @@ if [ -z "$BREW_PREFIX_NVM" ] || [ ! -d "$BREW_PREFIX_NVM" ]; then
     echo "BREW_PREFIX_NVM=\"$BREW_PREFIX_NVM\"" >> ~/.bashrc_cache
     echo >> ~/.bashrc_cache
 fi
-# Lazy loading for nvm.sh
-nvm() {
-  source "$BREW_PREFIX_NVM/nvm.sh" # This loads nvm
-  nvm $@
-}
+source "$BREW_PREFIX_NVM/nvm.sh" # This loads nvm
 
 # GO
 

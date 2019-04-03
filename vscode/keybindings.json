@@ -7,5 +7,17 @@
     {
         "key": "cmd+k m",
         "command": "-workbench.action.editor.changeLanguageMode"
+    },
+    {
+        "key": "shift+cmd+w",
+        "command": "-workbench.action.closeWindow"
+    },
+    {
+        "key": "shift+cmd+w",
+        "command": "workbench.action.closeOtherEditors"
+    },
+    {
+        "key": "alt+cmd+t",
+        "command": "-workbench.action.closeOtherEditors"
     }
 ]
