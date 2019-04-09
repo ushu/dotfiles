@@ -6,7 +6,6 @@
     "window.restoreFullscreen": false,
     // police
     "editor.fontFamily": "Fira Code, Monaco",
-    "editor.fontSize": 16,
     "editor.fontLigatures": true,
     // curseur
     "editor.cursorStyle": "block",
@@ -85,7 +84,7 @@
     "editor.tabSize": 2,
     "C_Cpp.autoAddFileAssociations": false,
     "explorer.confirmDragAndDrop": false,
-    "window.zoomLevel": 1,
+    "window.zoomLevel": -2,
     "workbench.colorTheme": "Monokai",
     "editor.fontSize": 14,
     "editor.suggest.localityBonus": true,
