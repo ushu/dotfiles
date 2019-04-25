@@ -76,6 +76,11 @@ main() {
   retreive_dotfiles
   update_symlinks
 
+  # Spacemacs
+  if [ ! -d "$HOME/.emacs.d" ];then
+    git clone https://github.com/syl20bnr/spacemacs "$HOME/.emacs.d"
+  end
+
   # For Mojave
   if [ ! -e /usr/include/zlib.h ];then
     if  [ -e /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg ];then

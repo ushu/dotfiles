@@ -83,6 +83,7 @@ cask "java" unless system "/usr/libexec/java_home --failfast >/dev/null 2>&1"
 # Dev Tools
 brew "antlr@4" # <- needs java !
 cask "visual-studio-code"
+cask "emacs"
 # GCP stuff
 cask "googleappengine"
 cask "google-cloud-sdk"
