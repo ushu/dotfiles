@@ -9,6 +9,7 @@ set shell=bash
 set wildmode=longest,list,full
 set visualbell
 set updatetime=300
+set textwidth=72
 
 " Allow multiple edition on a file
 set nobackup

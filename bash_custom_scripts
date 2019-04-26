@@ -496,3 +496,7 @@ video_to_gif() {
   fi
   ffmpeg -i "$file" -r 5 -vf scale=512:-1 "${file%.*}.gif"
 }
+
+hlog() {
+  heroku logs -t | grep -v "ActionView\|ActiveRecord\|heroku[router]\|worker"
+}
