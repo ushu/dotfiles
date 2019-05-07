@@ -1,0 +1,31 @@
+# By-identity SSH configs
+# Usage: replace github.com by github.com-<USERNAME>
+#
+# eg:
+#     git@github.com:ushu/Yamble -> git@github.com-ushu:ushu/Yamble
+#
+# ! This expects the presence of the two following identities:
+#   - .ssh/id_rsa-ushu[.pub]  (for the "ushu" GitHub account)
+#   - .ssh/id_rsa-aurelien-iapp[.pub]  (for the "aurelien-iapp" GitHub 
+#      account)
+#
+Host github.com-ushu
+	HostName github.com
+	User git
+	IdentityFile ~/.ssh/id_rsa-ushu
+
+host github.com-aurelien-iapp
+	hostname github.com
+	user git
+	identityfile ~/.ssh/id_rsa-aurelien-iapp
+
+Host git.lesappsdaurelien.fr
+	hostname lesappsdaurelien.fr
+	user git
+	IdentityFile ~/.ssh/id_rsa-ushu
+
+Host bitbucket.org
+	HostName bitbucket.org
+	User git
+	IdentityFile ~/.ssh/id_rsa-ushu
+

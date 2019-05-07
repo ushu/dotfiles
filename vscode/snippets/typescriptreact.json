@@ -1,0 +1,48 @@
+{
+	"Bottom Tab Navigator": {
+		"prefix": "bottomTabNavigator",
+		"body": [
+			"import { createBottomTabNavigator } from \"react-navigation\"",
+			"",
+			"const ${1:Navigator} = createBottomTabNavigator(",
+			"  // Route declarations:",
+			"  {",
+			"      ${2:Tab}: {",
+			"        screen: ${3:ScreenComponent},",
+			"        title: \"${4:My tab}\",",
+			"        // path: \"${2:/downcase}\",",
+			"        navigationOptions: {",
+			"          // tabBarIcon: makeTabIcon(iconActive, iconInactive),",
+			"        },",
+			"      },",
+			"      $0",
+			"  },",
+			"  // Global options:",
+			"  {",
+			"    initialRouteName: \"$2\",",
+			"    tabBarOptions: {",
+			"      // showLabel: false,",
+			"      // style: {}",
+			"    },",
+			"  },",
+			")"
+		],
+		"description": "Creates a new bottom tab navigator"
+	},
+	"makeTabIcon": {
+		"prefix": "makeTabIcon",
+		"body": [
+			"import { Image, ImageSourcePropType } from \"react-native\"",
+			"import { TabBarIconProps } from \"react-navigation\"",
+			"",
+			"const makeTabIcon = (",
+			"  activeIcon: ImageSourcePropType,",
+			"  inactiveIcon: ImageSourcePropType,",
+			") => ({ focused }: TabBarIconProps) => (",
+			"  <Image source={focused ? activeIcon : inactiveIcon} />",
+			")",
+			"$0"
+		],
+		"description": "Helper function to tab-bar icon from 2 images"
+	}
+}

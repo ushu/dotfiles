@@ -97,7 +97,7 @@ else
   set wildignore+=*.pdf,*.psd
   set wildignore+=node_modules/*,bower_components/*
 endif
-nnoremap <S-g><S-s> :Gstatus<CR>
-nnoremap <S-g><S-l> :Glog<CR><CR>:copen<CR><CR>
-nnoremap <S-g><S-g> :Git gr<CR>
+nnoremap gs :Gstatus<CR>
+nnoremap gl :Glog<CR><CR>:copen<CR><CR>
+nnoremap gr :Git gr<CR>
 nnoremap <S-z> za

@@ -1,0 +1,54 @@
+{
+	"React import": {
+		"prefix": "ri",
+		"body": [
+			"import React from \"react\"",
+			"$0"
+		],
+		"description": "Add React import"
+	},
+
+	"React PropTypes import": {
+		"prefix": "rt",
+		"body": [
+			"import PropTypes from \"prop-types\"",
+			"$0"
+		],
+		"description": "A PropTypes import"
+	},
+
+	"ReactDOM render": {
+		"prefix": "rd",
+		"body": [
+			"import {render as renderDOM} from \"react-dom\"",
+			"",
+			"const rootNode = document.querySelector(\"${1:#root}\");",
+			"renderDOM(<${2:App} />, rootNode);",
+			"$0"
+		],
+		"description": "A basic React Component"
+	},
+	"React class component": {
+		"prefix": "rr",
+		"body": [
+			"class $1 extends React.Component",
+			"\trender() {",
+			"\t\treturn ${2:null};",
+			"\t}",
+			"}",
+			"$0"
+		],
+		"description": "A basic React Component"
+	},
+
+	"React functional component": {
+		"prefix": "re",
+		"body": [
+			"const $1 = (${2:props}) => {",
+			"\treturn ${3:null};",
+			"}",
+			"$0"
+		],
+		"description": "A Functional React Component"
+	}
+}

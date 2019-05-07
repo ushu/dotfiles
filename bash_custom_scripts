@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # Generate a random password
 #
@@ -499,4 +500,49 @@ video_to_gif() {
 
 hlog() {
   heroku logs -t | grep -v "ActionView\|ActiveRecord\|heroku[router]\|worker"
+}
+
+cloneushu() {
+  local repo="$1"
+  if [ -z "$repo" ]; then
+    echo "Usage: cloneushu PROJECT_NAME"
+    return
+  fi
+  #ssh-agent $(ssh-add "$HOME/.ssh/id_rsa-ushu"; git clone --recursive "git@github.com-ushu:ushu/$repo") 
+  git clone --recursive "git@github.com-ushu:ushu/$repo"
+  cd "$repo"
+  cat >>.git/config <<-EOF
+[user]
+  name = Aurélien Noce
+  email = aurelien@noce.fr
+  signingkey = 8CBC2D1C
+[github]
+  user = ushu
+EOF
+  if [ -f ".nvmrc" ];then nvm use; fi
+  if [ -f ".ruby-version" ];then rbenv local; fi
+  if [ -f "package.json" ];then yarn; fi
+  if [ -f "Gemfile" ];then bundle; fi
+}
+
+cloneiapp() {
+  local repo="$1"
+  if [ -z "$repo" ]; then
+    echo "Usage: cloneiapp PROJECT_NAME"
+    return
+  fi
+  git clone --recursive "git@github.com-aurelien-iapp:ushu/$repo"
+  cd "$repo"
+  cat >>.git/config <<-EOF
+[user]
+  name = Aurélien Noce
+  email = aurelien.noce@imagine-app.fr
+  signingkey = 61722F5C
+[github]
+  user = aurelien-iapp
+EOF
+  if [ -f ".nvmrc" ];then nvm use; fi
+  if [ -f ".ruby-version" ];then rbenv local; fi
+  if [ -f "package.json" ];then yarn; fi
+  if [ -f "Gemfile" ];then bundle; fi
 }
