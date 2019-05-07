@@ -4,5 +4,5 @@
     "prefix": "prettierrc",
     "description": "Basic configuration for prettier, with forced trailing commas and no semicolons",
     "body": ["{", "  \"trailingComma\": \"all\",", "  \"semi\": false", "}"]
-  }
+  },
 }

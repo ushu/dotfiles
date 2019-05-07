@@ -509,8 +509,16 @@ cloneushu() {
     return
   fi
   #ssh-agent $(ssh-add "$HOME/.ssh/id_rsa-ushu"; git clone --recursive "git@github.com-ushu:ushu/$repo") 
-  git clone --recursive "git@github.com-ushu:ushu/$repo"
+  git clone --recursive "ushu:ushu/$repo"
   cd "$repo"
+  gituserushu
+  if [ -f ".nvmrc" ];then nvm use; fi
+  if [ -f ".ruby-version" ];then rbenv local; fi
+  if [ -f "package.json" ];then yarn; fi
+  if [ -f "Gemfile" ];then bundle; fi
+}
+
+gituserushu() {
   cat >>.git/config <<-EOF
 [user]
   name = Aurélien Noce
@@ -519,10 +527,6 @@ cloneushu() {
 [github]
   user = ushu
 EOF
-  if [ -f ".nvmrc" ];then nvm use; fi
-  if [ -f ".ruby-version" ];then rbenv local; fi
-  if [ -f "package.json" ];then yarn; fi
-  if [ -f "Gemfile" ];then bundle; fi
 }
 
 cloneiapp() {
@@ -531,8 +535,16 @@ cloneiapp() {
     echo "Usage: cloneiapp PROJECT_NAME"
     return
   fi
-  git clone --recursive "git@github.com-aurelien-iapp:ushu/$repo"
+  git clone --recursive "aurelien-iapp:imagine-app/$repo"
   cd "$repo"
+  gituseriapp
+  if [ -f ".nvmrc" ];then nvm use; fi
+  if [ -f ".ruby-version" ];then rbenv local; fi
+  if [ -f "package.json" ];then yarn; fi
+  if [ -f "Gemfile" ];then bundle; fi
+}
+
+gituseriapp() {
   cat >>.git/config <<-EOF
 [user]
   name = Aurélien Noce
@@ -541,8 +553,5 @@ cloneiapp() {
 [github]
   user = aurelien-iapp
 EOF
-  if [ -f ".nvmrc" ];then nvm use; fi
-  if [ -f ".ruby-version" ];then rbenv local; fi
-  if [ -f "package.json" ];then yarn; fi
-  if [ -f "Gemfile" ];then bundle; fi
 }
+
