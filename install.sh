@@ -79,7 +79,7 @@ main() {
   # Spacemacs
   if [ ! -d "$HOME/.emacs.d" ];then
     git clone https://github.com/syl20bnr/spacemacs "$HOME/.emacs.d"
-  end
+  fi
 
   # For Mojave
   if [ ! -e /usr/include/zlib.h ];then

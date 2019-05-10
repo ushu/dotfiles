@@ -502,6 +502,16 @@ hlog() {
   heroku logs -t | grep -v "ActionView\|ActiveRecord\|heroku[router]\|worker"
 }
 
+mapesc() {
+  hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000064,"HIDKeyboardModifierMappingDst":0x700000029}]}'
+  echo "§/± has been remapped to ESC"
+}
+
+unmapesc() {
+  hidutil property --set '{"UserKeyMapping":[]}'
+  echo "§/± has been restored"
+}
+
 cloneushu() {
   local repo="$1"
   if [ -z "$repo" ]; then
@@ -554,4 +564,3 @@ gituseriapp() {
   user = aurelien-iapp
 EOF
 }
-

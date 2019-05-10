@@ -27,7 +27,9 @@ if [ -z "$JAVA_HOME" ] || [ ! -d "$JAVA_HOME" ] ; then
     echo "JAVA_HOME=\"$JAVA_HOME\"" >> ~/.bashrc_cache
     echo >> ~/.bashrc_cache
 fi
-if [ -d "/Volumes/Storage/android-sdk" ]; then
+if [ -d "/Volumes/WIP/android-sdk" ]; then
+  export ANDROID_HOME="/Volumes/WIP/android-sdk"
+elif [ -d "/Volumes/Storage/android-sdk" ]; then
   export ANDROID_HOME="/Volumes/Storage/android-sdk"
 else
   export ANDROID_HOME="${HOME}/Library/Android/sdk"

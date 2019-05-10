@@ -82,7 +82,7 @@
     "editor.tabSize": 2,
     "C_Cpp.autoAddFileAssociations": false,
     "explorer.confirmDragAndDrop": false,
-    "window.zoomLevel": -1,
+    "window.zoomLevel": 0,
     "workbench.colorTheme": "Monokai",
     "editor.fontSize": 14,
     "editor.suggest.localityBonus": true,
@@ -101,5 +101,8 @@
     },
     "editor.formatOnPaste": true,
     "terminal.integrated.rendererType": "dom",
-    "git.enableSmartCommit": true
+    "git.enableSmartCommit": true,
+    "[go]": {
+        "editor.defaultFormatter": "ms-vscode.Go"
+    }
 }

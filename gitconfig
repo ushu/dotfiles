@@ -4,12 +4,13 @@
 	aa = add --all
 	st = status
 	br = branch
-	lg = log --oneline --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+	lg = log --oneline --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) %G? - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
 	gr = log --graph --oneline --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
 	ri = "!f() { git rebase -i HEAD~"$1"; }; f"
 [user]
 	name = Aurélien Noce
 	email = aurelien@noce.fr
+	signingkey = 60B63D08
 [core]
 	editor = /usr/bin/env vim
 	excludesfile = ~/.gitignore
@@ -25,3 +26,5 @@
 	required = true
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
+[commit]
+	gpgsign = true

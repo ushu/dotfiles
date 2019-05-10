@@ -44,6 +44,7 @@ augroup SyntaxEx
   autocmd BufNewFile,BufRead .prettierrc setlocal ft=json
   autocmd BufNewFile,BufRead .pryrc,*.jbuilder setlocal filetype=ruby
   autocmd BufNewFile,BufRead .gitconfig* setlocal filetype=gitconfig
+  autocmd BufNewFile,BufRead *.plist setlocal filetype=xml
 augroup END
 
 " Optional plugins
