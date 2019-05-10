@@ -1,0 +1,25 @@
+{
+  "tsconfig for React Native": {
+    "prefix": "reactnative",
+    "description": "Basic tsconfig.json for Expo-generated React Native projects",
+    "body": [
+      "{",
+      "  \"compilerOptions\": {",
+      "    \"allowJs\": false,",
+      "    \"allowSyntheticDefaultImports\": true,",
+      "    \"noFallthroughCasesInSwitch\": true,",
+      "    \"experimentalDecorators\": true,",
+      "    \"esModuleInterop\": true,",
+      "    \"isolatedModules\": true,",
+      "    \"jsx\": \"react-native\",",
+      "    \"lib\": [\"es6\"],",
+      "    \"moduleResolution\": \"node\",",
+      "    \"noEmit\": true,",
+      "    \"strict\": true,",
+      "    \"target\": \"esnext\"",
+      "  },",
+      "  \"exclude\": [\"node_modules\"]",
+      "}"
+    ]
+  }
+}

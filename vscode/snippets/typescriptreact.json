@@ -1,0 +1,63 @@
+{
+	"Bottom Tab Navigator": {
+		"prefix": "bottomTabNavigator",
+		"body": [
+			"import { createBottomTabNavigator, NavigationBottomTabScreenOptions } from \"react-navigation\"",
+			"",
+			"const ${1} = createBottomTabNavigator(",
+			"  // Route declarations: see http://bit.ly/bottomtabs-navoptions",
+			"  {",
+			"      Tab: {",
+			"        screen: $2,",
+			"        title: \"$3\",",
+			"        // path: \"$2\",",
+			"        navigationOptions: {",
+			"          // tabBarIcon is a component receiving TabBarIconProps",
+			"          // tabBarIcon: makeTabIcon(iconActive, iconInactive),",
+      "          // the custom hooks allow to override behaviour:",
+      "          // tabBarOnPress: ({navigation, defaultHandler}) => defaultHandler(),",
+      "          // tabBarOnLongPress: ({navigation, defaultHandler}) => defaultHandler(),",
+			"        } as NavigationBottomTabScreenOptions,",
+			"      },",
+			"      $0",
+			"  },",
+			"  // Global options:",
+			"  {",
+			"    initialRouteName: \"$2\",",
+      "    // navigationOptions: {}, // for the parent navigator",
+      "    // defaultNavigationOptions: {}, // for all tabs",
+			"    tabBarOptions: {",
+			"      // showLabel: true,",
+			"      // style: {} // for the whole bar",
+			"      // labelStyle: {} // for the text label",
+			"      // tabStyle: {} // for the tab (around the icon/title)",
+      "      // activeTintColor: \"#000\"",
+      "      // activeBackgroundColor: \"#fff\"",
+      "      // inactiveTintColor: \"#cc\"",
+      "      // inactiveBackgroundColor: \"#fff\"",
+      "      // adaptive: true, // on iOS, show title on the right on landscape tablets",
+			"    },",
+			"  },",
+			")",
+			"",
+			"export default $1"
+		],
+		"description": "Creates a new bottom tab navigator"
+	},
+	"makeTabIcon": {
+		"prefix": "makeTabIcon",
+		"body": [
+			"import { Image, ImageSourcePropType } from \"react-native\"",
+			"import { TabBarIconProps } from \"react-navigation\"",
+			"",
+			"const makeTabIcon = (",
+			"  activeIcon: ImageSourcePropType,",
+			"  inactiveIcon: ImageSourcePropType,",
+			") => ({ focused }: TabBarIconProps) => (",
+			"  <Image source={focused ? activeIcon : inactiveIcon} />",
+			")",
+			"$0"
+		],
+		"description": "Helper function to tab-bar icon from 2 images"
+	}
+}

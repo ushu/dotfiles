@@ -39,10 +39,11 @@ autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
 
 " Custom types for config files
 augroup SyntaxEx
-  autocmd BufNewFile,BufRead Brewfile,Gemfile,Podfile,VagrantFile,Cheffile setlocal ft=ruby
+  autocmd BufNewFile,BufRead Appfile,Fastfile,Brewfile,Gemfile,Podfile,VagrantFile,Cheffile setlocal ft=ruby
   autocmd BufNewFile,BufRead Procfile setlocal ft=yaml
   autocmd BufNewFile,BufRead .prettierrc setlocal ft=json
   autocmd BufNewFile,BufRead .pryrc,*.jbuilder setlocal filetype=ruby
+  autocmd BufNewFile,BufRead .gitconfig* setlocal filetype=gitconfig
 augroup END
 
 " Optional plugins
@@ -96,6 +97,7 @@ else
   set wildignore+=*.pdf,*.psd
   set wildignore+=node_modules/*,bower_components/*
 endif
-
-
-
+nnoremap gs :Gstatus<CR>
+nnoremap gl :Glog<CR><CR>:copen<CR><CR>
+nnoremap gr :Git gr<CR>
+nnoremap <S-z> za
