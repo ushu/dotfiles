@@ -104,5 +104,10 @@
     "git.enableSmartCommit": true,
     "[go]": {
         "editor.defaultFormatter": "ms-vscode.Go"
-    }
+    },
+    "gitlens.views.repositories.location": "scm",
+    "gitlens.views.fileHistory.location": "scm",
+    "gitlens.views.lineHistory.location": "scm",
+    "gitlens.views.compare.location": "scm",
+    "gitlens.views.search.location": "scm"
 }

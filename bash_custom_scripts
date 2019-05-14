@@ -564,3 +564,8 @@ gituseriapp() {
   user = aurelien-iapp
 EOF
 }
+
+updatevimplugins() {
+  local DOTFILES="$HOME/.dotfiles"
+  (cd "$DOTFILES" && git submodule update --remote --merge)
+}
