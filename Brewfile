@@ -7,7 +7,7 @@
 brew "bash"
 brew "git"
 brew "git-lfs"
-brew "mutt"
+#brew "mutt"
 brew "curl"
 brew "wget"
 brew "tree"
@@ -37,16 +37,15 @@ brew "memcached", restart_service: :changed
 brew "libyaml"
 brew "libxml2", args: [ "with-python" ]
 
+# Version manager
+brew "asdf"
+
 # Better tooling
 brew "bash-git-prompt"
 brew "ag"
 brew "fzf"
 
-# Ruby
-brew "rbenv"
-
 # Node & Javascript
-brew "nvm"
 brew "yarn"
 brew "flow"
 

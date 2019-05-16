@@ -7,7 +7,7 @@ else
     touch ~/.bashrc_cache
 fi
 
-# Add HOME/bin to PATh
+# Add HOME/bin to PATH
 [ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
 
 if [ -z "$BREW_PREFIX" ]; then
@@ -36,16 +36,6 @@ else
 fi
 export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools"
 
-# NVM
-export NVM_DIR=~/.nvm
-if [ -z "$BREW_PREFIX_NVM" ] || [ ! -d "$BREW_PREFIX_NVM" ]; then
-    echo "# nvm install dir" >> ~/.bashrc_cache
-    BREW_PREFIX_NVM=$(brew --prefix nvm)
-    echo "BREW_PREFIX_NVM=\"$BREW_PREFIX_NVM\"" >> ~/.bashrc_cache
-    echo >> ~/.bashrc_cache
-fi
-source "$BREW_PREFIX_NVM/nvm.sh" # This loads nvm
-
 # GO
 
 if [ -d "/Volumes/WIP" ]; then
@@ -68,10 +58,9 @@ if [ -e "/Library/TeX/texbin" ];then
 fi
 
 # RBENV & Ruby
-eval "$($BREW_PREFIX/bin/rbenv init -)"
 alias be="bundle exec"
 # fix crazy yarn/rbenv issue
-alias yarn="/usr/local/bin/yarn"
+#alias yarn="/usr/local/bin/yarn"
 
 # Faster fzf using silver searcher
 export FZF_DEFAULT_COMMAND='ag -l -g ""'
@@ -127,4 +116,13 @@ if [ -d /usr/local/Caskroom/google-cloud-sdk/latest ];then
   source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc'
 fi
 
+# ASDF
+if [ -z "$BREW_PREFIX_ASDF" ] || [ ! -d "$BREW_PREFIX_ASDF" ]; then
+    echo "# asdf install dir" >> ~/.bashrc_cache
+    BREW_PREFIX_ASDF=$(brew --prefix asdf)
+    echo "BREW_PREFIX_ASDF=\"$BREW_PREFIX_ASDF\"" >> ~/.bashrc_cache
+    echo >> ~/.bashrc_cache
+fi
+source "$BREW_PREFIX_ASDF/asdf.sh"
+source "$BREW_PREFIX_ASDF/etc/bash_completion.d/asdf.bash"
 

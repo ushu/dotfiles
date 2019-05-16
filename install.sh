@@ -14,7 +14,6 @@ NAME="Aurélien Noce"
 EMAIL="aurelien@noce.fr"
 DOTFILES="$HOME/.dotfiles"
 REPO="https://github.com/ushu/dotfiles"
-RUBY_VERSION="2.5.1"
 
 export MANPATH="/usr/local/man"
 
@@ -92,6 +91,10 @@ main() {
   fi
 
   install_or_update_homebrew
+
+  # ensure asdf is loaded !
+  source "$(brew --prefix asdf)/asdf.sh" 
+
   install_or_update_node
   install_or_update_python
   install_or_update_ruby
@@ -200,13 +203,14 @@ install_or_update_homebrew() {
 }
 
 install_or_update_node() {
-  # Ensure nvm is loaded
-  export NVM_DIR=~/.nvm
-  source "$(brew --prefix nvm)/nvm.sh"
+  # Ensure asdf is loaded
+  source "$(brew --prefix asdf)/asdf.sh"
+  asdf plugin-add nodejs
 
   echo "Installing the latest version of node"
-  nvm install node 
-  nvm alias default node 
+  local LATEST_NODE_VERSION=$(asdf list-all nodejs | tail -1)
+  asdf install nodejs "$LATEST_NODE_VERSION"
+  asdf global nodejs "$LATEST_NODE_VERSION"
   hash -r
 
   echo "Configuring yarn"
@@ -219,7 +223,7 @@ install_or_update_node() {
   fi
 
   echo "Installing basic node tools"
-  nvm use node 
+  asdf current nodejs "$LATEST_NODE_VERSION"
   yarn global add "${NODE_MODULES[@]}" 
   hash -r
 }
@@ -245,13 +249,20 @@ install_or_update_python() {
 }
 
 install_or_update_ruby() {
-  echo "Installing latest Ruby"
-  rbenv install "$RUBY_VERSION" --skip-existing 
-  rbenv local "$RUBY_VERSION"
-  echo "$RUBY_VERSION" > "$HOME/.ruby-version"
+  # Ensure asdf is loaded
+  source "$(brew --prefix asdf)/asdf.sh"
+  asdf plugin-add ruby
+
+  echo "Installing the latest version of Ruby"
+  local LATEST_RUBY_VERSION=$(asdf list-all ruby | grep '^[0-9]' | grep -v '\-dev' | tail -1)
+  asdf install ruby "$LATEST_RUBY_VERSION"
+  asdf global ruby "$LATEST_RUBY_VERSION"
+  hash -r
+  echo "$LATEST_RUBY_VERSION" > "$HOME/.ruby-version"
 
   echo "Installing/updating defaults libs and tools"
-  "$HOME/.rbenv/shims/gem" install "${RUBY_GEMS[@]}" --no-ri --no-rdoc 
+  asdf current ruby "$LATEST_RUBY_VERSION"
+  "$HOME/.asdf/shims/gem" install "${RUBY_GEMS[@]}" --no-ri --no-rdoc 
 }
 
 install_or_update_rust() {
@@ -264,19 +275,30 @@ install_or_update_rust() {
 }
 
 install_or_update_go() {
+  # Ensure asdf is loaded
+  source "$(brew --prefix asdf)/asdf.sh"
+  asdf plugin-add golang
+
+  local LATEST_GO_VERSION=$(asdf list-all golang | grep '^[0-9]' | tail -1)
+  echo "Installing the latest version of Go ($LATEST_GO_VERSION)"
+  asdf install golang "$LATEST_GO_VERSION"
+  asdf global golang "$LATEST_GO_VERSION"
+  hash -r
+
+  echo "installing go packages for dev..."
+  asdf current golang "$LATEST_GO_VERSION"
+  for pkg in ${GO_PACKAGES[@]}; do
+    go get "$pkg"
+  done
+
+  echo "code-signing delve... (to allow debugging on Mojave !)"
+  (cd "$GOPATH/src/github.com/go-delve/delve" && make install)
+
   echo 'updating installed google cloud components...'
   gcloud components update --quiet
   
   echo 'installing additional google cloud components for go...'
   gcloud components install app-engine-go --quiet
-
-  echo "installing go packages for dev..."
-  for pkg in ${GO_PACKAGES[@]}; do
-    go get "$pkg"
-  done
-
-  echo "code-signing delve..."
-  (cd "$GOPATH/src/github.com/go-delve/delve" && make install)
 }
 
 cleanup() {
