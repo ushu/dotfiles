@@ -51,7 +51,6 @@ brew "flow"
 
 # Go
 brew "go"
-brew "dep"
 
 # Lots of languages
 brew "elixir"

@@ -93,6 +93,7 @@ main() {
   install_or_update_homebrew
 
   # ensure asdf is loaded !
+  ZSH_VERSION=""
   source "$(brew --prefix asdf)/asdf.sh" 
 
   install_or_update_node
@@ -204,8 +205,10 @@ install_or_update_homebrew() {
 
 install_or_update_node() {
   # Ensure asdf is loaded
-  source "$(brew --prefix asdf)/asdf.sh"
-  asdf plugin-add nodejs
+  if [ -z "$(asdf plugin-list | grep 'nodejs')" ]; then
+    asdf plugin-add nodejs
+    bash "$HOME/.asdf/plugins/nodejs/bin/import-release-team-keyring"
+  fi
 
   echo "Installing the latest version of node"
   local LATEST_NODE_VERSION=$(asdf list-all nodejs | tail -1)
@@ -250,8 +253,9 @@ install_or_update_python() {
 
 install_or_update_ruby() {
   # Ensure asdf is loaded
-  source "$(brew --prefix asdf)/asdf.sh"
-  asdf plugin-add ruby
+  if [ -z "$(asdf plugin-list | grep 'ruby')" ]; then
+    asdf plugin-add ruby
+  fi
 
   echo "Installing the latest version of Ruby"
   local LATEST_RUBY_VERSION=$(asdf list-all ruby | grep '^[0-9]' | grep -v '\-dev' | tail -1)
@@ -276,8 +280,9 @@ install_or_update_rust() {
 
 install_or_update_go() {
   # Ensure asdf is loaded
-  source "$(brew --prefix asdf)/asdf.sh"
-  asdf plugin-add golang
+  if [ -z "$(asdf plugin-list | grep 'golang')" ]; then
+    asdf plugin-add golang
+  fi
 
   local LATEST_GO_VERSION=$(asdf list-all golang | grep '^[0-9]' | tail -1)
   echo "Installing the latest version of Go ($LATEST_GO_VERSION)"
