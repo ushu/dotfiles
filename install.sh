@@ -19,8 +19,6 @@ export MANPATH="/usr/local/man"
 
 # List of components to install
 PYTHON_PIPS=(httpie scipy matplotlib jupyter virtualenv virtualenvwrapper)
-RUBY_GEMS=(rails jekyll)
-NODE_MODULES=(express create-react-app react-native create-react-native-app firebase-tools wml)
 GO_PACKAGES=(
   # Go tools (for IDEs etc.)
   # First the "official" tools from Google
@@ -101,6 +99,7 @@ main() {
   install_or_update_ruby
   install_or_update_go
   install_or_update_rust
+  install_or_update_dart
   cleanup
 
   # Prepare bin directory
@@ -179,6 +178,10 @@ update_symlinks() {
   [ -e "$vscode_home/keybindings.json" ] || [ -L "$vscode_home/keybindings.json" ] || ln -s "$DOTFILES/vscode/keybindings.json" "$vscode_home/keybindings.json"
   [ -e "$vscode_home/locale.json" ] || [ -L "$vscode_home/locale.json" ] || ln -s "$DOTFILES/vscode/locale.json" "$vscode_home/locale.json"
   [ -d "$vscode_home/snippets" ] || [ -L "$vscode_home/snippets" ] || ln -s "$DOTFILES/vscode/snippets" "$vscode_home/snippets"
+  # ASDF
+  [ -e "$HOME/.default-npm-packages" ] || [ -L "$HOME/.default-npm-packages" ] || ln -s "$DOTFILES/default-npm-packages" "$HOME/.default-npm-packages"
+  [ -e "$HOME/.default-gems" ] || [ -L "$HOME/.default-gems" ] || ln -s "$DOTFILES/default-gems" "$HOME/.default-gems"
+  [ -e "$HOME/.tool-versions" ] || [ -L "$HOME/.tool-versions" ] || ln -s "$DOTFILES/.tool-versions" "$HOME/.tool-versions"
 }
 
 install_or_update_homebrew() {
@@ -224,30 +227,45 @@ install_or_update_node() {
     yarn config set yarn-offline-mirror .yarn-offline-cache
     yarn config set yarn-offline-mirror-pruning true
   fi
-
-  echo "Installing basic node tools"
-  asdf current nodejs "$LATEST_NODE_VERSION"
-  yarn global add "${NODE_MODULES[@]}" 
-  hash -r
 }
 
 install_or_update_python() {
+  # Ensure asdf is loaded
+  if [ -z "$(asdf plugin-list | grep 'python')" ]; then
+    asdf plugin-add python
+  fi
+
+  echo "Installing the latest version of Python"
+  local LATEST_PYTHON2_VERSION=$(asdf list-all python | grep '^2\.' | grep -v '\-dev' | tail -1)
+  local LATEST_PYTHON3_VERSION=$(asdf list-all python | grep '^3\.' | grep -v '\-dev' | tail -1)
+  asdf install python "$LATEST_PYTHON2_VERSION"
+  asdf install python "$LATEST_PYTHON3_VERSION"
+  asdf global python "$LATEST_PYTHON3_VERSION" "$LATEST_PYTHON2_VERSION"
+  hash -r
+
+
+  echo "Intalling Python2 dependencies"
+  asdf shell python "$LATEST_PYTHON2_VERSION"
   local python2_site_path=$(python2 -m site --user-site)
-  local python2_version=$(python2 -c "import sys;print(str(sys.version_info.major) + '.' + str(sys.version_info.minor))")
+  [ -d "$python2_site_path" ] && chown -R `whoami` "$python2_site_path" # fix nasty sudo pip...
+  if command -v pip2; then
+    pip2 install --upgrade pip
+  else
+    local python2_version=$(python2 -c "import sys;print(str(sys.version_info.major) + '.' + str(sys.version_info.minor))")
+    "easy_install-${python2_version}" pip
+  fi
+  pip2 install -U "${PYTHON_PIPS[@]}" 
+
+  echo "Intalling Python3 dependencies"
+  asdf shell python "$LATEST_PYTHON3_VERSION"
   local python3_site_path=$(python3 -m site --user-site)
-  local python3_version=$(python3 -c "import sys;print(str(sys.version_info.major) + '.' + str(sys.version_info.minor))")
-
-  # in case of re-install, we check the permissions are still valid...
-  # (fix nasty sudo pip...)
-  [ -d "$python2_site_path" ] && chown -R `whoami` "$python2_site_path"
-  [ -d "$python3_site_path" ] && chown -R `whoami` "$python3_site_path"
-
-  echo "Intalling pip (using easy_install)"
-  "easy_install-${python2_version}" pip
-  "easy_install-${python3_version}" pip
-
-  echo "Installing/updating defaults libs and tools"
-  pip install -U "${PYTHON_PIPS[@]}" 
+  [ -d "$python3_site_path" ] && chown -R `whoami` "$python3_site_path" # fix nasty sudo pip...
+  if command -v pip3; then
+    pip3 install --upgrade pip
+  else
+    local python3_version=$(python3 -c "import sys;print(str(sys.version_info.major) + '.' + str(sys.version_info.minor))")
+    "easy_install-${python3_version}" pip
+  fi
   pip3 install -U "${PYTHON_PIPS[@]}" 
 }
 
@@ -263,10 +281,6 @@ install_or_update_ruby() {
   asdf global ruby "$LATEST_RUBY_VERSION"
   hash -r
   echo "$LATEST_RUBY_VERSION" > "$HOME/.ruby-version"
-
-  echo "Installing/updating defaults libs and tools"
-  asdf current ruby "$LATEST_RUBY_VERSION"
-  "$HOME/.asdf/shims/gem" install "${RUBY_GEMS[@]}" --no-ri --no-rdoc 
 }
 
 install_or_update_rust() {
@@ -276,6 +290,19 @@ install_or_update_rust() {
   else
     rustup-init -y
   fi
+}
+
+install_or_update_dart() {
+  # Ensure asdf is loaded
+  if [ -z "$(asdf plugin-list | grep 'dart')" ]; then
+    asdf plugin-add dart
+  fi
+
+  local LATEST_DART_VERSION=$(asdf list-all dart | grep '^[0-9]' | tail -1)
+  echo "Installing the latest version of Dart ($LATEST_DART_VERSION)"
+  asdf install dart "$LATEST_DART_VERSION"
+  asdf global dart "$LATEST_DART_VERSION"
+  hash -r
 }
 
 install_or_update_go() {
@@ -300,9 +327,8 @@ install_or_update_go() {
   (cd "$GOPATH/src/github.com/go-delve/delve" && make install)
 
   echo 'updating installed google cloud components...'
+  asdf shell python system
   gcloud components update --quiet
-  
-  echo 'installing additional google cloud components for go...'
   gcloud components install app-engine-go --quiet
 }
 
