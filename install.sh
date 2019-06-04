@@ -160,6 +160,7 @@ update_symlinks() {
   [ -e "$HOME/.profile" ] || [ -L "$HOME/.profile" ] || ln -s "$DOTFILES/profile" "$HOME/.profile"
   [ -e "$HOME/.bashrc" ] || [ -L "$HOME/.bashrc" ] || ln -s "$DOTFILES/bashrc" "$HOME/.bashrc"
   [ -e "$HOME/.bash_custom_scripts" ] || [ -L "$HOME/.bash_custom_scripts" ] || ln -s "$DOTFILES/bash_custom_scripts" "$HOME/.bash_custom_scripts"
+  [ -e "$HOME/.zshrc" ] || [ -L "$HOME/.zshrc" ] || ln -s "$DOTFILES/zshrc" "$HOME/.zshrc"
   # SSH config
   [ -e "$HOME/.ssh/config" ] || [ -L "$HOME/.ssh/config" ] || ln -s "$DOTFILES/sshconfig" "$HOME/.ssh/config"
   # sensible defaults for Ruby/Rails

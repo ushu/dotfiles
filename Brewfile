@@ -5,6 +5,8 @@
 
 # Update common Unix tools
 brew "bash"
+brew "zsh"
+brew "antigen" # package manager for zsh
 brew "git"
 brew "git-lfs"
 #brew "mutt"
@@ -25,7 +27,7 @@ brew "ffmpeg"
 brew "watchman"
 tap "heroku/brew"
 brew "heroku/brew/heroku"
-tap "sass/sass"
+tap "sass/sass/sass"
 brew "sass/sass/sass"
 
 # DB & Cache servers
@@ -41,7 +43,6 @@ brew "libxml2", args: [ "with-python" ]
 brew "asdf"
 
 # Better tooling
-brew "bash-git-prompt"
 brew "ag"
 brew "fzf"
 

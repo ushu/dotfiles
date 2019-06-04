@@ -522,8 +522,6 @@ cloneushu() {
   git clone --recursive "ushu:ushu/$repo"
   cd "$repo"
   gituserushu
-  if [ -f ".nvmrc" ];then nvm use; fi
-  if [ -f ".ruby-version" ];then rbenv local; fi
   if [ -f "package.json" ];then yarn; fi
   if [ -f "Gemfile" ];then bundle; fi
 }
@@ -548,8 +546,6 @@ cloneiapp() {
   git clone --recursive "aurelien-iapp:imagine-app/$repo"
   cd "$repo"
   gituseriapp
-  if [ -f ".nvmrc" ];then nvm use; fi
-  if [ -f ".ruby-version" ];then rbenv local; fi
   if [ -f "package.json" ];then yarn; fi
   if [ -f "Gemfile" ];then bundle; fi
 }
@@ -568,4 +564,16 @@ EOF
 updatevimplugins() {
   local DOTFILES="$HOME/.dotfiles"
   (cd "$DOTFILES" && git submodule update --remote --merge)
+}
+
+svgtoscaled() {
+  for f in "$@";
+  do
+    echo "$f" "->" "${f%.svg}.png"
+    convert -format png -background none "$f" "${f%.svg}.png"
+    echo "$f" "->" "${f%.svg}.@2xpng"
+    convert -format png -background none -resize 200% "$f" "${f%.svg}@2x.png"
+    echo "$f" "->" "${f%.svg}.@3xpng"
+    convert -format png -background none -resize 300% "$f" "${f%.svg}@3x.png"
+  done
 }

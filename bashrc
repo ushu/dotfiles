@@ -63,7 +63,6 @@ alias be="bundle exec"
 #alias yarn="/usr/local/bin/yarn"
 
 # Faster fzf using silver searcher
-export FZF_DEFAULT_COMMAND='ag -l -g ""'
 
 # Git: completion & custom aliases
 source /usr/local/etc/bash_completion.d/git-completion.bash
@@ -124,5 +123,3 @@ if [ -z "$BREW_PREFIX_ASDF" ] || [ ! -d "$BREW_PREFIX_ASDF" ]; then
     echo >> ~/.bashrc_cache
 fi
 source "$BREW_PREFIX_ASDF/asdf.sh"
-source "$BREW_PREFIX_ASDF/etc/bash_completion.d/asdf.bash"
-

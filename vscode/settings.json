@@ -109,5 +109,7 @@
     "gitlens.views.fileHistory.location": "scm",
     "gitlens.views.lineHistory.location": "scm",
     "gitlens.views.compare.location": "scm",
-    "gitlens.views.search.location": "scm"
+    "gitlens.views.search.location": "scm",
+    "prettier.requireConfig": true,
+    "breadcrumbs.enabled": true
 }
