@@ -139,7 +139,7 @@ retreive_dotfiles() {
     git pull --depth=1 --force -q 
   else
     echo "Retreiving files from github.com/ushu/dotfiles..."
-    git clone --depth 1 -q "$REPO" "$DOTFILES"
+    git clone --depth=1 -q "$REPO" "$DOTFILES"
     cd "$DOTFILES"
   fi
   git submodule update --init --recursive -q
