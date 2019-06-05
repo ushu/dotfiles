@@ -64,9 +64,9 @@ main() {
       echo -e "oups, this script is intended to run on a mac !"
       exit 1
   fi
-  # I want Xcode !
-  if [ ! -e /Applications/Xcode.app/ ]; then
-      echo -e "oups, this script needs Xcode installed !"
+  # I want CLT installed !
+  if [ "$(xcode-select -p)ok" == "ok" ]; then
+      echo -e "oups, this script needs Xcode CLT installed !"
       exit 1
   fi
 
