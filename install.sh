@@ -127,19 +127,20 @@ main() {
 
 # Clone or Update local copy of repo
 retreive_dotfiles() {
-  if [ -e "$HOME/.dotfiles" ] && [ ! -e "$HOME/.dotfiles/.git" ] ; then
+  if [ -e "$DOTFILES" ] && [ ! -e "$DOTFILES/.git" ] ; then
     echo "Found broken installation, cleaning up..."
     rm -rf "$HOME/.dotfiles" 
   fi
   
   # Grab all files in ~/.dotfiles
-  if [ -e "$HOME/.dotfiles" ]; then
+  if [ -e "$DOTFILES" ]; then
     echo "Found previous installation, trying to update the files..."
-    cd "$HOME/.dotfiles"
+    cd "$DOTFILES"
     git pull --depth=1 --force -q 
   else
     echo "Retreiving files from github.com/ushu/dotfiles..."
-    git clone --depth 1 -q "$REPO" "$DOTFILES" 
+    git clone --depth 1 -q "$REPO" "$DOTFILES"
+    cd "$DOTFILES"
   fi
   git submodule update --init --recursive -q
 }
