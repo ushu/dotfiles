@@ -111,5 +111,6 @@
     "gitlens.views.compare.location": "scm",
     "gitlens.views.search.location": "scm",
     "prettier.requireConfig": true,
-    "breadcrumbs.enabled": true
+    "breadcrumbs.enabled": true,
+    "go.autocompleteUnimportedPackages": true
 }

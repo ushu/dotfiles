@@ -1,4 +1,10 @@
-.vscode
-.idea
+.DS_Store
+
+# IDE config(s)
+/.vscode
+/.idea
+
+# Vim stuff
+*~
 *.swp
 *.swo

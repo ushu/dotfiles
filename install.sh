@@ -156,7 +156,7 @@ update_symlinks() {
   [ -e "$HOME/.editorconfig" ] || [ -L "$HOME/.editorconfig" ] || ln -s "$DOTFILES/editorconfig" "$HOME/.editorconfig"
   # "root" git config
   [ -e "$HOME/.gitconfig" ] || [ -L "$HOME/.gitconfig" ] || ln -s "$DOTFILES/gitconfig" "$HOME/.gitconfig"
-  [ -e "$HOME/.gitignore" ] || [ -L "$HOME/.gitignore" ] || ln -s "$DOTFILES/gitignore" "$HOME/.gitignore"
+  [ -e "$HOME/.gitignore_global" ] || [ -L "$HOME/.gitignore_global" ] || ln -s "$DOTFILES/gitignore" "$HOME/.gitignore_global"
   # shell configs
   [ -e "$HOME/.profile" ] || [ -L "$HOME/.profile" ] || ln -s "$DOTFILES/profile" "$HOME/.profile"
   [ -e "$HOME/.bashrc" ] || [ -L "$HOME/.bashrc" ] || ln -s "$DOTFILES/bashrc" "$HOME/.bashrc"
