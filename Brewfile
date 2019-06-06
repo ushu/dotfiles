@@ -3,6 +3,17 @@
 #   $ brew tap Homebrew/bundle
 #
 
+# Setup Homebrew Cask first
+cask_args appdir: "/Applications"
+tap "caskroom/cask"
+cask "homebrew/cask-versions/adoptopenjdk8"
+
+# Java is needed
+cask "java" unless system "/usr/libexec/java_home --failfast >/dev/null 2>&1"
+
+# Cmake is also needed by some brews
+brew "cmake"
+
 # Update common Unix tools
 brew "bash"
 brew "zsh"
@@ -13,21 +24,19 @@ brew "git-lfs"
 brew "curl"
 brew "wget"
 brew "tree"
-brew "mercurial"
+#brew "mercurial"
 
-# Python
-brew "python3", args: [ "build-from-source" ]
-brew "python@2", args: [ "build-from-source" ]
+# Brew version(s) of scripting languages
+brew "python3"
+brew "python@2"
+brew "ruby"
+brew "perl"
 
 # Development tools
 brew "pkg-config"
-brew "vim", args: ["with-python", "with-lua", "with-python3"]
-brew "imagemagick"
-brew "ffmpeg"
+brew "vim"
 brew "watchman"
-tap "heroku/brew"
 brew "heroku/brew/heroku"
-tap "sass/sass/sass"
 brew "sass/sass/sass"
 
 # DB & Cache servers
@@ -37,7 +46,7 @@ brew "memcached", restart_service: :changed
 
 # Common libraries
 brew "libyaml"
-brew "libxml2", args: [ "with-python" ]
+brew "libxml2"
 
 # Version manager
 brew "asdf"
@@ -47,54 +56,46 @@ brew "ag"
 brew "fzf"
 
 # Node & Javascript
-brew "yarn"
 brew "flow"
 
 # Go
 brew "go"
 
-# Lots of languages
-brew "elixir"
-brew "rustup"
-brew "elm"
-
-# iOS
-brew "carthage"
 
 # Other dev tools
-brew "cmake", args: ["with-completion"]
 brew "letsencrypt"
 
 ###################################
 # Install GUI apps with Brew Cask #
 ###################################
 
-cask_args appdir: "/Applications"
-tap "caskroom/cask"
-
 # Browsers
 cask "google-chrome"
 cask "firefox"
 
-# Java
-cask "java" unless system "/usr/libexec/java_home --failfast >/dev/null 2>&1"
-
 # Dev Tools
 brew "antlr@4" # <- needs java !
 cask "visual-studio-code"
-cask "emacs"
+#cask "emacs"
+
 # GCP stuff
-cask "googleappengine"
-cask "google-cloud-sdk"
+#cask "googleappengine"
+#cask "google-cloud-sdk"
 
 # Android
 cask "android-studio"
 cask "keystore-explorer"
 
-# Misc
-cask "launchrocket"
-cask "omnidisksweeper"
-
-# JetBrains IDEs
-cask "jetbrains-toolbox"
+# The following tools do now work (yet) on Catalina
+osx_version = `defaults read loginwindow SystemVersionStampAsString`
+if osx_version != "10.15"
+  brew "imagemagick"
+  brew "ffmpeg"
+  brew "node"
+  brew "yarn" # <- depends on node
+  brew "elixir"
+  brew "rustup"
+  brew "elm"
+  brew "carthage"
+end
 

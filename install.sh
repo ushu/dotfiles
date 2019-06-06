@@ -290,7 +290,7 @@ install_or_update_rust() {
   echo "Installing rust"
   if command -v rustup; then
     rustup update stable 
-  else
+  elif command -v rustup-init; then
     rustup-init -y
   fi
 }
