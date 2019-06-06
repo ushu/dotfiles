@@ -97,5 +97,6 @@ if osx_version != "10.15"
   brew "rustup"
   brew "elm"
   brew "carthage"
+  brew "gpg2"
 end
 
