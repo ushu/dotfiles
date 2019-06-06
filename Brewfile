@@ -86,17 +86,17 @@ cask "visual-studio-code"
 cask "android-studio"
 cask "keystore-explorer"
 
-# The following tools do now work (yet) on Catalina
-osx_version = `defaults read loginwindow SystemVersionStampAsString`
-if osx_version != "10.15"
-  brew "imagemagick"
-  brew "ffmpeg"
-  brew "node"
-  brew "yarn" # <- depends on node
-  brew "elixir"
-  brew "rustup"
-  brew "elm"
-  brew "carthage"
-  brew "gpg2"
-end
+# On Catalina, install these *AFTER* the updated dev tools
+brew "imagemagick"
+brew "ffmpeg"
+brew "node"
+brew "yarn" # <- depends on node
+brew "elixir"
+brew "rustup"
+brew "elm"
+brew "carthage"
+brew "zlib"
+
+# Could not build it on Catalina
+# brew "gpg2"
 

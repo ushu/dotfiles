@@ -12,10 +12,10 @@ set -u
 
 NAME="Aurélien Noce"
 EMAIL="aurelien@noce.fr"
+
+# "locals"
 DOTFILES="$HOME/.dotfiles"
 REPO="https://github.com/ushu/dotfiles"
-
-export MANPATH="/usr/local/man"
 
 # List of components to install
 PYTHON_PIPS=(httpie scipy matplotlib jupyter virtualenv virtualenvwrapper)
@@ -233,6 +233,10 @@ install_or_update_node() {
 }
 
 install_or_update_python() {
+  # Use zlib from python
+  CPPFLAGS="-I$(brew --prefix zlib)/include" 
+  CFLAGS="-I$(xcrun --show-sdk-path)/usr/include" 
+
   # Ensure asdf is loaded
   if [ -z "$(asdf plugin-list | grep 'python')" ]; then
     asdf plugin-add python
@@ -241,8 +245,8 @@ install_or_update_python() {
   echo "Installing the latest version of Python"
   local LATEST_PYTHON2_VERSION=$(asdf list-all python | grep '^2\.' | grep -v '\-dev' | tail -1)
   local LATEST_PYTHON3_VERSION=$(asdf list-all python | grep '^3\.' | grep -v '\-dev' | tail -1)
-  asdf install python "$LATEST_PYTHON2_VERSION"
-  asdf install python "$LATEST_PYTHON3_VERSION"
+  CPPFLAGS="-I$(brew --prefix zlib)/include" CFLAGS="-I$(xcrun --show-sdk-path)/usr/include" asdf install python "$LATEST_PYTHON2_VERSION"
+  CPPFLAGS="-I$(brew --prefix zlib)/include" CFLAGS="-I$(xcrun --show-sdk-path)/usr/include" asdf install python "$LATEST_PYTHON3_VERSION"
   asdf global python "$LATEST_PYTHON3_VERSION" "$LATEST_PYTHON2_VERSION"
   hash -r
 
@@ -331,8 +335,10 @@ install_or_update_go() {
 
   echo 'updating installed google cloud components...'
   asdf shell python system
-  gcloud components update --quiet
-  gcloud components install app-engine-go --quiet
+  if command -d gcloud;then
+    gcloud components update --quiet
+    gcloud components install app-engine-go --quiet
+  fi
 }
 
 cleanup() {

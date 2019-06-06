@@ -13,7 +13,7 @@ export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 export FZF_DEFAULT_COMMAND='ag -l -g ""'
 
 # Configure Android build tools
-if [ -d "/Volumes/WIP/android-sdk" ]; then
+if [ -d "/Volumes/WIP/android-sdk" ] && [ -w "/Volumes/WIP/android-sdk" ]; then
   export ANDROID_HOME="/Volumes/WIP/android-sdk"
 elif [ -d "/Volumes/Storage/android-sdk" ]; then
   export ANDROID_HOME="/Volumes/Storage/android-sdk"
@@ -22,7 +22,7 @@ else
 fi
 
 # Go{PATH|tools}
-if [ -d "/Volumes/WIP" ]; then
+if [ -d "/Volumes/WIP/go" ] && [ -w "/Volumes/WIP/go" ]; then
   export WIPPATH="$HOME/WIP"
   [ -e "$WIPPATH" ] || [ -l "$WIPPATH" ] || ls -s "/Volumes/WIP" "$WIPPATH"
   export GOPATH="/Volumes/WIP/go"
