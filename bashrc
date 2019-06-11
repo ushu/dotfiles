@@ -123,3 +123,4 @@ if [ -z "$BREW_PREFIX_ASDF" ] || [ ! -d "$BREW_PREFIX_ASDF" ]; then
     echo >> ~/.bashrc_cache
 fi
 source "$BREW_PREFIX_ASDF/asdf.sh"
+source "$BREW_PREFIX_ASDF/etc/bash_completion.d/asdf.bash"
