@@ -100,14 +100,8 @@ main() {
   install_or_update_go
   install_or_update_rust
   install_or_update_dart
+  install_or_update_elixir
   cleanup
-
-  # Prepare bin directory
-  [ -d "$HOME/bin" ] || mkdir "$HOME/bin"
-  # And install other deps
-  pushd "$HOME/bin"
-    #...
-  popd
 
   trap - EXIT
 
@@ -281,11 +275,12 @@ install_or_update_ruby() {
   fi
 
   echo "Installing the latest version of Ruby"
-  local LATEST_RUBY_VERSION=$(asdf list-all ruby | grep '^[0-9]' | grep -v '\-dev' | tail -1)
+  local LATEST_RUBY_VERSION=$(asdf list-all ruby | grep '^[0-9]' | grep -v '\-dev' | grep -v '\-preview' | tail -1)
   asdf install ruby "$LATEST_RUBY_VERSION"
   asdf global ruby "$LATEST_RUBY_VERSION"
   hash -r
-  echo "$LATEST_RUBY_VERSION" > "$HOME/.ruby-version"
+
+  asdf shell ruby "$LATEST_RUBY_VERSION"
 }
 
 install_or_update_rust() {
@@ -298,16 +293,33 @@ install_or_update_rust() {
 }
 
 install_or_update_dart() {
-  # Ensure asdf is loaded
+  # ensure asdf is loaded
   if [ -z "$(asdf plugin-list | grep 'dart')" ]; then
     asdf plugin-add dart
   fi
 
-  local LATEST_DART_VERSION=$(asdf list-all dart | grep '^[0-9]' | tail -1)
-  echo "Installing the latest version of Dart ($LATEST_DART_VERSION)"
-  asdf install dart "$LATEST_DART_VERSION"
-  asdf global dart "$LATEST_DART_VERSION"
+  local latest_dart_version=$(asdf list-all dart | grep '^[0-9]' | tail -1)
+  echo "installing the latest version of dart ($latest_dart_version)"
+  asdf install dart "$latest_dart_version"
+  asdf global dart "$latest_dart_version"
   hash -r
+
+  asdf shell dart "$latest_dart_version"
+}
+
+install_or_update_elixir() {
+  # ensure asdf is loaded
+  if [ -z "$(asdf plugin-list | grep 'elixir')" ]; then
+    asdf plugin-add elixir
+  fi
+
+  local latest_elixir_version=$(asdf list-all elixir | grep '^[0-9]' | grep -v '\-rc' | tail -1)
+  echo "installing the latest version of elixir ($latest_elixir_version)"
+  asdf install elixir "$latest_elixir_version"
+  asdf global elixir "$latest_elixir_version"
+  hash -r
+
+  asdf shell elixir "$latest_elixir_version"
 }
 
 install_or_update_go() {
@@ -349,7 +361,7 @@ cleanup() {
   rm -rfv /Library/Caches/Homebrew/*
   brew tap --repair
   echo 'Cleanup gems...'
-  gem cleanup &>/dev/null
+  gem cleanup 
 }
 
 main
