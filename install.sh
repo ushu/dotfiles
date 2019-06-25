@@ -362,6 +362,8 @@ cleanup() {
   brew tap --repair
   echo 'Cleanup gems...'
   gem cleanup 
+  echo 'Re-generating asdf shims...'
+  asdf reshim
 }
 
 main
