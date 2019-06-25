@@ -59,10 +59,6 @@ fi
 
 # RBENV & Ruby
 alias be="bundle exec"
-# fix crazy yarn/rbenv issue
-#alias yarn="/usr/local/bin/yarn"
-
-# Faster fzf using silver searcher
 
 # Git: completion & custom aliases
 source /usr/local/etc/bash_completion.d/git-completion.bash
@@ -96,6 +92,9 @@ if [ -e "$HOME/.bash_local_scripts" ]; then
   source "$HOME/.bash_local_scripts"
 fi
 
+# Needed by python-build on Mojave
+export SDKROOT="$(xcrun --show-sdk-path)"
+
 # Setup virtualenvwrapper
 if [ -z "$PYTHON3_VERSION" ] || [ ! -z "$PYTHON_VERSION" ]; then
     PYTHON3_VERSION=$(python3 --version | cut -d' ' -f2 | cut -d'.' -f1,2)
@@ -114,6 +113,9 @@ if [ -d /usr/local/Caskroom/google-cloud-sdk/latest ];then
   source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc'
   source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc'
 fi
+
+# reorder path(s) for homebrew usage
+export PATH="/usr/local/sbin:/usr/local/bin/:$PATH"
 
 # ASDF
 if [ -z "$BREW_PREFIX_ASDF" ] || [ ! -d "$BREW_PREFIX_ASDF" ]; then

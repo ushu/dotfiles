@@ -184,7 +184,6 @@ update_symlinks() {
   # ASDF
   [ -e "$HOME/.default-npm-packages" ] || [ -L "$HOME/.default-npm-packages" ] || ln -s "$DOTFILES/default-npm-packages" "$HOME/.default-npm-packages"
   [ -e "$HOME/.default-gems" ] || [ -L "$HOME/.default-gems" ] || ln -s "$DOTFILES/default-gems" "$HOME/.default-gems"
-  [ -e "$HOME/.tool-versions" ] || [ -L "$HOME/.tool-versions" ] || ln -s "$DOTFILES/.tool-versions" "$HOME/.tool-versions"
 }
 
 install_or_update_homebrew() {
@@ -233,23 +232,22 @@ install_or_update_node() {
 }
 
 install_or_update_python() {
-  # Use zlib from python
-  CPPFLAGS="-I$(brew --prefix zlib)/include" 
-  CFLAGS="-I$(xcrun --show-sdk-path)/usr/include" 
-
   # Ensure asdf is loaded
   if [ -z "$(asdf plugin-list | grep 'python')" ]; then
     asdf plugin-add python
   fi
 
+  # Needed by python-build on Mojave
+  export SDKROOT="$(xcrun --show-sdk-path)"
+
   echo "Installing the latest version of Python"
   local LATEST_PYTHON2_VERSION=$(asdf list-all python | grep '^2\.' | grep -v '\-dev' | tail -1)
   local LATEST_PYTHON3_VERSION=$(asdf list-all python | grep '^3\.' | grep -v '\-dev' | tail -1)
-  CPPFLAGS="-I$(brew --prefix zlib)/include" CFLAGS="-I$(xcrun --show-sdk-path)/usr/include" asdf install python "$LATEST_PYTHON2_VERSION"
-  CPPFLAGS="-I$(brew --prefix zlib)/include" CFLAGS="-I$(xcrun --show-sdk-path)/usr/include" asdf install python "$LATEST_PYTHON3_VERSION"
+  # Use Hombrew zlib for python 2
+  asdf install python "$LATEST_PYTHON2_VERSION"
+  asdf install python "$LATEST_PYTHON3_VERSION"
   asdf global python "$LATEST_PYTHON3_VERSION" "$LATEST_PYTHON2_VERSION"
   hash -r
-
 
   echo "Intalling Python2 dependencies"
   asdf shell python "$LATEST_PYTHON2_VERSION"
@@ -325,7 +323,11 @@ install_or_update_go() {
   hash -r
 
   echo "installing go packages for dev..."
-  asdf current golang "$LATEST_GO_VERSION"
+  asdf shell golang "$LATEST_GO_VERSION"
+  
+  # Latest procogen is needed for Firebase
+  go get -u github.com/golang/protobuf/protoc-gen-go
+  # then all the deps
   for pkg in ${GO_PACKAGES[@]}; do
     go get "$pkg"
   done
