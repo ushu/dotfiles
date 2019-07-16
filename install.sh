@@ -222,6 +222,7 @@ install_or_update_node() {
     yarn config set init-license "MIT"
     yarn config set yarn-offline-mirror .yarn-offline-cache
     yarn config set yarn-offline-mirror-pruning true
+    yarn config set prefix ~/.yarn
   fi
 }
 
