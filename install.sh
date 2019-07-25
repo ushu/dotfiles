@@ -92,7 +92,10 @@ main() {
 
   # We often need the official fonts (even the legacy ones !) for the
   # design tools !
+  echo "Installing Apple Fonts..."
   install_apple_fonts
+  echo "Installing Apple Symbols (beta)..."
+  (sudo installer -pkg "$DOTFILES/Apple Fonts/SFSymbols.pkg" -target /; true)
 
   install_or_update_homebrew
 
