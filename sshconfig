@@ -19,7 +19,7 @@ host aurelien-iapp
 	user git
 	identityfile ~/.ssh/id_rsa-aurelien-iapp
 
-Host git.lesappsdaurelien.fr
+Host lesappsdaurelien.fr
 	hostname lesappsdaurelien.fr
 	user git
 	IdentityFile ~/.ssh/id_rsa-ushu

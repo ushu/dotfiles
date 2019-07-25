@@ -49,6 +49,8 @@ GO_PACKAGES=(
 )
 
 main() {
+
+
   # Reset logfile
   echo "BOOTING INSTALL SCRIPT @ $(date)"
 
@@ -87,6 +89,10 @@ main() {
       echo "Missing headers: install CLT first !"
     fi
   fi
+
+  # We often need the official fonts (even the legacy ones !) for the
+  # design tools !
+  install_apple_fonts
 
   install_or_update_homebrew
 
@@ -354,6 +360,12 @@ install_or_update_go() {
     gcloud components update --quiet
     gcloud components install app-engine-go --quiet
   fi
+}
+
+install_apple_fonts() {
+  find "$DOTFILES/Apple Fonts" -name '*.[ot]tf' | while read f;  do
+    cp "$f" "$HOME/Library/Fonts/"
+  done
 }
 
 cleanup() {

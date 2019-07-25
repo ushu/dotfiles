@@ -97,6 +97,10 @@ brew "elm"
 brew "carthage"
 brew "zlib"
 
+# LaTeX
+cask "basictex"
+cask "jabref"
+
 # Could not build it on Catalina
 # brew "gpg2"
 
