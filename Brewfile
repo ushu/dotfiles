@@ -29,6 +29,7 @@ brew "tree"
 # Brew version(s) of scripting languages
 brew "python3"
 brew "python@2"
+brew "cython"
 brew "ruby"
 brew "perl"
 
@@ -77,6 +78,7 @@ cask "firefox"
 brew "antlr@4" # <- needs java !
 cask "visual-studio-code"
 #cask "emacs"
+cask "miniconda"
 
 # GCP stuff
 #cask "googleappengine"
@@ -90,7 +92,6 @@ cask "keystore-explorer"
 brew "imagemagick"
 brew "ffmpeg"
 brew "node"
-brew "yarn" # <- depends on node
 brew "elixir"
 brew "rustup"
 brew "elm"
@@ -98,7 +99,7 @@ brew "carthage"
 brew "zlib"
 
 # LaTeX
-cask "basictex"
+#cask "basictex"
 cask "jabref"
 
 # Could not build it on Catalina

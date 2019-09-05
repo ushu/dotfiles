@@ -112,6 +112,8 @@ main() {
   install_or_update_elixir
   cleanup
 
+  generate_bashrc_cache
+
   trap - EXIT
 
   echo
@@ -246,7 +248,7 @@ install_or_update_python() {
 
   echo "Installing the latest version of Python"
   local LATEST_PYTHON2_VERSION=$(asdf list-all python | grep '^2\.' | grep -v '\-dev' | tail -1)
-  local LATEST_PYTHON3_VERSION=$(asdf list-all python | grep '^3\.' | grep -v '\-dev' | tail -1)
+  local LATEST_PYTHON3_VERSION=$(asdf list-all python | grep '^3\.' | grep -v '\-dev' | grep -v 'b\d\+' | tail -1)
   # Use Hombrew zlib for python 2
   asdf install python "$LATEST_PYTHON2_VERSION"
   asdf install python "$LATEST_PYTHON3_VERSION"
@@ -380,6 +382,32 @@ cleanup() {
   gem cleanup 
   echo 'Re-generating asdf shims...'
   asdf reshim
+}
+
+generate_bashrc_cache() {
+  local cache="$HOME/.bashrc_cache"
+
+  # Create file
+  touch "$HOME/.bashrc_cache"
+
+  # Add global brew prefix
+  BREW_PREFIX=$(brew --prefix)
+  echo "# Generic prefix for Homebrew installs" >> "$cache"
+  echo "BREW_PREFIX=\"$BREW_PREFIX\"" >> "$cache"
+  echo >> "$cache"
+
+
+  # Detect JAVA Home
+  JAVA_HOME=$(/usr/libexec/java_home)
+  echo "# Home path of the JAVA SDK" >> "$cache"
+  echo "JAVA_HOME=\"$JAVA_HOME\"" >> "$cache"
+  echo >> "$cache"
+
+  # Current version (MAJOR.MINOR) of Python
+  PYTHON3_VERSION=$(python3 --version | cut -d' ' -f2 | cut -d'.' -f1,2)
+  echo "# Installed Python3 version" >> ~/.bashrc_cache
+  echo "PYTHON3_VERSION=\"$PYTHON3_VERSION\"" >> ~/.bashrc_cache
+  echo >> ~/.bashrc_cache
 }
 
 main
