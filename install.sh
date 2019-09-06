@@ -278,6 +278,12 @@ install_or_update_python() {
     "easy_install-${python3_version}" pip
   fi
   pip3 install -U "${PYTHON_PIPS[@]}" 
+
+  echo "Install MiniConda"
+  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+  chmod +x ./Miniconda3-latest-MacOSX-x86_64.sh
+  ./Miniconda3-latest-MacOSX-x86_64.sh -b -p $HOME/.miniconda
+  rm ./Miniconda3-latest-MacOSX-x86_64.sh
 }
 
 install_or_update_ruby() {

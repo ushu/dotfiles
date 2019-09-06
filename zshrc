@@ -90,3 +90,8 @@ alias n="nvim"
 ASDF_PATH="$BREW_PREFIX/opt/asdf"
 [ -e "$ASDF_PATH/asdf/sh" ] && source "$ASDF_PATH/asdf.sh"
 
+# anaconda
+if [ -d "$HOME/.miniconda/bin" ]; then
+  export PATH="$HOME/.miniconda/bin:$PATH"
+fi
+

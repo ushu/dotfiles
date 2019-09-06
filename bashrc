@@ -96,6 +96,11 @@ if [ -f "$BREW_PREFIX/opt/asdf/etc/bash_completion.d/asdf.bash" ]; then
   source "$BREW_PREFIX/opt/asdf/etc/bash_completion.d/asdf.bash"
 fi
 
+# anaconda
+if [ -d "$HOME/.miniconda/bin" ]; then
+  export PATH="$HOME/.miniconda/bin:$PATH"
+fi
+
 # Custom prompt
 PS1="\W \$ "
 __conda_setup="$("$BREW_PREFIX/Caskroom/miniconda/base/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
