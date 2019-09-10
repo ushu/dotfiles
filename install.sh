@@ -99,9 +99,19 @@ main() {
 
   install_or_update_homebrew
 
-  # ensure asdf is loaded !
+  # ASDF
+  if [ ! -d "$HOME/.asdf" ]; then
+    git clone https://github.com/asdf-vm/asdf.git "$HOME/.asdf" 
+    git checkout "$(git describe --abbrev=0 --tags)"
+  else
+    pushd "$HOME/.asdf"
+      git fetch origin 
+      git checkout "$(git describe --abbrev=0 --tags)"
+    popd
+  fi
   ZSH_VERSION=""
-  source "$(brew --prefix asdf)/asdf.sh" 
+  source $HOME/.asdf/asdf.sh
+  source $HOME/.asdf/completions/asdf.bash
 
   install_or_update_node
   install_or_update_python
@@ -210,7 +220,7 @@ install_or_update_homebrew() {
     # for some reason ffmpeg can cause link issues
     brew unlink ffmpeg >/dev/null
   fi
-  brew bundle check --file="$DOTFILES/Brewfile" || brew bundle install --file="$DOTFILES/Brewfile" --no-update 
+  (brew bundle check --file="$DOTFILES/Brewfile" || brew bundle install --file="$DOTFILES/Brewfile" --no-update); true 
 }
 
 install_or_update_node() {

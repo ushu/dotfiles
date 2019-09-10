@@ -49,9 +49,6 @@ brew "memcached", restart_service: :changed
 brew "libyaml"
 brew "libxml2"
 
-# Version manager
-brew "asdf"
-
 # Better tooling
 brew "ag"
 brew "fzf"

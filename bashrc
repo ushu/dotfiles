@@ -89,11 +89,10 @@ fi
 export PATH="/usr/local/sbin:/usr/local/bin/:$PATH"
 
 # ASDF
-if [ -f "$BREW_PREFIX/opt/asdf/asdf.sh" ]; then
-  source "$BREW_PREFIX/opt/asdf/asdf.sh"
-fi
-if [ -f "$BREW_PREFIX/opt/asdf/etc/bash_completion.d/asdf.bash" ]; then
-  source "$BREW_PREFIX/opt/asdf/etc/bash_completion.d/asdf.bash"
+if [ -d "$HOME/.asdf" ]; then
+  source "$HOME/.asdf/asdf.sh"
+  source "$HOME/.asdf/completions/asdf.bash"
+  export PATH="$(yarn global bin):$PATH"
 fi
 
 # anaconda

@@ -87,8 +87,12 @@ alias e="emacsclient  -a '' --no-wait -c"
 alias nv="nvim"
 alias n="nvim"
 
-ASDF_PATH="$BREW_PREFIX/opt/asdf"
-[ -e "$ASDF_PATH/asdf/sh" ] && source "$ASDF_PATH/asdf.sh"
+# ASDF
+if [ -d "$HOME/.asdf" ]; then
+  source "$HOME/.asdf/asdf.sh"
+  source "$HOME/.asdf/completions/asdf.bash"
+  export PATH="$(yarn global bin):$PATH"
+fi
 
 # anaconda
 if [ -d "$HOME/.miniconda/bin" ]; then
