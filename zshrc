@@ -87,6 +87,12 @@ alias e="emacsclient  -a '' --no-wait -c"
 alias nv="nvim"
 alias n="nvim"
 
+# Google tools
+if [ -d "/Volumes/WIP/google-cloud-sdk" ]; then
+  source "/Volumes/WIP/google-cloud-sdk/path.zsh.inc"
+  source "/Volumes/WIP/google-cloud-sdk/completion.zsh.inc"
+fi
+
 # ASDF
 if [ -d "$HOME/.asdf" ]; then
   source "$HOME/.asdf/asdf.sh"

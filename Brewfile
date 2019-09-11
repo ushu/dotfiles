@@ -74,8 +74,8 @@ cask "firefox"
 # Dev Tools
 brew "antlr@4" # <- needs java !
 cask "visual-studio-code"
-#cask "emacs"
-cask "miniconda"
+cask "github"
+brew "hub"
 
 # GCP stuff
 #cask "googleappengine"

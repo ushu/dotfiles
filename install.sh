@@ -120,6 +120,9 @@ main() {
   install_or_update_rust
   install_or_update_dart
   install_or_update_elixir
+  
+  install_google_cloud
+
   cleanup
 
   generate_bashrc_cache
@@ -290,10 +293,12 @@ install_or_update_python() {
   pip3 install -U "${PYTHON_PIPS[@]}" 
 
   echo "Install MiniConda"
-  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
-  chmod +x ./Miniconda3-latest-MacOSX-x86_64.sh
-  ./Miniconda3-latest-MacOSX-x86_64.sh -b -p $HOME/.miniconda
-  rm ./Miniconda3-latest-MacOSX-x86_64.sh
+  if [ ! -d "$HOME/.miniconda" ]; then
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+    chmod +x ./Miniconda3-latest-MacOSX-x86_64.sh
+    ./Miniconda3-latest-MacOSX-x86_64.sh -b -p $HOME/.miniconda
+    rm ./Miniconda3-latest-MacOSX-x86_64.sh
+  fi
 }
 
 install_or_update_ruby() {
@@ -374,13 +379,29 @@ install_or_update_go() {
 
   echo "code-signing delve... (to allow debugging on Mojave !)"
   (cd "$GOPATH/src/github.com/go-delve/delve" && make install)
+}
+
+install_google_cloud() {
+  asdf shell python system
+
+  local install_dir="$HOME"
+  if [ -d /Volumes/WIP ]; then
+    install_dir="/Volumes/WIP"
+  fi
+  if [ ! -d "$install_dir/google-cloud-sdk" ]; then
+    echo "Updating google cloud SDK"
+    curl https://sdk.cloud.google.com > ./Google-Cloud-Installer.sh
+    chmod +x ./Google-Cloud-Installer.sh
+    ./Google-Cloud-Installer.sh --disable-prompts --install-dir="$install_dir"
+    rm ./Google-Cloud-Installer.sh
+  else
+    echo "Installing google cloud SDK"
+    gcloud components update --quiet
+  fi
+
 
   echo 'updating installed google cloud components...'
-  asdf shell python system
-  if command -d gcloud;then
-    gcloud components update --quiet
-    gcloud components install app-engine-go --quiet
-  fi
+  gcloud components install app-engine-go --quiet
 }
 
 install_apple_fonts() {
