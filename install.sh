@@ -110,8 +110,8 @@ main() {
     popd
   fi
   ZSH_VERSION=""
-  source $HOME/.asdf/asdf.sh
-  source $HOME/.asdf/completions/asdf.bash
+  source "$HOME/.asdf/asdf.sh"
+  source "$HOME/.asdf/completions/asdf.bash"
 
   install_or_update_node
   install_or_update_python

@@ -102,7 +102,7 @@ fi
 
 # Custom prompt
 PS1="\W \$ "
-__conda_setup="$("$BREW_PREFIX/Caskroom/miniconda/base/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$($HOME/.miniconda/bin/conda 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
    eval "$__conda_setup"
 fi
