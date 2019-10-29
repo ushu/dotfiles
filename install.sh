@@ -18,7 +18,7 @@ DOTFILES="$HOME/.dotfiles"
 REPO="https://github.com/ushu/dotfiles"
 
 # List of components to install
-PYTHON_PIPS=(httpie scipy matplotlib jupyter virtualenv virtualenvwrapper)
+PYTHON_PIPS=(httpie)
 GO_PACKAGES=(
   # Go tools (for IDEs etc.)
   # First the "official" tools from Google
@@ -102,7 +102,9 @@ main() {
   # ASDF
   if [ ! -d "$HOME/.asdf" ]; then
     git clone https://github.com/asdf-vm/asdf.git "$HOME/.asdf" 
-    git checkout "$(git describe --abbrev=0 --tags)"
+    pushd "$HOME/.asdf"
+      git checkout "$(git describe --abbrev=0 --tags)"
+    popd
   else
     pushd "$HOME/.asdf"
       git fetch origin 
@@ -230,8 +232,8 @@ install_or_update_node() {
   # Ensure asdf is loaded
   if [ -z "$(asdf plugin-list | grep 'nodejs')" ]; then
     asdf plugin-add nodejs
-    bash "$HOME/.asdf/plugins/nodejs/bin/import-release-team-keyring"
   fi
+  bash "$HOME/.asdf/plugins/nodejs/bin/import-release-team-keyring"
 
   echo "Installing the latest version of node"
   local LATEST_NODE_VERSION=$(asdf list-all nodejs | tail -1)
@@ -251,46 +253,13 @@ install_or_update_node() {
 }
 
 install_or_update_python() {
-  # Ensure asdf is loaded
-  if [ -z "$(asdf plugin-list | grep 'python')" ]; then
-    asdf plugin-add python
-  fi
-
   # Needed by python-build on Mojave
   export SDKROOT="$(xcrun --show-sdk-path)"
 
   echo "Installing the latest version of Python"
   local LATEST_PYTHON2_VERSION=$(asdf list-all python | grep '^2\.' | grep -v '\-dev' | tail -1)
   local LATEST_PYTHON3_VERSION=$(asdf list-all python | grep '^3\.' | grep -v '\-dev' | grep -v 'b\d\+' | tail -1)
-  # Use Hombrew zlib for python 2
-  asdf install python "$LATEST_PYTHON2_VERSION"
-  asdf install python "$LATEST_PYTHON3_VERSION"
-  asdf global python "$LATEST_PYTHON3_VERSION" "$LATEST_PYTHON2_VERSION"
   hash -r
-
-  echo "Intalling Python2 dependencies"
-  asdf shell python "$LATEST_PYTHON2_VERSION"
-  local python2_site_path=$(python2 -m site --user-site)
-  [ -d "$python2_site_path" ] && chown -R `whoami` "$python2_site_path" # fix nasty sudo pip...
-  if command -v pip2; then
-    pip2 install --upgrade pip
-  else
-    local python2_version=$(python2 -c "import sys;print(str(sys.version_info.major) + '.' + str(sys.version_info.minor))")
-    "easy_install-${python2_version}" pip
-  fi
-  pip2 install -U "${PYTHON_PIPS[@]}" 
-
-  echo "Intalling Python3 dependencies"
-  asdf shell python "$LATEST_PYTHON3_VERSION"
-  local python3_site_path=$(python3 -m site --user-site)
-  [ -d "$python3_site_path" ] && chown -R `whoami` "$python3_site_path" # fix nasty sudo pip...
-  if command -v pip3; then
-    pip3 install --upgrade pip
-  else
-    local python3_version=$(python3 -c "import sys;print(str(sys.version_info.major) + '.' + str(sys.version_info.minor))")
-    "easy_install-${python3_version}" pip
-  fi
-  pip3 install -U "${PYTHON_PIPS[@]}" 
 
   echo "Install MiniConda"
   if [ ! -d "$HOME/.miniconda" ]; then
@@ -299,6 +268,15 @@ install_or_update_python() {
     ./Miniconda3-latest-MacOSX-x86_64.sh -b -p $HOME/.miniconda
     rm ./Miniconda3-latest-MacOSX-x86_64.sh
   fi
+  # ensure we can access conda
+  export PATH="$HOME/.miniconda/bin:$PATH"
+  # and install pip
+  conda install pip -y
+
+  echo "Install PIPs"
+  for pkg in ${PYTHON_PIPS[@]}; do
+    pip install "$pkg"
+  done
 }
 
 install_or_update_ruby() {
@@ -369,6 +347,13 @@ install_or_update_go() {
 
   echo "installing go packages for dev..."
   asdf shell golang "$LATEST_GO_VERSION"
+
+  if [ -d "/Volumes/Work" ] && [ -w "/Volumes/Work" ]; then
+    [ -e "/Volumes/Work/go" ] || mkdir -p "/Volumes/Work/go"
+    export GOPATH="/Volumes/Work/go"
+  else
+    export GOPATH="$HOME"
+  fi
   
   # Latest procogen is needed for Firebase
   go get -u github.com/golang/protobuf/protoc-gen-go
@@ -382,11 +367,9 @@ install_or_update_go() {
 }
 
 install_google_cloud() {
-  asdf shell python system
-
   local install_dir="$HOME"
-  if [ -d /Volumes/WIP ]; then
-    install_dir="/Volumes/WIP"
+  if [ -d /Volumes/Work ]; then
+    install_dir="/Volumes/Work"
   fi
   if [ ! -d "$install_dir/google-cloud-sdk" ]; then
     echo "Updating google cloud SDK"
@@ -394,17 +377,18 @@ install_google_cloud() {
     chmod +x ./Google-Cloud-Installer.sh
     ./Google-Cloud-Installer.sh --disable-prompts --install-dir="$install_dir"
     rm ./Google-Cloud-Installer.sh
-  else
-    echo "Installing google cloud SDK"
-    gcloud components update --quiet
   fi
+  export PATH="$install_dir/google-cloud-sdk/bin:$PATH"
 
+  echo "updating google cloud SDK"
+  gcloud components update --quiet
 
-  echo 'updating installed google cloud components...'
+  echo 'adding appengine specifics'
   gcloud components install app-engine-go --quiet
 }
 
 install_apple_fonts() {
+  [ -d "$HOME/Library/Fonts" ] || mkdir -p "$HOME/Library/Fonts"
   find "$DOTFILES/Apple Fonts" -name '*.[ot]tf' | while read f;  do
     cp "$f" "$HOME/Library/Fonts/"
   done

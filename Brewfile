@@ -5,11 +5,15 @@
 
 # Setup Homebrew Cask first
 cask_args appdir: "/Applications"
-tap "caskroom/cask"
-cask "homebrew/cask-versions/adoptopenjdk8"
+#tap "homebrew/cask-cask"
+tap "heroku/brew"
+tap "sass/sass"
 
 # Java is needed
-cask "java" unless system "/usr/libexec/java_home --failfast >/dev/null 2>&1"
+tap "AdoptOpenJDK/openjdk"
+cask "adoptopenjdk12-jre"
+cask "adoptopenjdk12"
+#cask "java" unless system "/usr/libexec/java_home --failfast >/dev/null 2>&1"
 
 # Cmake is also needed by some brews
 brew "cmake"
@@ -37,8 +41,8 @@ brew "perl"
 brew "pkg-config"
 brew "vim"
 brew "watchman"
-brew "heroku/brew/heroku"
-brew "sass/sass/sass"
+brew "heroku"
+brew "sass"
 
 # DB & Cache servers
 brew "postgresql", restart_service: :changed
@@ -100,5 +104,6 @@ brew "zlib"
 cask "jabref"
 
 # Could not build it on Catalina
-# brew "gpg2"
+brew "gnupg"
+cask "gpg-suite-no-mail"
 
