@@ -22,6 +22,7 @@ elif [ -d "/Volumes/Storage/android-sdk" ]; then
 else
   export ANDROID_HOME="${HOME}/Library/Android/sdk"
 fi
+export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools"
 
 # Special setup for the "Work" directory
 if [ -d "/Volumes/Work" ] && [ -w "/Volumes/Work" ]; then
