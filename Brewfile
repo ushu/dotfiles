@@ -11,9 +11,7 @@ tap "sass/sass"
 
 # Java is needed
 tap "AdoptOpenJDK/openjdk"
-cask "adoptopenjdk12-jre"
-cask "adoptopenjdk12"
-#cask "java" unless system "/usr/libexec/java_home --failfast >/dev/null 2>&1"
+cask "adoptopenjdk10"
 
 # Cmake is also needed by some brews
 brew "cmake"

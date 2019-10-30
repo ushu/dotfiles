@@ -6,6 +6,8 @@
 BREW_PREFIX=$(brew --prefix)
 PYTHON3_VERSION=$(python3 --version | cut -d' ' -f2 | cut -d'.' -f1,2)
 export JAVA_HOME="$(/usr/libexec/java_home)"
+# we use openJDK, which implies some config to work well on Android
+export JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions --add-modules java.se.ee'
 
 # Generic options
 export EDITOR=vim
