@@ -13,7 +13,7 @@
 	signingkey = 60B63D08
 [core]
 	editor = /usr/bin/env vim
-	excludesfile = ~/.gitignore
+	excludesfile = ~/.gitignore_global
 	filemode = false
 [color]
 	ui = auto

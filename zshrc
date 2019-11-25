@@ -109,11 +109,14 @@ if [ -d "$HOME/.asdf" ]; then
 fi
 
 # anaconda
-if [ -d "$HOME/.miniconda/bin" ]; then
-  export PATH="$HOME/.miniconda/bin:$PATH"
-fi
-__conda_setup="$($HOME/.miniconda/bin/conda 'shell.zsh' 'hook' 2> /dev/null)"
-[ $? -eq 0 ] && eval "$__conda_setup"
+conda() {
+  if [ -d "$HOME/.miniconda/bin" ]; then
+    export PATH="$HOME/.miniconda/bin:$PATH"
+  fi
+  __conda_setup="$($HOME/.miniconda/bin/conda 'shell.zsh' 'hook' 2> /dev/null)"
+  [ $? -eq 0 ] && eval "$__conda_setup"
+  conda $@
+}
 
 # custom comandes
 [ -e "$HOME/.bash_custom_scripts" ] && source "$HOME/.bash_custom_scripts"

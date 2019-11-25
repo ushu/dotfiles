@@ -79,12 +79,7 @@ cask "visual-studio-code"
 cask "github"
 brew "hub"
 
-# GCP stuff
-#cask "googleappengine"
-#cask "google-cloud-sdk"
-
 # Android
-cask "android-studio"
 cask "keystore-explorer"
 
 # On Catalina, install these *AFTER* the updated dev tools
@@ -98,10 +93,12 @@ brew "carthage"
 brew "zlib"
 
 # LaTeX
-#cask "basictex"
 cask "jabref"
 
 # Could not build it on Catalina
 brew "gnupg"
 cask "gpg-suite-no-mail"
+
+# Dev font
+brew "homebrew/cask-fonts/font-fira-code"
 

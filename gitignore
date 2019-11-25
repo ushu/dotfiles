@@ -1,8 +1,8 @@
 .DS_Store
 
 # IDE config(s)
-/.vscode
-/.idea
+.vscode
+.idea
 
 # Vim stuff
 *~
