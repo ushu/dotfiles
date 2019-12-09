@@ -144,5 +144,7 @@
     ],
     "debug.console.fontSize": 11,
     "terminal.integrated.fontSize": 11,
-    "terminal.integrated.inheritEnv": false
+    "terminal.integrated.inheritEnv": false,
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue"
 }

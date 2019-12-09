@@ -96,16 +96,19 @@ if [ -d "$HOME/.asdf" ]; then
 fi
 
 # anaconda
-if [ -d "$HOME/.miniconda/bin" ]; then
-  export PATH="$HOME/.miniconda/bin:$PATH"
-fi
+conda() {
+  if [ -d "$HOME/.miniconda/bin" ]; then
+    export PATH="$HOME/.miniconda/bin:$PATH"
+  fi
+  __conda_setup="$($HOME/.miniconda/bin/conda 'shell.bash' 'hook' 2> /dev/null)"
+  if [ $? -eq 0 ]; then
+     eval "$__conda_setup"
+  fi
+  conda $@
+}
 
 # Custom prompt
 PS1="\W \$ "
-__conda_setup="$($HOME/.miniconda/bin/conda 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-   eval "$__conda_setup"
-fi
 if [ -f "$BREW_PREFIX/opt/bash-git-prompt/share/gitprompt.sh" ]; then
     source "$BREW_PREFIX/opt/bash-git-prompt/share/gitprompt.sh"
 fi

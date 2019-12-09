@@ -29,3 +29,7 @@ Host bitbucket.org
 	User git
 	IdentityFile ~/.ssh/id_rsa-ushu
 
+Host wesignit
+	HostName 54.78.19.167
+	User ubuntu
+	IdentityFile ~/.ssh/wesignit

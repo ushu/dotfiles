@@ -577,3 +577,30 @@ svgtoscaled() {
     convert -format png -background none -resize 300% "$f" "${f%.svg}@3x.png"
   done
 }
+
+
+reencode_mp4_videos() {
+  local path="$1"
+  if [ -z "$path" ]; then
+    path="."
+  fi
+
+  find "$path" -name "*.mp4" | while read i; do
+    local file="$i"
+    local backfile=""
+    if [ "${file%.bak.mp4}" == "$file" ]; then
+      backfile="${i%.mp4}.bak.mp4"
+      echo mv "$file" "$backfile"
+      mv "$file" "$backfile"
+    else
+      file="${i%.bak.mp4}.mp4"
+      backfile="$i"
+    fi
+    echo ffmpeg -y -loglevel quiet -stats -i "$backfile" -c:v libx264 -crf 18 -c:a copy "$file" 2>/dev/null
+    ffmpeg -y -loglevel quiet -stats -i "$backfile" -c:v libx264 -crf 18 -c:a copy "$file" 2>/dev/null
+  done
+  find "$path" -name "*.bak.mp4" | while read i; do
+    echo rm "$i"
+    rm "$i"
+  done
+}
