@@ -7,7 +7,8 @@ BREW_PREFIX=$(brew --prefix)
 PYTHON3_VERSION=$(python3 --version | cut -d' ' -f2 | cut -d'.' -f1,2)
 export JAVA_HOME="$(/usr/libexec/java_home)"
 # we use openJDK, which implies some config to work well on Android
-export JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions --add-modules java.se.ee'
+export JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions' # <- ignore missing JDK
+
 
 # Generic options
 export EDITOR=vim
@@ -54,6 +55,11 @@ APPENGINE_PATH_EXT="$HOME/go_appengine" # /usr/local/bin ?
 export PATH="$HOME/bin:$APPENGINE_PATH_EXT:$GO_PATH_EXT:$ANDROID_PATH_EXT:$PATH"
 if [ -e "/Library/TeX/texbin" ];then
   export PATH="$PATH:/Library/TeX/texbin"
+fi
+
+# rustup config dir
+if [ -e "$HOME/.cargo/bin" ];then
+  export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
 ###

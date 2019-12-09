@@ -28,3 +28,5 @@
 	smudge = git-lfs smudge -- %f
 [commit]
 	gpgsign = true
+[gpg]
+	program = gpg2

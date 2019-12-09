@@ -9,9 +9,10 @@ cask_args appdir: "/Applications"
 tap "heroku/brew"
 tap "sass/sass"
 
-# Java is needed
-tap "AdoptOpenJDK/openjdk"
-cask "adoptopenjdk10"
+# Install Java: avoid issues w/ openjdk by using Oracle...
+#tap "AdoptOpenJDK/openjdk"
+#cask "adoptopenjdk13"
+cask "oracle-jdk"
 
 # Cmake is also needed by some brews
 brew "cmake"
@@ -87,7 +88,6 @@ brew "imagemagick"
 brew "ffmpeg"
 brew "node"
 brew "elixir"
-brew "rustup"
 brew "elm"
 brew "carthage"
 brew "zlib"
