@@ -92,13 +92,11 @@ brew "elm"
 brew "carthage"
 brew "zlib"
 
-# LaTeX
-cask "jabref"
-
 # Could not build it on Catalina
 brew "gnupg"
 cask "gpg-suite-no-mail"
 
 # Dev font
+tap "homebrew/cask-fonts"
 brew "homebrew/cask-fonts/font-fira-code"
 

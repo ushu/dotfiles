@@ -94,8 +94,6 @@ main() {
   # design tools !
   echo "Installing Apple Fonts..."
   install_apple_fonts
-  echo "Installing Apple Symbols (beta)..."
-  (sudo installer -pkg "$DOTFILES/Apple Fonts/SFSymbols.pkg" -target /; true)
 
   install_or_update_homebrew
 
@@ -392,6 +390,14 @@ install_apple_fonts() {
   find "$DOTFILES/Apple Fonts" -name '*.[ot]tf' | while read f;  do
     cp "$f" "$HOME/Library/Fonts/"
   done
+  echo "Installing Apple Symbols..."
+  (sudo installer -pkg "$DOTFILES/Apple Fonts/SF Symbols.pkg" -target /; true)
+  echo "Installing SF Compact..."
+  (sudo installer -pkg "$DOTFILES/Apple Fonts/San Francisco Compact.pkg" -target /; true)
+  echo "Installing SF Mono..."
+  (sudo installer -pkg "$DOTFILES/Apple Fonts/SF Mono Fonts.pkg" -target /; true)
+  echo "Installing New York..."
+  (sudo installer -pkg "$DOTFILES/Apple Fonts/NY Fonts.pkg" -target /; true)
 }
 
 cleanup() {
