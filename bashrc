@@ -1,5 +1,16 @@
 export EDITOR=vim
 
+# Special setup for the "Work" directory
+if [ -d "/Volumes/Work" ]; then
+  [ -d "/Volumes/Work/WIP" ] || mkdir -p "/Volumes/Work/WIP"
+  export WIP_DIR="/Volumes/Work"
+  # also make a symlink unless exists
+  [ -d "$HOME/WIP" ] || [ -h "$HOME/WIP" ] || ls -s "$WIP_DIR/WIP" "$HOME/WIP"
+else
+  mkdir -p "$HOME/WIP"
+  export WIP_DIR="$HOME/WIP"
+fi
+
 # preload vars
 if [ -f "$HOME/.bashrc_cache" ]; then
   source "$HOME/.bashrc_cache"
@@ -20,23 +31,22 @@ export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 if [ -z "$JAVA_HOME" ] || [ ! -d "$JAVA_HOME" ] ; then
   JAVA_HOME=$(/usr/libexec/java_home)
 fi
-if [ -d "/Volumes/WIP/android-sdk" ] && [ -w "/Volumes/WIP/android-sdk" ]; then
-  export ANDROID_HOME="/Volumes/WIP/android-sdk"
+if [ -d "$WIP_DIR/android-sdk" ] && [ -w "$WIP_DIR/android-sdk" ]; then
+  export ANDROID_HOME="$WIP_DIR/android-sdk"
 elif [ -d "/Volumes/Storage/android-sdk" ]; then
   export ANDROID_HOME="/Volumes/Storage/android-sdk"
 else
   export ANDROID_HOME="${HOME}/Library/Android/sdk"
 fi
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
 export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools"
 
 # GO
-if [ -d "/Volumes/WIP/go" ] && [ -w "/Volumes/WIP/go" ] ; then
-  export WIPPATH="$HOME/WIP"
-  [ -e "$WIPPATH" ] || [ -l "$WIPPATH" ] || ls -s "/Volumes/WIP" "$WIPPATH"
-  export GOPATH="/Volumes/WIP/go"
+if [ -d "$WIP_DIR/go" ] && [ -w "$WIP_DIR/go" ] ; then
+  export GOPATH="$WIP_DIR/go"
   [ -d "$GOPATH" ] || mkdir "$GOPATH"
 else
-  export GOPATH="$HOME"
+  export GOPATH="$HOME/go"
 fi
 #export GOMAXPROCS=1
 export PATH="$PATH:$GOPATH/bin"

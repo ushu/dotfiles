@@ -15,6 +15,7 @@
 	editor = /usr/bin/env vim
 	excludesfile = ~/.gitignore_global
 	filemode = false
+	autocrlf = input
 [color]
 	ui = auto
 [github]
@@ -28,3 +29,8 @@
 	smudge = git-lfs smudge -- %f
 [commit]
 	gpgsign = true
+[gpg]
+	program = gpg2
+[credential]
+	helper = osxkeychain
+

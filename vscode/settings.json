@@ -82,7 +82,7 @@
     "editor.tabSize": 2,
     "C_Cpp.autoAddFileAssociations": false,
     "explorer.confirmDragAndDrop": false,
-    "window.zoomLevel": 5,
+    "window.zoomLevel": 3,
     "workbench.colorTheme": "Night Owl",
     "editor.suggest.localityBonus": true,
     "editor.suggestFontSize": 12,
