@@ -9,20 +9,13 @@ export JAVA_HOME="$(/usr/libexec/java_home)"
 # we use openJDK, which implies some config to work well on Android
 export JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions' # <- ignore missing JDK
 
+
 # Generic options
 export EDITOR=vim
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 export FZF_DEFAULT_COMMAND='ag -l -g ""'
 
 # Special setup for the "Work" directory
-<<<<<<< HEAD
-if [ -d "/Volumes/Work" ] && [ -w "/Volumes/Work" ]; then
-  [ -e "/Volumes/Work/WIP" ] || mkdir -p "/Volumes/Work/WIP"
-  [ -e "/Volumes/Work/go" ] || mkdir -p "/Volumes/Work/go"
-  [ -d "$HOME/WIP" ] ||  [ -h "$HOME/WIP" ] || ln -s "/Volumes/Work/WIP" "$HOME/WIP"
-fi
-
-=======
 if [ -d "/Volumes/Work" ]; then
   [ -d "/Volumes/Work/WIP" ] || mkdir -p "/Volumes/Work/WIP"
   export WIP_DIR="/Volumes/Work"
@@ -41,7 +34,6 @@ else
 fi
 export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools"
 
->>>>>>> 83c5fa1caa7f0cd7bcf4a55d706e8337e5c2e8d8
 # Go{PATH|tools}
 if [ -d "$WIP_DIR/go" ] && [ -w "$WIP_DIR/go" ]; then
   export GOPATH="$WIP_DIR/go"
@@ -65,6 +57,11 @@ APPENGINE_PATH_EXT="$HOME/go_appengine" # /usr/local/bin ?
 export PATH="$HOME/bin:$APPENGINE_PATH_EXT:$GO_PATH_EXT:$ANDROID_PATH_EXT:$PATH"
 if [ -e "/Library/TeX/texbin" ];then
   export PATH="$PATH:/Library/TeX/texbin"
+fi
+
+# rustup config dir
+if [ -e "$HOME/.cargo/bin" ];then
+  export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
 ###
@@ -108,12 +105,15 @@ alias n="nvim"
 
 # Google tools
 if [ -d "/Volumes/Work/google-cloud-sdk" ]; then
+  source "/Volumes/Work/google-cloud-sdk/path.zsh.inc"
   source "/Volumes/Work/google-cloud-sdk/completion.zsh.inc"
 fi
 
 # ASDF
 if [ -d "$HOME/.asdf" ]; then
+  source "$HOME/.asdf/asdf.sh"
   source "$HOME/.asdf/completions/asdf.bash"
+  export PATH="$(yarn global bin):$PATH"
 fi
 
 # anaconda
