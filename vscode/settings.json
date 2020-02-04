@@ -80,9 +80,8 @@
     },
     "typescript.updateImportsOnFileMove.enabled": "always",
     "editor.tabSize": 2,
-    "C_Cpp.autoAddFileAssociations": false,
     "explorer.confirmDragAndDrop": false,
-    "window.zoomLevel": 5,
+    "window.zoomLevel": 0,
     "workbench.colorTheme": "Night Owl",
     "editor.suggest.localityBonus": true,
     "editor.suggestFontSize": 12,
@@ -104,47 +103,15 @@
     "[go]": {
         "editor.defaultFormatter": "ms-vscode.Go"
     },
-    "gitlens.views.repositories.location": "scm",
-    "gitlens.views.fileHistory.location": "scm",
-    "gitlens.views.lineHistory.location": "scm",
-    "gitlens.views.compare.location": "scm",
-    "gitlens.views.search.location": "scm",
     "prettier.requireConfig": true,
     "breadcrumbs.enabled": true,
     "go.autocompleteUnimportedPackages": true,
     "workbench.editor.showTabs": false,
     "editor.tabCompletion": "on",
-    "latex-workshop.latex.recipes": [
-        {
-            "name": "lualatex",
-            "tools": [
-                "lualatex"
-            ]
-        }
-    ],
-    "latex-workshop.latex.tools": [
-        {
-            "name": "lualatex",
-            "command": "lualatex",
-            "args": [
-                "-synctex=1",
-                "-interaction=nonstopmode",
-                "-file-line-error",
-                // "-pdf",
-                "%DOC%"
-            ]
-        },
-        {
-            "name": "biber",
-            "command": "biber",
-            "args": [
-                "%DOCFILE%"
-            ]
-        }
-    ],
     "debug.console.fontSize": 11,
     "terminal.integrated.fontSize": 11,
-    "terminal.integrated.inheritEnv": false,
+    "terminal.integrated.inheritEnv": true,
+    "terminal.integrated.shell.osx" : "/usr/local/bin/zsh",
+    "terminal.integrated.shellArgs.osx": [],
     "editor.suggestSelection": "first",
-    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue"
 }

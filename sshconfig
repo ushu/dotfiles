@@ -35,8 +35,8 @@ Host bitbucket.org
 	IdentityFile ~/.ssh/id_rsa-ushu
 
 Host wesignit
-	HostName 54.78.19.167
-	User ubuntu
+  HostName 185.34.32.126
+	User root
 	IdentityFile ~/.ssh/wesignit
 
 host react-native.fr

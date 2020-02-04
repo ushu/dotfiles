@@ -9,21 +9,10 @@ export JAVA_HOME="$(/usr/libexec/java_home)"
 # we use openJDK, which implies some config to work well on Android
 export JAVA_OPTS='-XX:+IgnoreUnrecognizedVMOptions' # <- ignore missing JDK
 
-
 # Generic options
 export EDITOR=vim
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 export FZF_DEFAULT_COMMAND='ag -l -g ""'
-
-# Configure Android build tools
-if [ -d "/Volumes/Work/android-sdk" ] && [ -w "/Volumes/Work/android-sdk" ]; then
-  export ANDROID_HOME="/Volumes/Work/android-sdk"
-elif [ -d "/Volumes/Storage/android-sdk" ]; then
-  export ANDROID_HOME="/Volumes/Storage/android-sdk"
-else
-  export ANDROID_HOME="${HOME}/Library/Android/sdk"
-fi
-export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools"
 
 # Special setup for the "Work" directory
 if [ -d "/Volumes/Work" ] && [ -w "/Volumes/Work" ]; then
@@ -55,11 +44,6 @@ APPENGINE_PATH_EXT="$HOME/go_appengine" # /usr/local/bin ?
 export PATH="$HOME/bin:$APPENGINE_PATH_EXT:$GO_PATH_EXT:$ANDROID_PATH_EXT:$PATH"
 if [ -e "/Library/TeX/texbin" ];then
   export PATH="$PATH:/Library/TeX/texbin"
-fi
-
-# rustup config dir
-if [ -e "$HOME/.cargo/bin" ];then
-  export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
 ###
@@ -103,15 +87,12 @@ alias n="nvim"
 
 # Google tools
 if [ -d "/Volumes/Work/google-cloud-sdk" ]; then
-  source "/Volumes/Work/google-cloud-sdk/path.zsh.inc"
   source "/Volumes/Work/google-cloud-sdk/completion.zsh.inc"
 fi
 
 # ASDF
 if [ -d "$HOME/.asdf" ]; then
-  source "$HOME/.asdf/asdf.sh"
   source "$HOME/.asdf/completions/asdf.bash"
-  export PATH="$(yarn global bin):$PATH"
 fi
 
 # anaconda
