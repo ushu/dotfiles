@@ -13,6 +13,7 @@ tap "sass/sass"
 #tap "AdoptOpenJDK/openjdk"
 #cask "adoptopenjdk13"
 cask "oracle-jdk"
+brew "gradle" # <- hate it but better having it installed
 
 # Cmake is also needed by some brews
 brew "cmake"
@@ -65,6 +66,7 @@ brew "go"
 
 # Other dev tools
 brew "letsencrypt"
+brew "md5sha1sum"
 
 ###################################
 # Install GUI apps with Brew Cask #
@@ -92,13 +94,12 @@ brew "elm"
 brew "carthage"
 brew "zlib"
 
-# LaTeX
-cask "jabref"
-
 # Could not build it on Catalina
 brew "gnupg"
+brew "pinentry" # <- to allow "unlocking" the key...
 cask "gpg-suite-no-mail"
 
 # Dev font
+tap "homebrew/cask-fonts"
 brew "homebrew/cask-fonts/font-fira-code"
 

@@ -15,15 +15,36 @@ export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 export FZF_DEFAULT_COMMAND='ag -l -g ""'
 
 # Special setup for the "Work" directory
+<<<<<<< HEAD
 if [ -d "/Volumes/Work" ] && [ -w "/Volumes/Work" ]; then
   [ -e "/Volumes/Work/WIP" ] || mkdir -p "/Volumes/Work/WIP"
   [ -e "/Volumes/Work/go" ] || mkdir -p "/Volumes/Work/go"
   [ -d "$HOME/WIP" ] ||  [ -h "$HOME/WIP" ] || ln -s "/Volumes/Work/WIP" "$HOME/WIP"
 fi
 
+=======
+if [ -d "/Volumes/Work" ]; then
+  [ -d "/Volumes/Work/WIP" ] || mkdir -p "/Volumes/Work/WIP"
+  export WIP_DIR="/Volumes/Work"
+  # also make a symlink unless exists
+  [ -d "$HOME/WIP" ] || [ -h "$HOME/WIP" ] || ls -s "$WIP_DIR/WIP" "$HOME/WIP"
+else
+  mkdir -p "$HOME/WIP"
+  export WIP_DIR="$HOME/WIP"
+fi
+
+# Configure Android build tools
+if [ -d "$WIP_DIR/android-sdk" ] && [ -w "$WIP_DIR/android-sdk" ]; then
+  export ANDROID_HOME="$WIP_DIR/android-sdk"
+else
+  export ANDROID_HOME="${HOME}/Library/Android/sdk"
+fi
+export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools"
+
+>>>>>>> 83c5fa1caa7f0cd7bcf4a55d706e8337e5c2e8d8
 # Go{PATH|tools}
-if [ -d "/Volumes/Work/go" ] && [ -w "/Volumes/Work/go" ]; then
-  export GOPATH="/Volumes/Work/go"
+if [ -d "$WIP_DIR/go" ] && [ -w "$WIP_DIR/go" ]; then
+  export GOPATH="$WIP_DIR/go"
   [ -d "$GOPATH" ] || mkdir "$GOPATH"
 else
   export GOPATH="$HOME"
