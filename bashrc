@@ -123,8 +123,8 @@ if [ -f "$BREW_PREFIX/opt/bash-git-prompt/share/gitprompt.sh" ]; then
     source "$BREW_PREFIX/opt/bash-git-prompt/share/gitprompt.sh"
 fi
 
-if [ -e "$HOME/.bash_custom_scripts" ]; then
-  source "$HOME/.bash_custom_scripts"
+if [ -e "$HOME/.custom_shell_scripts" ]; then
+  source "$HOME/.custom_shell_scripts"
 fi
 if [ -e "$HOME/.bash_local_scripts" ]; then
   source "$HOME/.bash_local_scripts"

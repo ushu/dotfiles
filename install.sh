@@ -175,11 +175,16 @@ update_symlinks() {
   # "root" git config
   [ -e "$HOME/.gitconfig" ] || [ -L "$HOME/.gitconfig" ] || ln -s "$DOTFILES/gitconfig" "$HOME/.gitconfig"
   [ -e "$HOME/.gitignore_global" ] || [ -L "$HOME/.gitignore_global" ] || ln -s "$DOTFILES/gitignore" "$HOME/.gitignore_global"
-  # shell configs
+  # Shell Configs
+  #> BASH
   [ -e "$HOME/.profile" ] || [ -L "$HOME/.profile" ] || ln -s "$DOTFILES/profile" "$HOME/.profile"
   [ -e "$HOME/.bashrc" ] || [ -L "$HOME/.bashrc" ] || ln -s "$DOTFILES/bashrc" "$HOME/.bashrc"
-  [ -e "$HOME/.bash_custom_scripts" ] || [ -L "$HOME/.bash_custom_scripts" ] || ln -s "$DOTFILES/bash_custom_scripts" "$HOME/.bash_custom_scripts"
+  #> ZSH
   [ -e "$HOME/.zshrc" ] || [ -L "$HOME/.zshrc" ] || ln -s "$DOTFILES/zshrc" "$HOME/.zshrc"
+  [ -e "$HOME/.zprofile" ] || [ -L "$HOME/.zprofile" ] || ln -s "$DOTFILES/zprofile" "$HOME/.zprofile"
+  #> shell scripts/commands
+  [ -e "$HOME/.hushlogin" ] || touch "$HOME/.hushlogin"
+  [ -e "$HOME/.custom_shell_scripts" ] || [ -L "$HOME/.custom_shell_scripts" ] || ln -s "$DOTFILES/custom_shell_scripts" "$HOME/.custom_shell_scripts" 
   # SSH config
   [ -e "$HOME/.ssh" ] || mkdir -m 700 "$HOME/.ssh"
   [ -e "$HOME/.ssh/config" ] || [ -L "$HOME/.ssh/config" ] || ln -s "$DOTFILES/sshconfig" "$HOME/.ssh/config"
