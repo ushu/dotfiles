@@ -82,13 +82,14 @@ fi
 
 # anaconda
 conda() {
-  if [ -d "$WIP_PATH/miniconda/bin" ]; then
-    export PATH="$WIP_PATH/miniconda/bin:$PATH"
+  if [ -d "$WIP_DIR/miniconda/bin" ]; then
+    export PATH="$WIP_DIR/miniconda/bin:$PATH"
   fi
-  __conda_setup="$($WIP_PATH/miniconda/bin/conda 'shell.zsh' 'hook' 2> /dev/null)"
+  __conda_setup="$($WIP_DIR/miniconda/bin/conda 'shell.zsh' 'hook' 2> /dev/null)"
   [ $? -eq 0 ] && eval "$__conda_setup"
   conda $@
 }
 
 # custom comandes
 [ -e "$HOME/.custom_shell_scripts" ] && source "$HOME/.custom_shell_scripts"
+

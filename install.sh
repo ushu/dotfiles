@@ -265,15 +265,22 @@ install_or_update_python() {
   hash -r
 
   echo "Install MiniConda"
-  if [ ! -d "$HOME/.miniconda" ]; then
+  MINICONDA_PATH="$HOME/.miniconda"
+  if [ -d "/Volumes/Work" ]; then
+    MINICONDA_PATH="/Volumes/Work/miniconda"
+  fi
+
+  if [ ! -d "$MINICONDA_PATH" ]; then
     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
     chmod +x ./Miniconda3-latest-MacOSX-x86_64.sh
-    ./Miniconda3-latest-MacOSX-x86_64.sh -b -p $HOME/.miniconda
+    ./Miniconda3-latest-MacOSX-x86_64.sh -b -p "$MINICONDA_PATH"
     rm ./Miniconda3-latest-MacOSX-x86_64.sh
   fi
-  # ensure we can access conda
-  export PATH="$HOME/.miniconda/bin:$PATH"
-  # and install pip
+
+  # now we activate miniconda
+  export PATH="$MINICONDA_PATH/bin:$PATH"
+
+  # and install pip in base conda env
   conda install pip -y
 
   echo "Install PIPs"
@@ -393,16 +400,24 @@ install_google_cloud() {
 install_apple_fonts() {
   [ -d "$HOME/Library/Fonts" ] || mkdir -p "$HOME/Library/Fonts"
   find "$DOTFILES/Apple Fonts" -name '*.[ot]tf' | while read f;  do
-    cp "$f" "$HOME/Library/Fonts/"
+    [ -e "$HOME/Library/Fonts/$f" ] || cp "$f" "$HOME/Library/Fonts/"
   done
-  echo "Installing Apple Symbols..."
-  (sudo installer -pkg "$DOTFILES/Apple Fonts/SF Symbols.pkg" -target /; true)
-  echo "Installing SF Compact..."
-  (sudo installer -pkg "$DOTFILES/Apple Fonts/San Francisco Compact.pkg" -target /; true)
-  echo "Installing SF Mono..."
-  (sudo installer -pkg "$DOTFILES/Apple Fonts/SF Mono Fonts.pkg" -target /; true)
-  echo "Installing New York..."
-  (sudo installer -pkg "$DOTFILES/Apple Fonts/NY Fonts.pkg" -target /; true)
+  if [ ! -d "/Applications/SF Symbols.app" ]; then
+    echo "Installing Apple Symbols..."
+    (sudo installer -pkg "$DOTFILES/Apple Fonts/SF Symbols.pkg" -target /; true)
+  fi
+  if [ ! -e "/Library/Fonts/SF-Compact-Text-Black.otf" ]; then
+    echo "Installing SF Compact..."
+    (sudo installer -pkg "$DOTFILES/Apple Fonts/San Francisco Compact.pkg" -target /; true)
+  fi
+  if [ ! -e "/Library/Fonts/SF-Mono-Bold.otf" ]; then
+    echo "Installing SF Mono..."
+    (sudo installer -pkg "$DOTFILES/Apple Fonts/SF Mono Fonts.pkg" -target /; true)
+  fi
+  if [ ! -e "/Library/Fonts/NewYorkLarge-Black.otf" ]; then
+    echo "Installing New York..."
+    (sudo installer -pkg "$DOTFILES/Apple Fonts/NY Fonts.pkg" -target /; true)
+  fi
 }
 
 cleanup() {
