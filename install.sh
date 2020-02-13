@@ -120,6 +120,7 @@ main() {
   install_or_update_rust
   install_or_update_dart
   install_or_update_elixir
+  install_or_update_haskell
   
   install_google_cloud
 
@@ -417,6 +418,15 @@ install_apple_fonts() {
   if [ ! -e "/Library/Fonts/NewYorkLarge-Black.otf" ]; then
     echo "Installing New York..."
     (sudo installer -pkg "$DOTFILES/Apple Fonts/NY Fonts.pkg" -target /; true)
+  fi
+}
+
+install_or_update_haskell() {
+  if [ -d /Volumes/Work ]; then
+    export GHCUP_INSTALL_BASE_PREFIX="/Volumes/Work"
+  fi
+  if ! command -v cabal; then
+    curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
   fi
 }
 

@@ -69,15 +69,12 @@ alias n="nvim"
 
 # Google tools
 if [ -d "/Volumes/Work/google-cloud-sdk" ]; then
-  source "/Volumes/Work/google-cloud-sdk/path.zsh.inc"
   source "/Volumes/Work/google-cloud-sdk/completion.zsh.inc"
 fi
 
 # ASDF
 if [ -d "$HOME/.asdf" ]; then
-  source "$HOME/.asdf/asdf.sh"
   source "$HOME/.asdf/completions/asdf.bash"
-  export PATH="$(yarn global bin):$PATH"
 fi
 
 # anaconda
@@ -89,6 +86,14 @@ conda() {
   [ $? -eq 0 ] && eval "$__conda_setup"
   conda $@
 }
+
+# Haskell
+if [ -d /Volumes/Work ]; then
+  export GHCUP_INSTALL_BASE_PREFIX="/Volumes/Work"
+fi
+if [ -f "${GHCUP_INSTALL_BASE_PREFIX:=$HOME}/.ghcup/env" ]; then
+  source "${GHCUP_INSTALL_BASE_PREFIX:=$HOME}/.ghcup/env"
+fi
 
 # custom comandes
 [ -e "$HOME/.custom_shell_scripts" ] && source "$HOME/.custom_shell_scripts"
