@@ -33,7 +33,9 @@ let g:loaded_matchparen = 1
 let g:netrw_banner = 0
 
 " indent size
-set tabstop=2|set shiftwidth=2|set expandtab
+set tabstop=2
+set shiftwidth=2
+set expandtab
 autocmd FileType go set tabstop=4|set shiftwidth=4|set noexpandtab
 autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
 
@@ -48,12 +50,15 @@ augroup SyntaxEx
 augroup END
 
 " Optional plugins
+" -> loaded from
 " EMMET for HTML/CSS
 let g:user_emmet_install_global = 0
 autocmd FileType html,css packadd emmet-vim
 autocmd FileType html,css EmmetInstall
 " ALE for live linting
-autocmd BufNewFile,BufRead *.js,*.go packadd ale
+autocmd BufNewFile,BufRead *.js,*.ts,*.go packadd ale
+" Elixir support
+autocmd BufNewFile,BufRead *.ex,*.exs packadd vim-elixir
 " Async auto-commands (-post=checktime will auto-reload file once processed !)
 " autocmd BufWritePost *.js AsyncRun -post=checktime ./node_modules/.bin/eslint --fix %
 
