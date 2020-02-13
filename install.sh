@@ -113,6 +113,11 @@ main() {
   source "$HOME/.asdf/asdf.sh"
   source "$HOME/.asdf/completions/asdf.bash"
 
+  # VIM deps
+  if [ ! -e "$HOME/.vim/autoload/plug.vim" ]; then
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  fi
+
   install_or_update_node
   install_or_update_python
   install_or_update_ruby

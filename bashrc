@@ -130,3 +130,5 @@ if [ -e "$HOME/.bash_local_scripts" ]; then
   source "$HOME/.bash_local_scripts"
 fi
 
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

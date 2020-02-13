@@ -98,3 +98,5 @@ fi
 # custom comandes
 [ -e "$HOME/.custom_shell_scripts" ] && source "$HOME/.custom_shell_scripts"
 
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

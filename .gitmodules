@@ -1,3 +1,0 @@
-[submodule "vim/pack/Shougo/start/dein"]
-	path = vim/pack/Shougo/start/dein
-	url = https://github.com/Shougo/dein.vim

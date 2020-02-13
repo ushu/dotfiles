@@ -36,8 +36,8 @@ let g:netrw_banner = 0
 set tabstop=2
 set shiftwidth=2
 set expandtab
-autocmd FileType go set tabstop=4|set shiftwidth=4|set noexpandtab
-autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
+autocmd FileType go setlocal tabstop=4|set shiftwidth=4|set noexpandtab
+autocmd FileType python setlocal tabstop=4|set shiftwidth=4|set expandtab
 
 " Custom types for config files
 augroup SyntaxEx
@@ -49,18 +49,16 @@ augroup SyntaxEx
   autocmd BufNewFile,BufRead *.plist setlocal filetype=xml
 augroup END
 
-" Optional plugins
-" -> loaded from
-" EMMET for HTML/CSS
-let g:user_emmet_install_global = 0
-autocmd FileType html,css packadd emmet-vim
-autocmd FileType html,css EmmetInstall
-" ALE for live linting
-autocmd BufNewFile,BufRead *.js,*.ts,*.go packadd ale
-" Elixir support
-autocmd BufNewFile,BufRead *.ex,*.exs packadd vim-elixir
-" Async auto-commands (-post=checktime will auto-reload file once processed !)
-" autocmd BufWritePost *.js AsyncRun -post=checktime ./node_modules/.bin/eslint --fix %
+" Additional plugins
+call plug#begin('~/.vim/plugged')
+" more syntaxes
+Plug 'sheerun/vim-polyglot'
+" fuzzy file search
+Plug 'junegunn/fzf', { 'do': './install --all', 'on': ['FZF', 'Ag'] }
+Plug 'junegunn/fzf.vim', { 'on': ['FZF', 'Ag'] }
+" linter
+Plug 'dense-analysis/ale', { 'for': [ 'javascript', 'go' ] }
+call plug#end()
 
 " Custom mappings
 let mapleader=","
@@ -90,7 +88,7 @@ cnoremap %% <C-R>=expand('%:h').'/'<CR>
 map <leader>e :e %%<CR>
 " <leader>i => open w/ prefix for fuzzy search
 if filereadable("/usr/local/opt/fzf/plugin/fzf.vim")
-  source /usr/local/opt/fzf/plugin/fzf.vim
+  "source /usr/local/opt/fzf/plugin/fzf.vim
   map <leader>i :FZF<CR>
   map <leader>/ :Ag<CR>
   map <leader>l :Lines<CR>

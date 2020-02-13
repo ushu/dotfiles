@@ -12,3 +12,6 @@
 .ruby-version
 .netrwhist
 /go.*
+
+vim/autoload
+vim/plugged
