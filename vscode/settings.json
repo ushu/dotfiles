@@ -12,6 +12,8 @@
     "editor.quickSuggestions": true,
     "editor.suggestOnTriggerCharacters": true,
     "editor.parameterHints.enabled": true,
+    // auto-format
+    "editor.formatOnSave": true,
     // Enable emmet in JS
     "emmet.includeLanguages": {
         "javascript": "javascriptreact",
@@ -81,6 +83,7 @@
     "typescript.updateImportsOnFileMove.enabled": "always",
     "editor.tabSize": 2,
     "explorer.confirmDragAndDrop": false,
+    "window.zoomLevel": 1,
     "workbench.colorTheme": "Night Owl",
     "editor.suggest.localityBonus": true,
     "editor.suggestFontSize": 12,

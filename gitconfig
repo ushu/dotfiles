@@ -9,7 +9,7 @@
 	ri = "!f() { git rebase -i HEAD~"$1"; }; f"
 [user]
 	name = Aurélien Noce
-	email = aurelien@noce.fr
+	email = aurelien.noce@imagine-app.fr
 	signingkey = 60B63D08
 [core]
 	editor = /usr/bin/env vim

@@ -604,3 +604,7 @@ reencode_mp4_videos() {
     rm "$i"
   done
 }
+
+debug_rn_android() {
+  adb shell input keyevent 82
+}
