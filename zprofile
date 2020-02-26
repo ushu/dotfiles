@@ -10,7 +10,7 @@ else
 fi
 
 # Configure Android build tools
-if [ -d "$WIP_DIR/android-sdk" ] && [ -w "$WIP_DIR§/android-sdk" ]; then
+if [ -d "$WIP_DIR/android-sdk" ] && [ -w "$WIP_DIR/android-sdk" ]; then
   export ANDROID_HOME="$WIP_DIR/android-sdk"
 else
   export ANDROID_HOME="${HOME}/Library/Android/sdk"
