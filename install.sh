@@ -213,6 +213,8 @@ update_symlinks() {
   # ASDF
   [ -e "$HOME/.default-npm-packages" ] || [ -L "$HOME/.default-npm-packages" ] || ln -s "$DOTFILES/default-npm-packages" "$HOME/.default-npm-packages"
   [ -e "$HOME/.default-gems" ] || [ -L "$HOME/.default-gems" ] || ln -s "$DOTFILES/default-gems" "$HOME/.default-gems"
+  # MacOS env variables (!)
+  [ -e "$HOME/Library/LaunchAgents/ushu.startup.plist" ] || [ -L "$HOME/Library/LaunchAgents/ushu.startup.plist" ] || ln -s "$DOTFILES/ushu.startup.plist" "$HOME/Library/LaunchAgents/ushu.startup.plist"
 }
 
 install_or_update_homebrew() {
