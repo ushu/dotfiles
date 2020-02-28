@@ -11,7 +11,7 @@
 			"	 return <View style={styles.container}>$0</View>",
 		  "}",
 			"",
-			"StyleSheet.create({",
+			"const styles = StyleSheet.create({",
 			"  container: {",
 			"    flex: 1,"
 			"  }",

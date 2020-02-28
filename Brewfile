@@ -103,3 +103,8 @@ cask "gpg-suite-no-mail"
 tap "homebrew/cask-fonts"
 brew "homebrew/cask-fonts/font-fira-code"
 
+# Docker stuff
+cask "docker" # Docker Desktop
+brew "kubectl"
+brew "minikube"
+
