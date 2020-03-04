@@ -63,6 +63,9 @@ brew "flow"
 # Go
 brew "go"
 
+# PHP
+brew "php"
+brew "composer"
 
 # Other dev tools
 brew "letsencrypt"

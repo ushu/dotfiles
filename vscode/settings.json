@@ -117,4 +117,5 @@
     "terminal.integrated.shellArgs.osx": [],
     "editor.suggestSelection": "first",
     "workbench.sideBar.location": "right",
+    "editor.largeFileOptimizations": false,
 }
