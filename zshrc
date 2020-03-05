@@ -40,6 +40,9 @@ source "$ANTIGEN_PATH/share/antigen/antigen.zsh"
 
   # Load plugins
   antigen bundle git
+  antigen bundle docker
+  antigen bundle pip
+  antigen bundle zsh-users/zsh-syntax-highlighting
 
   # Set active theme
   antigen theme robbyrussell

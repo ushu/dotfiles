@@ -1,5 +1,5 @@
 {
-	"React Component": {
+	"RN Component": {
 		"prefix": "rncomp",
 		"description": "RN Component (boilerplate)",
 		"body": [
@@ -18,68 +18,108 @@
 			"  }",
 			"})",
 			"",
-			"export default $1",
+			"export default $1"
 		]
 	},
-	"Bottom Tab Navigator": {
-		"prefix": "bottomTabNavigator",
+	"RN Icon Component": {
+		"prefix": "rnicon",
 		"body": [
-			"import { createBottomTabNavigator, NavigationBottomTabScreenOptions } from \"react-navigation\"",
+			"import React from \"react\"",
+			"import { Image, ImageProps } from \"react-native\"",
+			"import source from \"./images/$1.png\"",
 			"",
-			"const ${1} = createBottomTabNavigator(",
-			"  // Route declarations: see http://bit.ly/bottomtabs-navoptions",
-			"  {",
-			"      Tab: {",
-			"        screen: $2,",
-			"        title: \"$3\",",
-			"        // path: \"$2\",",
-			"        navigationOptions: {",
-			"          // tabBarIcon is a component receiving TabBarIconProps",
-			"          // tabBarIcon: makeTabIcon(iconActive, iconInactive),",
-			"          // the custom hooks allow to override behaviour:",
-			"          // tabBarOnPress: ({navigation, defaultHandler}) => defaultHandler(),",
-			"          // tabBarOnLongPress: ({navigation, defaultHandler}) => defaultHandler(),",
-			"        } as NavigationBottomTabScreenOptions,",
-			"      },",
-			"      $0",
-			"  },",
-			"  // Global options:",
-			"  {",
-			"    initialRouteName: \"$2\",",
-			"    // navigationOptions: {}, // for the parent navigator",
-			"    // defaultNavigationOptions: {}, // for all tabs",
-			"    tabBarOptions: {",
-			"      // showLabel: true,",
-			"      // style: {} // for the whole bar",
-			"      // labelStyle: {} // for the text label",
-			"      // tabStyle: {} // for the tab (around the icon/title)",
-			"      // activeTintColor: \"#000\"",
-			"      // activeBackgroundColor: \"#fff\"",
-			"      // inactiveTintColor: \"#cc\"",
-			"      // inactiveBackgroundColor: \"#fff\"",
-			"      // adaptive: true, // on iOS, show title on the right on landscape tablets",
-			"    },",
-			"  },",
+			"type Props = Omit<ImageProps, \"source\">",
+			"",
+			"const $1: React.FC<Props> = props => (",
+			"  <Image source={source} {...props} />",
 			")",
 			"",
-			"export default $1"
+			"export default $1$0"
 		],
-		"description": "Creates a new bottom tab navigator"
+		"description": "RN Icon (image) component"
 	},
-	"makeTabIcon": {
-		"prefix": "makeTabIcon",
+	"RN CLICKABLE Icon Component": {
+		"prefix": "rnclickableicon",
 		"body": [
-			"import { Image, ImageSourcePropType } from \"react-native\"",
-			"import { TabBarIconProps } from \"react-navigation\"",
+			"import React from \"react\"",
+			"import { Image, ImageProps, TouchableOpacity, TouchableOpacityProps } from \"react-native\"",
+			"import source from \"./images/$1.png\"",
 			"",
-			"const makeTabIcon = (",
-			"  activeIcon: ImageSourcePropType,",
-			"  inactiveIcon: ImageSourcePropType,",
-			") => ({ focused }: TabBarIconProps) => (",
-			"  <Image source={focused ? activeIcon : inactiveIcon} />",
+			"type Props = TouchableOpacityProps & {",
+			"  imageProps?: Omit<ImageProps, \"source\">",
+			"}",
+			"",
+			"const $1: React.FC<Props> = ({ imageProps, ...props }) => (",
+			"  <TouchableOpacity {...props}>",
+			"    <Image source={source} {...imageProps} />",
+			"  </TouchableOpacity>",
 			")",
-			"$0"
+			"",
+			"export default $1$0"
 		],
-		"description": "Helper function to tab-bar icon from 2 images"
+		"description": "RN Icon (image) component"
+	},
+	"RN TextInupt EMAIL attributes": {
+		"prefix": "rntfemail",
+		"body": [
+			"placeholder=\"${1:Email address}\"",
+			"keyboardType=\"email-address\"",
+			"autoCapitalize=\"none\"",
+			"textContentType=\"emailAddress\""
+		],
+		"description": "attributes for email text field"
+	},
+	"RN TextInupt PHONE NUMBER attributes": {
+		"prefix": "rntfname",
+		"body": [
+			"placeholder=\"${1:Phone number}\"",
+			"keyboardType=\"phone-pad\"",
+			"autoCapitalize=\"none\"",
+			"textContentType=\"telephoneNumber\""
+		],
+		"description": "attributes for email text field"
+	},
+	"RN TextInupt PASSWORD attributes": {
+		"prefix": "rntfpassword",
+		"body": [
+			"placeholder=\"${1:Password}\"",
+			"keyboardType=\"default\"",
+			"autoCapitalize=\"none\"",
+			"textContentType=\"${2:password}\" /* or \"newPassword\"*/",
+			"secureTextEntry={true}"
+		],
+		"description": "attributes for password text field"
+	},
+	"RN TextInupt NAME attributes": {
+		"prefix": "rntfname",
+		"body": [
+			"placeholder=\"${1:First name}\"",
+			"keyboardType=\"default\"",
+			"autoCapitalize=\"words\"",
+			"textContentType=\"${2:givenName}\" /* or \"familyName\"*/"
+		],
+		"description": "attributes for email text field"
+	},
+	"reducer": {
+		"prefix": "reducer",
+		"description": "(use)Reducer boilerplate",
+		"body": [
+			"type State = ",
+			"| { name: \"$1\" }",
+			"",
+			"type Action = ",
+			"| { type: \"$2\" }",
+			"",
+			"const reducer = (state: State, action: Action): State => {",
+			"  switch(state.name) {",
+			"    case \"$1\":",
+			"      switch(action.type) {",
+			"        case \"$2\":",
+			"          $0",
+			"      }",
+			"  }",
+			"}",
+			""
+		]
 	}
 }

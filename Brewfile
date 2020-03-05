@@ -63,6 +63,9 @@ brew "flow"
 # Go
 brew "go"
 
+# PHP
+brew "php"
+brew "composer"
 
 # Other dev tools
 brew "letsencrypt"
@@ -102,4 +105,9 @@ cask "gpg-suite-no-mail"
 # Dev font
 tap "homebrew/cask-fonts"
 brew "homebrew/cask-fonts/font-fira-code"
+
+# Docker stuff
+cask "docker" # Docker Desktop
+brew "kubectl"
+brew "minikube"
 

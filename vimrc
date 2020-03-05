@@ -57,7 +57,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'junegunn/fzf', { 'do': './install --all', 'on': ['FZF', 'Ag'] }
 Plug 'junegunn/fzf.vim', { 'on': ['FZF', 'Ag'] }
 " linter
-Plug 'dense-analysis/ale', { 'for': [ 'javascript', 'go' ] }
+Plug 'dense-analysis/ale'
 call plug#end()
 
 " Custom mappings
