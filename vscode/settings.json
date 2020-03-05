@@ -83,8 +83,7 @@
     "typescript.updateImportsOnFileMove.enabled": "always",
     "editor.tabSize": 2,
     "explorer.confirmDragAndDrop": false,
-    "window.zoomLevel": 1,
-    "workbench.colorTheme": "Night Owl",
+    "workbench.colorTheme": "Atom One Light",
     "editor.suggest.localityBonus": true,
     "editor.suggestFontSize": 12,
     "editor.suggestLineHeight": 13,
@@ -116,4 +115,5 @@
     "terminal.integrated.shell.osx" : "/usr/local/bin/zsh",
     "terminal.integrated.shellArgs.osx": [],
     "editor.suggestSelection": "first",
+    "window.zoomLevel": 1,
 }

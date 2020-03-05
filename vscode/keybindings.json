@@ -19,5 +19,9 @@
     {
         "key": "alt+cmd+t",
         "command": "-workbench.action.closeOtherEditors"
+    },
+    {
+        "command": "editor.action.clipboardCopyWithSyntaxHighlightingAction",
+        "key": "shift+cmd+c"
     }
 ]
