@@ -29,7 +29,7 @@ GO_PACKAGES=(
   "firebase.google.com/go"
   "google.golang.org/api/option"
   # My tools
-  "github.com/ushu/quiver/tree/master/cmd/quiver_to_markdown" 
+  "github.com/ushu/quiver/cmd/quiver_to_markdown"
 )
 
 main() {
