@@ -3,22 +3,20 @@
 " sensible defaults
 set encoding=utf-8
 set nocompatible
-set novisualbell
+" set visualbell
+" set cursorline
 set backspace=indent,eol,start
 set shell=bash
 set wildmode=longest,list,full
 set visualbell
 set updatetime=300
 set textwidth=72
+set shortmess+=I
 
 " Allow multiple edition on a file
 set nobackup
 set noswapfile
 set hidden
-
-" Colors
-syntax on
-colorscheme desert
 
 " (from the docs) Jump to last cursor position 
 autocmd BufReadPost *
@@ -31,6 +29,7 @@ filetype plugin indent on
 " & config default plugins
 let g:loaded_matchparen = 1
 let g:netrw_banner = 0
+let g:ale_sign_column_always = 1
 
 " indent size
 set tabstop=2
@@ -58,7 +57,13 @@ Plug 'junegunn/fzf', { 'do': './install --all', 'on': ['FZF', 'Ag'] }
 Plug 'junegunn/fzf.vim', { 'on': ['FZF', 'Ag'] }
 " linter
 Plug 'dense-analysis/ale'
+" colors
+Plug 'phanviet/vim-monokai-pro'
 call plug#end()
+
+" Colors
+syntax on
+colorscheme monokai_pro
 
 " Custom mappings
 let mapleader=","
@@ -105,3 +110,4 @@ nnoremap gs :Gstatus<CR>
 nnoremap gl :Glog<CR><CR>:copen<CR><CR>
 nnoremap gr :Git gr<CR>
 nnoremap <S-z> za
+

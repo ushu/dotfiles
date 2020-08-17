@@ -4,6 +4,9 @@
 .vscode
 .idea
 
+# Tools
+cloud_sql_proxy
+
 # Vim stuff
 *~
 *.swp

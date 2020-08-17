@@ -50,3 +50,5 @@ if [ -e "/Library/TeX/texbin" ];then
   export PATH="$PATH:/Library/TeX/texbin"
 fi
 
+
+export PATH="$HOME/.cargo/bin:$PATH"

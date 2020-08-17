@@ -21,35 +21,18 @@ REPO="https://github.com/ushu/dotfiles"
 PYTHON_PIPS=(httpie)
 GO_PACKAGES=(
   # Go tools (for IDEs etc.)
-  # First the "official" tools from Google
   "golang.org/x/tools/cmd/goimports" 
-  "golang.org/x/tools/refactor/rename"
-  "golang.org/x/tools/cmd/guru"
-  "golang.org/x/lint/golint"
-  # and a ton of additional tools too...
-  # first the langage server
-  "github.com/sourcegraph/go-langserver"
-  # then a ton of additional tools
-  "github.com/mgechev/revive"
-  "github.com/mdempsky/gocode"
-  "github.com/zmb3/gogetdoc"
-  "github.com/lukehoban/go-outline"
-  "github.com/newhook/go-symbols"
-  "github.com/sqs/goreturns"
-  "github.com/uudashr/gopkgs/cmd/gopkgs"
-  "github.com/fatih/gomodifytags"
-  "github.com/josharian/impl"
-  "github.com/davidrjenni/reftools/cmd/fillstruct"
-  "github.com/tylerb/gotype-live"
-  "github.com/cweill/gotests"
-  "github.com/go-delve/delve/cmd/dlv"
+  "golang.org/x/tools/gopls@latest"
+  "github.com/sourcegraph/go-langserver" # ⬅︎ remplacé par GoPLS mais certains outils l'utilisent
+  "github.com/go-delve/delve/cmd/dlv" # Debugger
   # Firebase libs
   "firebase.google.com/go"
   "google.golang.org/api/option"
+  # My tools
+  "github.com/ushu/quiver/tree/master/cmd/quiver_to_markdown" 
 )
 
 main() {
-
 
   # Reset logfile
   echo "BOOTING INSTALL SCRIPT @ $(date)"
@@ -78,16 +61,6 @@ main() {
   # Spacemacs
   if [ ! -d "$HOME/.emacs.d" ];then
     git clone https://github.com/syl20bnr/spacemacs "$HOME/.emacs.d"
-  fi
-
-  # For Mojave
-  if [ ! -e /usr/include/zlib.h ];then
-    if  [ -e /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg ];then
-      echo "installing CLT headers..."
-      sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
-    else
-      echo "Missing headers: install CLT first !"
-    fi
   fi
 
   # We often need the official fonts (even the legacy ones !) for the
@@ -126,7 +99,6 @@ main() {
   install_or_update_dart
   install_or_update_elixir
   install_or_update_haskell
-  
   install_google_cloud
 
   cleanup
@@ -236,7 +208,8 @@ install_or_update_homebrew() {
     # for some reason ffmpeg can cause link issues
     brew unlink ffmpeg >/dev/null
   fi
-  (brew bundle check --file="$DOTFILES/Brewfile" || brew bundle install --file="$DOTFILES/Brewfile" --no-update); true 
+  #(brew bundle check --file="$DOTFILES/Brewfile" || brew bundle install --file="$DOTFILES/Brewfile" --no-upgrade); true 
+  (brew bundle check --file="$DOTFILES/Brewfile" || brew bundle install --file="$DOTFILES/Brewfile"); true 
 }
 
 install_or_update_node() {
@@ -264,20 +237,28 @@ install_or_update_node() {
 }
 
 install_or_update_python() {
-  # Needed by python-build on Mojave
-  export SDKROOT="$(xcrun --show-sdk-path)"
+  # Ensure asdf is loaded
+  if [ -z "$(asdf plugin-list | grep 'python')" ]; then
+    asdf plugin-add python
+  fi
 
   echo "Installing the latest version of Python"
-  local LATEST_PYTHON2_VERSION=$(asdf list-all python | grep '^2\.' | grep -v '\-dev' | tail -1)
-  local LATEST_PYTHON3_VERSION=$(asdf list-all python | grep '^3\.' | grep -v '\-dev' | grep -v 'b\d\+' | tail -1)
-  hash -r
+  local LATEST_PYTHON2_VERSION=$(asdf list-all python | grep '^2\.' | grep -v '\-dev\|rc' | tail -1)
+  local LATEST_PYTHON3_VERSION=$(asdf list-all python | grep '^3\.' | grep -v '\-dev\|rc' | grep -v 'b\d\+' | tail -1)
+  asdf install python "${LATEST_PYTHON2_VERSION}" 
+  asdf install python "${LATEST_PYTHON3_VERSION}" 
+  asdf global python "${LATEST_PYTHON3_VERSION}" "${LATEST_PYTHON2_VERSION}"
+
+  echo "Installing the root python packages"
+  asdf shell python "${LATEST_PYTHON3_VERSION}" 
+  pip install -U pip
+  pip install "${PYTHON_PIPS[@]}"
 
   echo "Install MiniConda"
   MINICONDA_PATH="$HOME/.miniconda"
   if [ -d "/Volumes/Work" ]; then
     MINICONDA_PATH="/Volumes/Work/miniconda"
   fi
-
   if [ ! -d "$MINICONDA_PATH" ]; then
     wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
     chmod +x ./Miniconda3-latest-MacOSX-x86_64.sh
@@ -288,13 +269,8 @@ install_or_update_python() {
   # now we activate miniconda
   export PATH="$MINICONDA_PATH/bin:$PATH"
 
-  # and install pip in base conda env
-  conda install pip -y
-
-  echo "Install PIPs"
-  for pkg in ${PYTHON_PIPS[@]}; do
-    pip install "$pkg"
-  done
+  # and install the default deps
+  conda install numpy scipy matplotlib pip -y
 }
 
 install_or_update_ruby() {
@@ -318,6 +294,8 @@ install_or_update_rust() {
     rustup update stable 
   elif command -v rustup-init; then
     rustup-init -y
+  else
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
   fi
 }
 

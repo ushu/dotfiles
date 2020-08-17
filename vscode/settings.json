@@ -12,8 +12,6 @@
     "editor.quickSuggestions": true,
     "editor.suggestOnTriggerCharacters": true,
     "editor.parameterHints.enabled": true,
-    // auto-format
-    "editor.formatOnSave": true,
     // Enable emmet in JS
     "emmet.includeLanguages": {
         "javascript": "javascriptreact",
@@ -83,7 +81,7 @@
     "typescript.updateImportsOnFileMove.enabled": "always",
     "editor.tabSize": 2,
     "explorer.confirmDragAndDrop": false,
-    "workbench.colorTheme": "Atom One Light",
+    "workbench.colorTheme": "Dracula Pro",
     "editor.suggest.localityBonus": true,
     "editor.suggestFontSize": 12,
     "editor.suggestLineHeight": 13,
@@ -116,5 +114,9 @@
     "terminal.integrated.shellArgs.osx": [],
     "editor.suggestSelection": "first",
     "window.zoomLevel": 1,
-    "workbench.sideBar.location": "right"
+    "workbench.sideBar.location": "right",
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "editor.minimap.enabled": false,
+    "editor.fontSize": 14,
+    "editor.formatOnSave": true
 }

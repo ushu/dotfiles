@@ -608,3 +608,68 @@ reencode_mp4_videos() {
 debug_rn_android() {
   adb shell input keyevent 82
 }
+
+# Hist ZSH history, without actually deleting it
+# (cool before a recording)
+hide_history() {
+  export HISTSIZE=0
+}
+
++course() {
+  if [ "$#" -le 2 ]; then
+    echo "Usage: +course SLUG [DESCRIPTION]"
+    return
+  fi
+  local projectSlug="$1"; shift
+  local projectDescription="$@"
+
+  # Make course directory on the Desktop
+  local courseDir="$HOME/Desktop/$projectSlug"
+  mkdir -p "$courseDir"
+  cd "$courseDir"
+
+  # make a git repo
+  ginit && gituserushu
+  hub create -p -d "$projectDescription"
+
+  # create base files README file
+  echo "$projectDescription" >> README.md
+  echo "# Lessons\n\n" >> PLAYLIST.md
+  echo "# IDE files\n.DS_Store\n.vscode\n.idea\n*.swo\n*.swp" >> .gitignore
+  git add . 
+  git commit -m "Add README.md, PLAYLIST.md & .gitignore" 
+  git push -u origin master
+}
+
++lecture() {
+  if [ "$#" -le 2 ]; then
+    echo "Usage: +lecture SLUG [DESCRIPTION]"
+    return
+  fi
+  local branchName="$1"; shift
+  local branchDescription="$@"
+
+  # create the branch
+  git checkout -b "$branchName" 
+
+  # update docs
+  local ghUrl="https://$(git config user.name)/${PWD##*/}/tree/${branchName}"
+  echo "* $branchDescription ([code on Github]($ghUrl))" >> PLAYLIST.md
+  git add PLAYLIST.md
+  git commit -m "Create branch $branchName"
+  git push -u origin "$branchName"
+}
+
+pyvenv() {
+  python -m venv venv --prompt $(basename "$PWD")
+  echo "/venv" >> .gitignore
+}
+
+new-rn-project() {
+  if [ "$#" -lt 1 ]; then
+    echo "Usage: new-rn-project SLUG"
+    return
+  fi
+  #npx react-native init "$1" --template git+https://github.com/ushu/react-native-template-typescript
+  npx react-native init "$1" --template @ushu/react-native-template-typescript
+}

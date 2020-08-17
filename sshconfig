@@ -24,6 +24,11 @@ host aurelien-iapp
 	user git
 	identityfile ~/.ssh/id_rsa-aurelien-iapp
 
+host pythongroupe3
+	hostname github.com
+	user git
+	identityfile ~/.ssh/id_rsa-pythongroupe3
+
 Host lesappsdaurelien.fr
 	hostname lesappsdaurelien.fr
 	user git
@@ -33,6 +38,11 @@ Host bitbucket.org
 	HostName bitbucket.org
 	User git
 	IdentityFile ~/.ssh/id_rsa-ushu
+
+Host bitbucket
+	HostName bitbucket.org
+	User git
+	IdentityFile ~/.ssh/id_rsa-bitbucket
 
 Host wesignit
   HostName 185.34.32.126

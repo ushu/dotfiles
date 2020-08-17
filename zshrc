@@ -28,6 +28,9 @@ export EDITOR=vim
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 export FZF_DEFAULT_COMMAND='ag -l -g ""'
 
+export TYPEWRITTEN_CURSOR="block"
+
+
 ###
 # Plugins
 ###
@@ -42,12 +45,14 @@ source "$ANTIGEN_PATH/share/antigen/antigen.zsh"
   antigen bundle git
   antigen bundle docker
   antigen bundle pip
+  antigen bundle zsh-users/zsh-autosuggestions
   antigen bundle zsh-users/zsh-syntax-highlighting
 
   # Set active theme
-  antigen theme robbyrussell
+  antigen theme reobin/typewritten
 
 antigen apply
+
 
 ###
 # Aliase(s)
@@ -98,8 +103,21 @@ if [ -f "${GHCUP_INSTALL_BASE_PREFIX:=$HOME}/.ghcup/env" ]; then
   source "${GHCUP_INSTALL_BASE_PREFIX:=$HOME}/.ghcup/env"
 fi
 
+# Rust
+if [ -e "$HOME/.cargo/env" ]; then
+  source "$HOME/.cargo/env"
+fi
+
 # custom comandes
 [ -e "$HOME/.custom_shell_scripts" ] && source "$HOME/.custom_shell_scripts"
 
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Other ZSH-specific options
+#setopt menu_complete
+
+# Custom binaries (?)
+if [ -d "$HOME/.bin" ]; then
+  export PATH="$HOME/.bin:$PATH"
+fi

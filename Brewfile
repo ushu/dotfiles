@@ -29,6 +29,8 @@ brew "curl"
 brew "wget"
 brew "tree"
 #brew "mercurial"
+brew "bat"
+brew "tokei"
 
 # Brew version(s) of scripting languages
 brew "python3"
@@ -40,6 +42,7 @@ brew "perl"
 # Development tools
 brew "pkg-config"
 brew "vim"
+#brew "emacs"
 brew "watchman"
 brew "heroku"
 brew "sass"
@@ -108,6 +111,6 @@ brew "homebrew/cask-fonts/font-fira-code"
 
 # Docker stuff
 cask "docker" # Docker Desktop
-brew "kubectl"
-brew "minikube"
+#brew "kubectl"
+#brew "minikube"
 
