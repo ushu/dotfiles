@@ -537,6 +537,17 @@ gituserushu() {
 EOF
 }
 
+gitusercaptive() {
+  cat >>.git/config <<-EOF
+[user]
+  name = Aurélien Noce
+  email = aurelien@captive.fr
+  signingkey = 4FE67BC7
+[github]
+  user = ushu
+EOF
+}
+
 cloneiapp() {
   local repo="$1"
   if [ -z "$repo" ]; then
@@ -671,5 +682,10 @@ new-rn-project() {
     return
   fi
   #npx react-native init "$1" --template git+https://github.com/ushu/react-native-template-typescript
-  npx react-native init "$1" --template @ushu/react-native-template-typescript
+  npx --ignore-existing react-native init "$1" #--template @ushu/react-native-template-typescript
+}
+
+install-exact-bundler() {
+  # see. https://bundler.io/blog/2019/05/14/solutions-for-cant-find-gem-bundler-with-executable-bundle.html
+  gem install bundler -v "$(grep -A 1 "BUNDLED WITH" Gemfile.lock | tail -n 1)"
 }

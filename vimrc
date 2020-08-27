@@ -48,22 +48,17 @@ augroup SyntaxEx
   autocmd BufNewFile,BufRead *.plist setlocal filetype=xml
 augroup END
 
-" Additional plugins
-call plug#begin('~/.vim/plugged')
-" more syntaxes
-Plug 'sheerun/vim-polyglot'
-" fuzzy file search
-Plug 'junegunn/fzf', { 'do': './install --all', 'on': ['FZF', 'Ag'] }
-Plug 'junegunn/fzf.vim', { 'on': ['FZF', 'Ag'] }
-" linter
-Plug 'dense-analysis/ale'
-" colors
-Plug 'phanviet/vim-monokai-pro'
-call plug#end()
+if filereadable("~/.dotfiles/plugins.vim")
+  source "~/.dotfiles/plugins.vim"
+endif
 
 " Colors
 syntax on
-colorscheme monokai_pro
+try
+  colorscheme monokai_pro
+catch
+  colorscheme desert
+endtry
 
 " Custom mappings
 let mapleader=","
@@ -108,6 +103,10 @@ else
 endif
 nnoremap gs :Gstatus<CR>
 nnoremap gl :Glog<CR><CR>:copen<CR><CR>
-nnoremap gr :Git gr<CR>
 nnoremap <S-z> za
 
+" Symbol renaming.
+nmap <leader>r <Plug>(coc-rename)
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
